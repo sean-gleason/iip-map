@@ -1,0 +1,15 @@
+{
+    "name": "iip-design/iip-map",
+    "type": "wordpress-plugin",
+    "description" : "Adds ability to embed a Google map onto a WordPress site",
+    "authors": [
+        {
+            "name": "Office of Design, Bureau of International Information Programs",
+            "email": "rewersmc@america.gov"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+       "composer/installers": "~1.0"
+    }
+}
