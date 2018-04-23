@@ -28,13 +28,13 @@ class IIP_Map_Admin {
     );
   }
 
-  // Add Google API key to the plugin settings page
+  // Add API keys section to the plugin settings page
   public function added_settings_sections() {
     add_settings_section(
-      __( 'iip_map_google_maps_api', 'iip-map' ),
-      __( 'Google Maps API Key', 'iip-map' ),
+      __( 'iip_map_api_keys', 'iip-map' ),
+      __( 'API Keys', 'iip-map' ),
       function() {
-        echo '<p>Enter your Google Maps API key. If you do not have one, you can acquire one at the <a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">Google Maps developer site</a>.</p>';
+        echo '<p>Enter your API keys below. If you do not have a Google Maps API key, you can acquire one at the <a href="https://developers.google.com/maps/documentation/javascript/" target="_blank">Google Maps developer site</a>.</p>';
       }, $this->plugin_name );
   }
 
@@ -46,11 +46,22 @@ class IIP_Map_Admin {
       __( 'Google Maps API Key' ),
       array( $this, 'google_api_key_markup' ),
       $this->plugin_name,
-      'iip_map_google_maps_api',
+      'iip_map_api_keys',
       array( 'label_for' => 'iip_map_google_maps_api_key' )
     );
 
+    // Screendoor API Key
+    add_settings_field(
+      __( 'iip_map_screendoor_api_key' ),
+      __( 'Screendoor API Key' ),
+      array( $this, 'screendoor_api_key_markup' ),
+      $this->plugin_name,
+      'iip_map_api_keys',
+      array( 'label_for' => 'iip_map_screendoor_api_key' )
+    );
+
     register_setting( $this->plugin_name, 'iip_map_google_maps_api_key', 'sanitize_text_field' );
+    register_setting( $this->plugin_name, 'iip_map_screendoor_api_key', 'sanitize_text_field' );
   }
 
   // HTML markup for the Google Maps API key field
@@ -62,6 +73,22 @@ class IIP_Map_Admin {
         $html .= 'type="text" ';
         $html .= 'name="iip_map_google_maps_api_key" ';
         $html .= 'id="iip_map_google_maps_api_key" ';
+        $html .= 'class="iip-map-textfield" ';
+        $html .= 'value="' . $key . '">';
+    $html .= '</fieldset>';
+
+    echo $html;
+  }
+
+  // HTML markup for the Google Maps API key field
+  public function screendoor_api_key_markup() {
+    $key = get_option( 'iip_map_screendoor_api_key' );
+
+    $html = '<fieldset>';
+      $html .= '<input ';
+        $html .= 'type="text" ';
+        $html .= 'name="iip_map_screendoor_api_key" ';
+        $html .= 'id="iip_map_screendoor_api_key" ';
         $html .= 'class="iip-map-textfield" ';
         $html .= 'value="' . $key . '">';
     $html .= '</fieldset>';
