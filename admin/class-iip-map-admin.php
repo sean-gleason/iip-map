@@ -17,14 +17,23 @@ class IIP_Map_Admin {
 	}
 
   // Add to admin menu
-  public function added_menu_page() {
+  public function added_admin_menu() {
     add_menu_page(
-      __('IIP Map', 'iip-map'),
-      __('Embed a Map', 'iip-map'),
+      __('Configure Map', 'iip-map'),
+      __('Add Map', 'iip-map'),
       'activate_plugins',
-      'iip-map-settings',
-      array( $this, 'display_options_partial' ),
+      'iip-map-configs',
+      array( $this, 'display_configs_partial' ),
       'dashicons-location-alt'
+    );
+
+    add_submenu_page(
+      'iip-map-configs',
+      __('Settings', 'iip-map'),
+      __('Settings', 'iip-map'),
+      'activate_plugins',
+      'iip-map-keys',
+      array( $this, 'display_keys_partial' )
     );
   }
 
@@ -97,8 +106,12 @@ class IIP_Map_Admin {
   }
 
   // The admin area view for the plugin settings page
-  public function display_options_partial() {
-    include_once IIP_MAP_DIR . 'admin/partials/iip-map-admin-display.php';
+  public function display_configs_partial() {
+    include_once IIP_MAP_DIR . 'admin/partials/iip-map-admin-display-configs.php';
+  }
+
+  public function display_keys_partial() {
+    include_once IIP_MAP_DIR . 'admin/partials/iip-map-admin-display-keys.php';
   }
 
   // The output of the map shortcode
