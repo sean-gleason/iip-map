@@ -20,8 +20,8 @@
 
   <form action="options.php" method="post">
     <?php
-      do_settings_sections( $this->plugin_name );
-      settings_fields( $this->plugin_name );
+      do_settings_sections( 'iip-map-setup', 'iip_map_configurations' );
+      settings_fields( 'iip-map-setup' );
       submit_button();
     ?>
   </form>
