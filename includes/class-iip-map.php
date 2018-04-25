@@ -38,7 +38,7 @@ class IIP_Map {
 
     $this->load_dependencies();
     $this->define_admin_hooks();
-    //$this->define_public_hooks();
+    $this->define_public_hooks();
   }
 
   /**
@@ -64,31 +64,28 @@ class IIP_Map {
     // The class responsible for defining all actions that occur in the admin area.
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-iip-map-admin.php';
 
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-     *
-		 * require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-america-api-client-public.php';
-     */
+		// The class responsible for defining all actions that occur in the public-facing side of the site.
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/embed-map.php';
 
-     $this->loader = new IIP_Map_Loader();
+    $this->loader = new IIP_Map_Loader();
+
 	}
 
-  /**
-   * Register all of the hooks related to the admin area functionality of the plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-
+  // Register all of the hooks related to the admin area functionality of the plugin.
   private function define_admin_hooks() {
     $plugin_admin = new IIP_Map_Admin( $this->get_plugin_name(), $this->get_version() );
 
-    $this->loader->add_action( 'init', $plugin_admin, 'iip_map_added_shortcodes' );
     $this->loader->add_action( 'admin_init', $plugin_admin, 'added_settings_sections' );
     $this->loader->add_action( 'admin_init', $plugin_admin, 'added_settings_fields' );
     $this->loader->add_action( 'admin_menu', $plugin_admin, 'added_admin_menu' );
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+  }
+
+  // Register all of the hooks related to the public-facing functionality
+  private function define_public_hooks() {
+    $plugin_public = new IIP_Map_Embed( $this->get_plugin_name(), $this->get_version() );
+
+    $this->loader->add_action( 'init', $plugin_public, 'iip_map_added_shortcodes' );
   }
 
   /**
@@ -112,13 +109,7 @@ class IIP_Map {
 		return $this->loader;
 	}
 
-  /**
-	 * Retrieve the name & version number of the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    string    The version number of the plugin.
-	 */
-
+  // Retrieve the name & version number of the plugin.
    public function get_plugin_name() {
     return $this->plugin_name;
   }
