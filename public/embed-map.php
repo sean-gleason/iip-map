@@ -14,10 +14,12 @@ class IIP_Map_Embed {
   }
 
   public function register_map_embed_js() {
-    // Pull Google Maps & Screendoor API keys from admin settings
-    wp_localize_script( 'map-embed-js', 'iip-map', array(
-      'iip_map_google_maps_api_key' => get_option( 'iip_map_google_maps_api_key' ),
-      'iip_map_screendoor_api_key'  => get_option( 'iip_map_screendoor_api_key' )
+    // Pull Screendoor API key and project ID from admin settings
+    wp_register_script( 'load-screendoor-api', IIP_MAP_URL . 'js/screendoor.js', array(), null, true );
+
+    wp_localize_script( 'load-screendoor-api', 'iip_map_params', array(
+      'screendoor_project' => get_option( 'iip_map_screendoor_project' ),
+      'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' )
     ));
 
     // Add Google Maps API script to page footer
@@ -42,6 +44,7 @@ class IIP_Map_Embed {
     $lng = $attr['lng'];
 
     wp_enqueue_script( 'load-api-script' );
+    wp_enqueue_script( 'load-screendoor-api' );
 
     $html .= '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
     $html .=
@@ -55,6 +58,8 @@ class IIP_Map_Embed {
       </script>';
 
     return $html;
+
+
 
   }
 
