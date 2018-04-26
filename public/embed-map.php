@@ -3,39 +3,36 @@
 // Embedded Google Map on page
 class IIP_Map_Embed {
 
-	public function __construct( $plugin_name, $version ) {
-		$this->plugin = $plugin;
+  public function __construct( $plugin_name, $version ) {
+    $this->plugin = $plugin;
     $this->version = $version;
-		//$this->enqueue_scripts();
-	}
-/*
-	public function enqueue_scripts() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_screendoor_embed_js' ) );
-	}
+    $this->enqueue_scripts();
+  }
 
-	public function enqueue_screendoor_embed_js() {
-  	wp_enqueue_script( 'screendoor', '//d3q1ytufopwvkq.cloudfront.net/0/formrenderer.js', array('jquery'), null, false );
-  	wp_enqueue_style( 'screendoor-style', '//d3q1ytufopwvkq.cloudfront.net/0/formrenderer.css', array(), null, 'all' );
-  	wp_enqueue_script(  'screendoor-embed-js', $this->plugin->plugin_url . 'js/dist/frontend.min.js',  array( 'jquery', 'underscore' ), null, true );
+  public function enqueue_scripts() {
+    add_action( 'init', array( $this, 'register_map_embed_js' ) );
+  }
 
+  public function register_map_embed_js() {
     // Pull Google Maps & Screendoor API keys from admin settings
     wp_localize_script( 'map-embed-js', 'iip-map', array(
       'iip_map_google_maps_api_key' => get_option( 'iip_map_google_maps_api_key' ),
       'iip_map_screendoor_api_key'  => get_option( 'iip_map_screendoor_api_key' )
     ));
 
-	}
-*/
+    // Add Google Maps API script to page footer
+    wp_register_script( 'load-api-script', 'https://maps.googleapis.com/maps/api/js?key=' . get_option('iip_map_google_maps_api_key') . '&callback=initMap', array(), null, true );
 
+  }
 
   // The output of the map shortcode
   public function iip_map_shortcode( $args ) {
     $attr = shortcode_atts( array(
-      'id'    => '',
+      'id'     => '',
       'height' => '',
-      'zoom'  => '',
-      'lat'   => '',
-      'lng'   => ''
+      'zoom'   => '',
+      'lat'    => '',
+      'lng'    => ''
     ), $args );
 
     $map = $attr['id'];
@@ -43,6 +40,8 @@ class IIP_Map_Embed {
     $zoom = $attr['zoom'];
     $lat = $attr['lat'];
     $lng = $attr['lng'];
+
+    wp_enqueue_script( 'load-api-script' );
 
     $html .= '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
     $html .=
@@ -54,9 +53,9 @@ class IIP_Map_Embed {
           });
         }
       </script>';
-    $html .= '<script async defer src="https://maps.googleapis.com/maps/api/js?key= &callback=initMap"></script></div>';
 
     return $html;
+
   }
 
   // Register the map shortcode
