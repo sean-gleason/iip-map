@@ -79,8 +79,19 @@ class IIP_Map_Admin {
       array( 'label_for' => 'iip_map_screendoor_api_key' )
     );
 
+    // Screendoor Project ID
+    add_settings_field(
+      'iip_map_screendoor_api_key',
+      __( 'Screendoor Project Number', 'iip-map'),
+      array( $this, 'screendoor_project_markup' ),
+      'iip-map-setup',
+      'iip_map_setup',
+      array( 'label_for' => 'iip_map_screendoor_project' )
+    );
+
     register_setting( 'iip-map-keys', 'iip_map_google_maps_api_key', 'sanitize_text_field' );
     register_setting( 'iip-map-keys', 'iip_map_screendoor_api_key', 'sanitize_text_field' );
+    register_setting( 'iip-map-setup', 'iip_map_screendoor_project', 'sanitize_text_field' );
   }
 
   // HTML markup for the API key fields
@@ -107,6 +118,21 @@ class IIP_Map_Admin {
         $html .= 'type="text" ';
         $html .= 'name="iip_map_screendoor_api_key" ';
         $html .= 'id="iip_map_screendoor_api_key" ';
+        $html .= 'class="iip-map-textfield" ';
+        $html .= 'value="' . $key . '">';
+    $html .= '</fieldset>';
+
+    echo $html;
+  }
+
+  public function screendoor_project_markup() {
+    $key = get_option( 'iip_map_screendoor_project' );
+
+    $html = '<fieldset>';
+      $html .= '<input ';
+        $html .= 'type="text" ';
+        $html .= 'name="iip_map_screendoor_project" ';
+        $html .= 'id="iip_map_screendoor_project" ';
         $html .= 'class="iip-map-textfield" ';
         $html .= 'value="' . $key . '">';
     $html .= '</fieldset>';
