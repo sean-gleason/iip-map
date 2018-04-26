@@ -31,7 +31,6 @@ class IIP_Map {
    *
    * @since    1.0.0
    */
-
   public function __construct() {
     $this->plugin_name = 'iip-map';
     $this->version = '1.0.0';
@@ -42,34 +41,34 @@ class IIP_Map {
   }
 
   /**
-	 * Load the required dependencies for this plugin.
-	 *
-	 * Include the following files that make up the plugin:
-	 *
-	 * - IIP_Map_Loader. Orchestrates the hooks of the plugin.
+   * Load the required dependencies for this plugin.
+   *
+   * Include the following files that make up the plugin:
+   *
+   * - IIP_Map_Loader. Orchestrates the hooks of the plugin.
    * - IIP_Map_Admin. Defines all hooks for the admin area.
-	 * - IIP_Map_Public. Defines all hooks for the public side of the site.
-	 *
-	 * Create an instance of the loader which will be used to register the hooks with WordPress.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
+   * - IIP_Map_Embed. Defines all hooks for the public side of the site.
+   *
+   * Create an instance of the loader which will be used to register the hooks with WordPress.
+   *
+   * @since    1.0.0
+   * @access   private
+   */
 
-	private function load_dependencies() {
+  private function load_dependencies() {
 
     // The class responsible for orchestrating the actions and filters of the core plugin.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-iip-map-loader.php';
 
     // The class responsible for defining all actions that occur in the admin area.
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-iip-map-admin.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-iip-map-admin.php';
 
-		// The class responsible for defining all actions that occur in the public-facing side of the site.
+    // The class responsible for defining all actions that occur in the public-facing side of the site.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/embed-map.php';
 
     $this->loader = new IIP_Map_Loader();
 
-	}
+  }
 
   // Register all of the hooks related to the admin area functionality of the plugin.
   private function define_admin_hooks() {
@@ -99,18 +98,18 @@ class IIP_Map {
   }
 
   /**
-	 * The reference to the class that orchestrates the hooks with the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    IIP_Map_Loader    Orchestrates the hooks of the plugin.
-	 */
+   * The reference to the class that orchestrates the hooks with the plugin.
+   *
+   * @since     1.0.0
+   * @return    IIP_Map_Loader    Orchestrates the hooks of the plugin.
+   */
 
-	public function get_loader() {
-		return $this->loader;
-	}
+  public function get_loader() {
+    return $this->loader;
+  }
 
   // Retrieve the name & version number of the plugin.
-   public function get_plugin_name() {
+  public function get_plugin_name() {
     return $this->plugin_name;
   }
 

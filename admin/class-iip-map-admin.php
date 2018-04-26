@@ -7,14 +7,14 @@ class IIP_Map_Admin {
 
   //Initialize the class and set its properties.
   public function __construct( $plugin_name, $version ) {
-		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-	}
+    $this->plugin_name = $plugin_name;
+    $this->version = $version;
+  }
 
   // Register the stylesheets for the admin area.
   public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
-	}
+    wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
+  }
 
   // Add to admin menu
   public function added_admin_menu() {
