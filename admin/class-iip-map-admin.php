@@ -59,6 +59,46 @@ class IIP_Map_Admin {
 
   //Create and register the fields on the plugin settings page
   public function added_settings_fields() {
+    // Screendoor Project ID
+    add_settings_field(
+      'iip_map_screendoor_project',
+      __( 'Screendoor Project ID', 'iip-map'),
+      array( $this, 'screendoor_project_markup' ),
+      'iip-map-setup',
+      'iip_map_setup',
+      array( 'label_for' => 'iip_map_screendoor_project' )
+    );
+
+    // Screendoor city field
+    add_settings_field(
+      'iip_map_screendoor_city',
+      __( 'Screendoor City Field ID', 'iip-map'),
+      array( $this, 'screendoor_city_markup' ),
+      'iip-map-setup',
+      'iip_map_setup',
+      array( 'label_for' => 'iip_map_screendoor_city' )
+    );
+
+    // Screendoor region field
+    add_settings_field(
+      'iip_map_screendoor_region',
+      __( 'Screendoor Region Field ID', 'iip-map'),
+      array( $this, 'screendoor_region_markup' ),
+      'iip-map-setup',
+      'iip_map_setup',
+      array( 'label_for' => 'iip_map_screendoor_region' )
+    );
+
+    // Screedoor country field
+    add_settings_field(
+      'iip_map_screendoor_country',
+      __( 'Screendoor Country Field ID', 'iip-map'),
+      array( $this, 'screendoor_country_markup' ),
+      'iip-map-setup',
+      'iip_map_setup',
+      array( 'label_for' => 'iip_map_screendoor_country' )
+    );
+
     // Google Maps API Key
     add_settings_field(
       'iip_map_google_maps_api_key',
@@ -79,19 +119,75 @@ class IIP_Map_Admin {
       array( 'label_for' => 'iip_map_screendoor_api_key' )
     );
 
-    // Screendoor Project ID
-    add_settings_field(
-      'iip_map_screendoor_api_key',
-      __( 'Screendoor Project Number', 'iip-map'),
-      array( $this, 'screendoor_project_markup' ),
-      'iip-map-setup',
-      'iip_map_setup',
-      array( 'label_for' => 'iip_map_screendoor_project' )
-    );
+    register_setting( 'iip-map-setup', 'iip_map_screendoor_project', 'sanitize_text_field' );
+    register_setting( 'iip-map-setup', 'iip_map_screendoor_city', 'sanitize_text_field' );
+    register_setting( 'iip-map-setup', 'iip_map_screendoor_region', 'sanitize_text_field' );
+    register_setting( 'iip-map-setup', 'iip_map_screendoor_country', 'sanitize_text_field' );
 
     register_setting( 'iip-map-keys', 'iip_map_google_maps_api_key', 'sanitize_text_field' );
     register_setting( 'iip-map-keys', 'iip_map_screendoor_api_key', 'sanitize_text_field' );
-    register_setting( 'iip-map-setup', 'iip_map_screendoor_project', 'sanitize_text_field' );
+  }
+
+
+  // HTML markup for Screendoor data fields
+  public function screendoor_project_markup() {
+    $key = get_option( 'iip_map_screendoor_project' );
+
+    $html = '<fieldset>';
+      $html .= '<input ';
+        $html .= 'type="text" ';
+        $html .= 'name="iip_map_screendoor_project" ';
+        $html .= 'id="iip_map_screendoor_project" ';
+        $html .= 'class="iip-map-textfield" ';
+        $html .= 'value="' . $key . '">';
+    $html .= '</fieldset>';
+
+    echo $html;
+  }
+
+  public function screendoor_city_markup() {
+    $key = get_option( 'iip_map_screendoor_city' );
+
+    $html = '<fieldset>';
+      $html .= '<input ';
+        $html .= 'type="text" ';
+        $html .= 'name="iip_map_screendoor_city" ';
+        $html .= 'id="iip_map_screendoor_city" ';
+        $html .= 'class="iip-map-textfield" ';
+        $html .= 'value="' . $key . '">';
+    $html .= '</fieldset>';
+
+    echo $html;
+  }
+
+  public function screendoor_region_markup() {
+    $key = get_option( 'iip_map_screendoor_region' );
+
+    $html = '<fieldset>';
+      $html .= '<input ';
+        $html .= 'type="text" ';
+        $html .= 'name="iip_map_screendoor_region" ';
+        $html .= 'id="iip_map_screendoor_region" ';
+        $html .= 'class="iip-map-textfield" ';
+        $html .= 'value="' . $key . '">';
+    $html .= '</fieldset>';
+
+    echo $html;
+  }
+
+  public function screendoor_country_markup() {
+    $key = get_option( 'iip_map_screendoor_country' );
+
+    $html = '<fieldset>';
+      $html .= '<input ';
+        $html .= 'type="text" ';
+        $html .= 'name="iip_map_screendoor_country" ';
+        $html .= 'id="iip_map_screendoor_country" ';
+        $html .= 'class="iip-map-textfield" ';
+        $html .= 'value="' . $key . '">';
+    $html .= '</fieldset>';
+
+    echo $html;
   }
 
   // HTML markup for the API key fields
@@ -118,21 +214,6 @@ class IIP_Map_Admin {
         $html .= 'type="text" ';
         $html .= 'name="iip_map_screendoor_api_key" ';
         $html .= 'id="iip_map_screendoor_api_key" ';
-        $html .= 'class="iip-map-textfield" ';
-        $html .= 'value="' . $key . '">';
-    $html .= '</fieldset>';
-
-    echo $html;
-  }
-
-  public function screendoor_project_markup() {
-    $key = get_option( 'iip_map_screendoor_project' );
-
-    $html = '<fieldset>';
-      $html .= '<input ';
-        $html .= 'type="text" ';
-        $html .= 'name="iip_map_screendoor_project" ';
-        $html .= 'id="iip_map_screendoor_project" ';
         $html .= 'class="iip-map-textfield" ';
         $html .= 'value="' . $key . '">';
     $html .= '</fieldset>';
