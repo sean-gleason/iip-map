@@ -1,5 +1,6 @@
 var googleKey = iip_map_params.google_api_key;
 
+var map_id = iip_map_params.map_id;
 var zoom = iip_map_params.map_zoom;
 var lat = iip_map_params.map_center_lat;
 var lng = iip_map_params.map_center_lng;
@@ -7,15 +8,15 @@ var lng = iip_map_params.map_center_lng;
 document.addEventListener('DOMContentLoaded', function () {
   if (document.querySelectorAll('#map').length > 0)
   {
-    var js_file = document.createElement('script');
-    js_file.type = 'text/javascript';
-    js_file.src = 'https://maps.googleapis.com/maps/api/js?key=' + googleKey + '&callback=initMap' ;
-    document.getElementsByTagName('head')[0].appendChild(js_file);
+    var maps_api_js = document.createElement('script');
+    maps_api_js.type = 'text/javascript';
+    maps_api_js.src = 'https://maps.googleapis.com/maps/api/js?key=' + googleKey + '&callback=initMap' ;
+    document.getElementsByTagName('head')[0].appendChild(maps_api_js);
 
-    var js_file2 = document.createElement('script');
-    js_file2.type = 'text/javascript';
-    js_file2.src = '/wp-content/plugins/iip-map/js/markerclusterer.js' ;
-    document.getElementsByTagName('head')[0].appendChild(js_file2);
+    var maps_clusters_js = document.createElement('script');
+    maps_clusters_js.type = 'text/javascript';
+    maps_clusters_js.src = '/wp-content/plugins/iip-map/js/markerclusterer.js' ;
+    document.getElementsByTagName('head')[0].appendChild(maps_clusters_js);
   }
 });
 
@@ -27,7 +28,7 @@ function initMap() {
     zoom: parseFloat(zoom)
   });
 
-  fetch('/wp-content/plugins/iip-map/js/markers.json')
+  fetch('/wp-json/iip-map/v1/map/' + map_id)
     .then(function(response){return response.json()})
     .then(plotMarkers);
 }
