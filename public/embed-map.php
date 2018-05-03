@@ -28,8 +28,6 @@ class IIP_Map_Embed {
 
     wp_register_script( 'draw-map', IIP_MAP_URL . 'js/draw-map.js', array(), null, true );
 
-    // Add Google Maps API script to page footer
-    // wp_register_script( 'load-api-script', 'https://maps.googleapis.com/maps/api/js?key=' . get_option('iip_map_google_maps_api_key') . '&callback=initMap', array(), null, true );
   }
 
   // The output of the map shortcode
@@ -42,22 +40,25 @@ class IIP_Map_Embed {
       'lng'    => 0
     ), $args );
 
+    // Set shortcode attributes as variables
     $map = $attr['id'];
     $height = $attr['height'];
     $zoom = $attr['zoom'];
     $lat = $attr['lat'];
     $lng = $attr['lng'];
 
+    // Pass variables to map drawing file
     wp_localize_script( 'draw-map', 'iip_map_params', array(
       'google_api_key' => get_option( 'iip_map_google_maps_api_key' ),
+      'map_id' => $map,
       'map_zoom' => $zoom,
       'map_center_lat' => $lat,
       'map_center_lng' => $lng
     ));
 
-    // wp_enqueue_script( 'geocode-screendoor-entries' );
+    // Return map
     wp_enqueue_script( 'draw-map' );
-    // wp_enqueue_script( 'load-api-script' );
+    wp_enqueue_script( 'geocode-screendoor-entries' );
 
     $html .= '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
 
