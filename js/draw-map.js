@@ -28,7 +28,8 @@ function initMap() {
     zoom: parseFloat(zoom)
   });
 
-  fetch('/wp-json/iip-map/v1/map/' + map_id)
+  // fetch('/wp-json/iip-map/v1/map/' + map_id)
+  fetch('/wp-content/plugins/iip-map/public/map-data/markers' + map_id + '.json')
     .then(function(response){return response.json()})
     .then(plotMarkers);
 }

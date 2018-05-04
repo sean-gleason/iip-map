@@ -14,18 +14,36 @@ class IIP_Map_Embed {
   }
 
   public function register_map_embed_js() {
+
+    // Define map data post metadata values as variables
+    $args = array(
+      'post_type' => 'iip_map_data',
+      'post_status' => 'publish',
+      'fields' => 'ids'
+    );
+    $maps = get_posts( $args );
+
+    foreach ($maps as $maps) {
+      $project_id = get_post_meta( $maps, '_iip_map_screendoor_project' );
+      $city_field = get_post_meta( $maps, '_iip_map_screendoor_city' );
+      $region_field = get_post_meta( $maps, '_iip_map_screendoor_region' );
+      $country_field = get_post_meta( $maps, '_iip_map_screendoor_country' );
+    }
+
     // Pass Screendoor API key and project info from admin page to geocoder
     wp_register_script( 'geocode-screendoor-entries', IIP_MAP_URL . 'js/geocode.js', array(), null, true );
 
     wp_localize_script( 'geocode-screendoor-entries', 'iip_map_params', array(
-      'screendoor_project' => get_option( 'iip_map_screendoor_project' ),
+      'map_data_id' => $maps,
+      'screendoor_project' => $project_id,
+      'screendoor_city' => $city_field,
+      'screendoor_region' => $region_field,
+      'screendoor_country' => $country_field,
       'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
-      'screendoor_city' => get_option( 'iip_map_screendoor_city' ),
-      'screendoor_region' => get_option( 'iip_map_screendoor_region' ),
-      'screendoor_country' => get_option( 'iip_map_screendoor_country' ),
       'google_api_key' => get_option( 'iip_map_google_maps_api_key' )
     ));
 
+    // Register script that embeds the map
     wp_register_script( 'draw-map', IIP_MAP_URL . 'js/draw-map.js', array(), null, true );
 
   }

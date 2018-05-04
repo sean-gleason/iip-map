@@ -1,24 +1,25 @@
-// Pull Screendoor project id and API key from admin config
-var endpoint = 'https://screendoor.dobt.co/api/projects/' + iip_map_params.screendoor_project + '/responses?v=0&api_key=' + iip_map_params.screendoor_api_key;
+  // Pull Screendoor project id and API key from admin config
+  var endpoint = 'https://screendoor.dobt.co/api/projects/' + iip_map_params.screendoor_project + '/responses?v=0&api_key=' + iip_map_params.screendoor_api_key;
 
-var cityField = iip_map_params.screendoor_city;
-var regionField = iip_map_params.screendoor_region;
-var countryField = iip_map_params.screendoor_country;
+  var mapId = iip_map_params.map_data_id
+  var cityField = iip_map_params.screendoor_city[0];
+  var regionField = iip_map_params.screendoor_region[0];
+  var countryField = iip_map_params.screendoor_country[0];
 
-var googleKey = iip_map_params.google_api_key;
+  var googleKey = iip_map_params.google_api_key;
 
-// Make request to Screendoor API
-var request = new XMLHttpRequest();
-request.open('GET', endpoint);
-request.responseType = 'json';
-request.send();
+  // Make request to Screendoor API
+  var request = new XMLHttpRequest();
+  request.open('GET', endpoint);
+  request.responseType = 'json';
+  request.send();
 
-request.onload = function() {
-  var data = request.response;
+  request.onload = function() {
+    var data = request.response;
 
-  getAddressString(data);
+    getAddressString(data);
 
-}
+  }
 
 // Pull out address info and write to a string
 function getAddressString(jsonObj) {
@@ -40,6 +41,8 @@ function geocodeAddress(address) {
       var lng = results[0].geometry.location.lng();
 
       var latLng = { lat: lat, lng: lng}
+
+      console.log(latLng);
 
     }
   });
