@@ -46,6 +46,11 @@ class IIP_Map_Post_Type {
     register_post_type( $this->name, $args );
   }
 
+  // Register the stylesheets for the admin area.
+  public function enqueue_styles() {
+    wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
+  }
+
   public function map_add_metaboxes() {
     add_meta_box(
       'iip_map_project_info',
@@ -77,41 +82,49 @@ class IIP_Map_Post_Type {
     ?>
     <div class="map-project-info-box" id="map-project-info-box">
 
-      <label for="_iip_map_screendoor_project"><?php _e( 'Screendoor Project ID:', 'iip-map' )?></label>
-      <input
-        id="iip-map-screendoor-project"
-        type="text"
-        name="_iip_map_screendoor_project"
-        class="widefat"
-        value="<?php if ( isset ( $screendoor_project ) ) echo $screendoor_project; ?>"
-      /><br/>
+      <div class="map-admin-clearfix">
+        <label for="_iip_map_screendoor_project"><?php _e( 'Screendoor Project ID:', 'iip-map' )?></label>
+        <input
+          id="iip-map-screendoor-project"
+          type="text"
+          name="_iip_map_screendoor_project"
+          class="map-admin-project-info-input"
+          value="<?php if ( isset ( $screendoor_project ) ) echo $screendoor_project; ?>"
+        /><br/>
+      </div>
 
-      <label for="_iip_map_screendoor_city"><?php _e( 'Screendoor City Field ID:', 'iip-map' )?></label>
-      <input
-        id="iip-map-screendoor-city"
-        type="text"
-        name="_iip_map_screendoor_city"
-        class="widefat"
-        value="<?php if ( isset ( $screendoor_city ) ) echo $screendoor_city; ?>"
-      />
+      <div class="map-admin-clearfix">
+        <label for="_iip_map_screendoor_city"><?php _e( 'Screendoor City Field ID:', 'iip-map' )?></label>
+        <input
+          id="iip-map-screendoor-city"
+          type="text"
+          name="_iip_map_screendoor_city"
+          class="map-admin-project-info-input"
+          value="<?php if ( isset ( $screendoor_city ) ) echo $screendoor_city; ?>"
+        /><br/>
+      </div>
 
-      <label for="_iip_map_screendoor_region"><?php _e( 'Screedoor Region Field ID:', 'iip-map' )?></label>
-      <input
-        id="iip-map-screendoor-region"
-        type="text"
-        name="_iip_map_screendoor_region"
-        class="widefat"
-        value="<?php if ( isset ( $screendoor_region ) ) echo $screendoor_region; ?>"
-      />
+      <div class="map-admin-clearfix">
+        <label for="_iip_map_screendoor_region"><?php _e( 'Screedoor Region Field ID:', 'iip-map' )?></label>
+        <input
+          id="iip-map-screendoor-region"
+          type="text"
+          name="_iip_map_screendoor_region"
+          class="map-admin-project-info-input"
+          value="<?php if ( isset ( $screendoor_region ) ) echo $screendoor_region; ?>"
+        /><br/>
+      </div>
 
-      <label for="_iip_map_screendoor_country"><?php _e( 'Screendoor Country Field ID:', 'iip-map' )?></label>
-      <input
-        id="iip-map-screendoor-country"
-        type="text"
-        name="_iip_map_screendoor_country"
-        class="widefat"
-        value="<?php if ( isset ( $screendoor_country ) ) echo $screendoor_country; ?>"
-      />
+      <div class="map-admin-clearfix">
+        <label for="_iip_map_screendoor_country"><?php _e( 'Screendoor Country Field ID:', 'iip-map' )?></label>
+        <input
+          id="iip-map-screendoor-country"
+          type="text"
+          name="_iip_map_screendoor_country"
+          class="map-admin-project-info-input"
+          value="<?php if ( isset ( $screendoor_country ) ) echo $screendoor_country; ?>"
+        /><br/>
+      </div>
 
     </div>
     <?php
@@ -129,45 +142,55 @@ class IIP_Map_Post_Type {
     ?>
     <div class="map-shortcode-box" id="map-shortcode-box">
 
-      <label for="_iip_map_height"><?php _e( 'Map Height:', 'iip-map' )?></label>
-      <input
-        id="iip-map-height"
-        type="text"
-        name="_iip_map_height"
-        class="widefat"
-        value="<?php if ( isset ( $map_height ) ) echo $map_height; ?>"
-      /><br/>
+      <div class="map-admin-clearfix">
+        <label class="map-admin-shortcode-label" for="_iip_map_height"><?php _e( 'Map Height:', 'iip-map' )?></label>
+        <input
+          id="iip-map-height"
+          type="text"
+          name="_iip_map_height"
+          class="map-admin-shortcode-input"
+          value="<?php if ( isset ( $map_height ) ) echo $map_height; ?>"
+        /><br/>
+      </div>
 
-      <label for="_iip_map_zoom"><?php _e( 'Map Zoom:', 'iip-map' )?></label>
-      <input
-        id="iip-map-zoom"
-        type="text"
-        name="_iip_map_zoom"
-        class="widefat"
-        value="<?php if ( isset ( $map_zoom ) ) echo $map_zoom; ?>"
-      />
+      <div class="map-admin-clearfix">
+        <label class="map-admin-shortcode-label" for="_iip_map_zoom"><?php _e( 'Map Zoom:', 'iip-map' )?></label>
+        <input
+          id="iip-map-zoom"
+          type="text"
+          name="_iip_map_zoom"
+          class="map-admin-shortcode-input"
+          value="<?php if ( isset ( $map_zoom ) ) echo $map_zoom; ?>"
+        /><br/>
+      </div>
 
-      <label for="_iip_map_lat"><?php _e( 'Map Center Latitude:', 'iip-map' )?></label>
-      <input
-        id="iip-map-lat"
-        type="text"
-        name="_iip_map_lat"
-        class="widefat"
-        value="<?php if ( isset ( $map_lat ) ) echo $map_lat; ?>"
-      />
+      <div class="map-admin-clearfix">
+        <label class="map-admin-shortcode-label" for="_iip_map_lat"><?php _e( 'Map Center Latitude:', 'iip-map' )?></label>
+        <input
+          id="iip-map-lat"
+          type="text"
+          name="_iip_map_lat"
+          class="map-admin-shortcode-input"
+          value="<?php if ( isset ( $map_lat ) ) echo $map_lat; ?>"
+        /><br/>
+      </div>
 
-      <label for="_iip_map_lng"><?php _e( 'Map Center Longitude:', 'iip-map' )?></label>
-      <input
-        id="iip-map-lng"
-        type="text"
-        name="_iip_map_lng"
-        class="widefat"
-        value="<?php if ( isset ( $map_lng ) ) echo $map_lng; ?>"
-      />
+      <div class="map-admin-clearfix">
+        <label class="map-admin-shortcode-label" for="_iip_map_lng"><?php _e( 'Map Center Longitude:', 'iip-map' )?></label>
+        <input
+          id="iip-map-lng"
+          type="text"
+          name="_iip_map_lng"
+          class="map-admin-shortcode-input"
+          value="<?php if ( isset ( $map_lng ) ) echo $map_lng; ?>"
+        /><br/>
+      </div>
 
-      <label for="_iip_map_lng"><?php _e( 'Your Shortcode Is:', 'iip-map' )?></label>
-      <div class="shortcode-return">
-        <?php echo '[map id=' . $map_id . ' height=' . $map_height . ' lat=' . $map_lat . ' lng=' . $map_lng . ']';?>
+      <div class="map-admin-shortcode-output">
+        <label class="map-shortcode-output-label" for="iip_map_shortcode_output"><?php _e( 'Your Shortcode Is:', 'iip-map' )?></label><br/>
+        <div class="map-shortcode-output">
+          <?php echo '[map id=' . $map_id . ' height=' . $map_height . ' lat=' . $map_lat . ' lng=' . $map_lng . ']';?>
+        </div>
       </div>
 
     </div>
