@@ -1,16 +1,6 @@
 <?php
 
-/**
- * Provide a admin area view for the plugin
- *
- * This file is used to markup the admin-facing aspects of the plugin.
- *
- * @link       https://github.com/IIP-Design/
- * @since      1.0.0
- *
- * @package    IIP_Map
- * @subpackage IIP_Map/admin/partials
- */
+// Markup for the API key inputs
 ?>
 
 <div class="wrap">
