@@ -4,7 +4,7 @@
 class IIP_Map_Embed {
 
   public function __construct( $plugin_name, $version ) {
-    $this->plugin = $plugin;
+    $this->plugin_name = $plugin_name;
     $this->version = $version;
     $this->enqueue_scripts();
   }
@@ -78,7 +78,7 @@ class IIP_Map_Embed {
     wp_enqueue_script( 'draw-map' );
     wp_enqueue_script( 'geocode-screendoor-entries' );
 
-    $html .= '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
+    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
 
     return $html;
 
