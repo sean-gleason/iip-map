@@ -17,6 +17,20 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'IIP_MAP_DIR', plugin_dir_path( dirname( __FILE__ ) ) . 'iip-map/' );
 define( 'IIP_MAP_URL', plugin_dir_url( dirname( __FILE__ ) ) . 'iip-map/' );
 
+function iip_map_activate() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-iip-map-activator.php';
+	IIP_Map_Activator::activate();
+}
+register_activation_hook( __FILE__, 'iip_map_activate' );
+register_activation_hook( __FILE__, 'iip_map_create_db' );
+
+
+function iip_map_deactivate() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-iip-map-deactivator.php';
+	IIP_Map_Deactivator::deactivate();
+}
+register_deactivation_hook( __FILE__, 'iip_map_deactivate' );
+
 require plugin_dir_path( __FILE__ ) . 'includes/class-iip-map.php';
 
 /* Begin execution of the plugin.
