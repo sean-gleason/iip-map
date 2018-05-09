@@ -63,24 +63,30 @@ class IIP_Map {
     // The class responsible for defining all actions that occur in the admin area.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-iip-map-admin.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/map-data-post-type.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/save-map-data.php';
 
     // The class responsible for defining all actions that occur in the public-facing side of the site.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/embed-map.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/generate-api.php';
 
     $this->loader = new IIP_Map_Loader();
-
   }
 
   // Register all of the hooks related to the admin area functionality of the plugin.
   private function define_admin_hooks() {
     $plugin_admin = new IIP_Map_Admin( $this->get_plugin_name(), $this->get_version() );
+    $plugin_ajax = new IIP_Map_Ajax();
     $plugin_post_type = new IIP_Map_Post_Type();
 
+    // Admin hooks
     $this->loader->add_action( 'admin_init', $plugin_admin, 'added_settings_sections' );
     $this->loader->add_action( 'admin_init', $plugin_admin, 'added_settings_fields' );
     $this->loader->add_action( 'admin_menu', $plugin_admin, 'added_admin_menu' );
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+    // Ajax hooks
+    $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_ajax, 'map_ajax' );
+    $this->loader->add_action( 'wp_ajax_nopriv_map_ajax', $plugin_ajax, 'map_ajax' );
+    // Post type hooks
     $this->loader->add_action( 'init', $plugin_post_type, 'create_map_post_type' );
     $this->loader->add_action( 'save_post', $plugin_post_type, 'save_map_shortcode_meta', 10, 2 );
     $this->loader->add_action( 'save_post', $plugin_post_type, 'save_map_project_info_meta', 10, 2 );

@@ -40,7 +40,8 @@ class IIP_Map_Embed {
       'screendoor_region' => $region_field,
       'screendoor_country' => $country_field,
       'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
-      'google_api_key' => get_option( 'iip_map_google_maps_api_key' )
+      'google_api_key' => get_option( 'iip_map_google_maps_api_key' ),
+      'ajax_url' => admin_url( 'admin-ajax.php' )
     ));
 
     // Register script that embeds the map
