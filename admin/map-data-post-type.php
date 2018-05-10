@@ -2,7 +2,7 @@
 class IIP_Map_Post_Type {
 
   // Post type name.
-	public $name = 'iip_map_data';
+  public $name = 'iip_map_data';
 
   public function create_map_post_type(){
     $labels = array(
@@ -36,7 +36,7 @@ class IIP_Map_Post_Type {
       'has_archive'          => false,
       'hierarchical'         => false,
       'can_export'           => true,
-			'delete_with_user'     => false,
+      'delete_with_user'     => false,
       'menu_position'        => 6,
       'register_meta_box_cb' => array( $this, 'map_add_metaboxes' ),
       'menu_icon'            => 'dashicons-location-alt',

@@ -80,7 +80,6 @@ class IIP_Map_Embed {
     wp_enqueue_script( 'geocode-screendoor-entries' );
 
     $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
-
     return $html;
 
   }

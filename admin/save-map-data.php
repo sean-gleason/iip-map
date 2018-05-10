@@ -10,6 +10,8 @@ class IIP_Map_Ajax {
     $venue_city = $_POST['venue_city'];
     $venue_region = $_POST['venue_region'];
     $venue_country = $_POST['venue_country'];
+    $lat = $_POST['lat'];
+    $lng = $_POST['lng'];
 
     $wpdb->insert(
     	$table,
@@ -17,13 +19,17 @@ class IIP_Map_Ajax {
     		'map_id' => $map_id,
     		'venue_city' => $venue_city,
         'venue_region' => $venue_region,
-        'venue_country' => $venue_country
+        'venue_country' => $venue_country,
+        'lat' => $lat,
+        'lng' => $lng
     	),
     	array(
     		'%d',
     		'%s',
         '%s',
-        '%s'
+        '%s',
+        '%f',
+        '%f'
     	)
     );
 
