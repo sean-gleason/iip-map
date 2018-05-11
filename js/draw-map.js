@@ -25,11 +25,11 @@ var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: parseFloat(lat), lng: parseFloat(lng)},
-    zoom: parseFloat(zoom)
+    zoom: parseInt(zoom)
   });
 
-  // fetch('/wp-json/iip-map/v1/map/' + map_id)
-  fetch('/wp-content/plugins/iip-map/public/map-data/markers' + map_id + '.json')
+  fetch('/wp-json/iip-map/v1/map/' + map_id)
+  // fetch('/wp-content/plugins/iip-map/public/map-data/markers' + map_id + '.json')
     .then(function(response){return response.json()})
     .then(plotMarkers);
 }
@@ -40,12 +40,14 @@ function plotMarkers(m) {
   markers = [];
 
   m.forEach(function (entry) {
-    var latLng = new google.maps.LatLng(entry.lat, entry.lng)
-    var marker = new google.maps.Marker({
-      position: latLng
+    entry.forEach(function (item, index) {
+      var latLng = new google.maps.LatLng(parseFloat(item.lat), parseFloat(item.lng))
+      var marker = new google.maps.Marker({
+        position: latLng
+      });
+      markers.push(marker);
     });
-    markers.push(marker);
-  });
+  })
 
   var markerCluster = new MarkerClusterer(map, markers, {imagePath: '/wp-content/plugins/iip-map/images/m'});
 }

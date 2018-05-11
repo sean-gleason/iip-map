@@ -95,10 +95,10 @@ class IIP_Map {
   // Register all of the hooks related to the public-facing functionality
   private function define_public_hooks() {
     $plugin_map = new IIP_Map_Embed( $this->get_plugin_name(), $this->get_version() );
-    $plugin_api = new IIP_Map_API( $this->get_plugin_name(), $this->get_version() );
+    $plugin_api = new IIP_Map_API_Route( $this->get_plugin_name(), $this->get_version() );
 
     $this->loader->add_action( 'init', $plugin_map, 'iip_map_added_shortcodes' );
-    $this->loader->add_action( 'rest_api_init', $plugin_api, 'create_endpoint' );
+    $this->loader->add_action( 'rest_api_init', $plugin_api, 'create_map_endpoint' );
   }
 
   /**
