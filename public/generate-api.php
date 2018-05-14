@@ -19,16 +19,14 @@ class IIP_Map_API_Route extends WP_REST_Controller {
     foreach( $maps as $map ) {
 
       $get_item_args = array('map_id' => $map);
-    // var_dump($map);
-    register_rest_route( $namespace, '/' . $base . $map, array(
-      'methods' => WP_REST_Server::READABLE,
-      'callback' => array($this, 'get_map_data'),
-      'args' => $get_item_args,
-    ) );
 
+      register_rest_route( $namespace, '/' . $base . $map, array(
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => array($this, 'get_map_data'),
+        'args' => $get_item_args,
+      ) );
     }
-
-  } // End create_map_endpoint
+  }
 
   public function get_map_data( $request ) {
     $item = $get_item_args;
@@ -38,7 +36,6 @@ class IIP_Map_API_Route extends WP_REST_Controller {
     $data[] = $this->prepare_response_for_collection( $itemdata );
 
     return new WP_REST_Response( $data, 200 );
-
   }
 
   public function prepare_item_for_response( $item, $request ) {
@@ -48,17 +45,4 @@ class IIP_Map_API_Route extends WP_REST_Controller {
     return $list;
   }
 
-  // public function read_map_json() {
-  //
-  //   $url = IIP_MAP_URL . 'public/map-data/markers'. $maps .'.json';
-  //   var_dump($url);
-  //   // $request = wp_remote_get( $url );
-    //
-    // $body = wp_remote_retrieve_body( $request );
-    // $data = json_decode($body);
-
-    // return $data;
-  // } // End read_map_json
-
-
-} // End IIP_Map_API Class
+}

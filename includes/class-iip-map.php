@@ -79,10 +79,11 @@ class IIP_Map {
     $plugin_post_type = new IIP_Map_Post_Type();
 
     // Admin hooks
-    $this->loader->add_action( 'admin_init', $plugin_admin, 'added_settings_sections' );
-    $this->loader->add_action( 'admin_init', $plugin_admin, 'added_settings_fields' );
-    $this->loader->add_action( 'admin_menu', $plugin_admin, 'added_admin_menu' );
-    $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+    $this->loader->add_action( 'admin_init', $plugin_admin, 'iip_map_settings_sections' );
+    $this->loader->add_action( 'admin_init', $plugin_admin, 'iip_map_settings_fields' );
+    $this->loader->add_action( 'admin_menu', $plugin_admin, 'iip_map_admin_menu' );
+    $this->loader->add_action( 'admin_notices', $plugin_admin, 'get_map_variables' );
+    $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'iip_map_admin_enqueue' );
     // Ajax hooks
     $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_ajax, 'map_ajax' );
     $this->loader->add_action( 'wp_ajax_nopriv_map_ajax', $plugin_ajax, 'map_ajax' );
@@ -97,7 +98,8 @@ class IIP_Map {
     $plugin_map = new IIP_Map_Embed( $this->get_plugin_name(), $this->get_version() );
     $plugin_api = new IIP_Map_API_Route( $this->get_plugin_name(), $this->get_version() );
 
-    $this->loader->add_action( 'init', $plugin_map, 'iip_map_added_shortcodes' );
+    $this->loader->add_action( 'init', $plugin_map, 'iip_map_register_embed' );
+    $this->loader->add_action( 'init', $plugin_map, 'iip_map_add_shortcode' );
     $this->loader->add_action( 'rest_api_init', $plugin_api, 'create_map_endpoint' );
   }
 

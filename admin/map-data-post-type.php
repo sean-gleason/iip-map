@@ -29,6 +29,7 @@ class IIP_Map_Post_Type {
       'show_in_menu'         => true,
       'show_in_nav_menus'    => true,
       'show_in_admin_bar'    => true,
+      'show_in_rest'         => false,
       'exclude_from_search'  => true,
       'query_var'            => false,
       'rewrite'              => array( 'slug' => 'map' ),
@@ -46,11 +47,6 @@ class IIP_Map_Post_Type {
     register_post_type( $this->name, $args );
   }
 
-  // Register the stylesheets for the admin area.
-  public function enqueue_styles() {
-    wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
-  }
-
   public function map_add_metaboxes() {
     add_meta_box(
       'iip_map_project_info',
@@ -59,6 +55,14 @@ class IIP_Map_Post_Type {
       $this->name,
       'normal',
       'high'
+    );
+    add_meta_box(
+      'iip_map_geocoder',
+      __( 'Geocode Events', 'iip-map' ),
+      array( $this, 'geocoder_metabox' ),
+      $this->name,
+      'normal',
+      'low'
     );
     add_meta_box(
       'iip_map_shortcode',
@@ -83,47 +87,95 @@ class IIP_Map_Post_Type {
     <div class="map-project-info-box" id="map-project-info-box">
 
       <div class="map-admin-clearfix">
-        <label for="_iip_map_screendoor_project"><?php _e( 'Screendoor Project ID:', 'iip-map' )?></label>
-        <input
+        <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Project ID:', 'iip-map' )?></label>
+        <div class="map-input-div">
+          <input
           id="iip-map-screendoor-project"
-          type="text"
-          name="_iip_map_screendoor_project"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_project ) ) echo $screendoor_project; ?>"
-        /><br/>
+            type="text"
+            name="_iip_map_screendoor_project"
+            class="map-admin-project-info-input"
+            value="<?php if ( isset ( $screendoor_project ) ) echo $screendoor_project; ?>"
+          />
+        </div><br/>
       </div>
 
       <div class="map-admin-clearfix">
-        <label for="_iip_map_screendoor_city"><?php _e( 'Screendoor City Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-city"
-          type="text"
-          name="_iip_map_screendoor_city"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_city ) ) echo $screendoor_city; ?>"
-        /><br/>
+        <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor City Field ID:', 'iip-map' )?></label>
+        <div class="map-input-div">
+          <input
+            id="iip-map-screendoor-city"
+            type="text"
+            name="_iip_map_screendoor_city"
+            class="map-admin-project-info-input"
+            value="<?php if ( isset ( $screendoor_city ) ) echo $screendoor_city; ?>"
+          />
+        </div><br/>
       </div>
 
       <div class="map-admin-clearfix">
-        <label for="_iip_map_screendoor_region"><?php _e( 'Screedoor Region Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-region"
-          type="text"
-          name="_iip_map_screendoor_region"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_region ) ) echo $screendoor_region; ?>"
-        /><br/>
+        <label class="map-admin-label" for="_iip_map_screendoor_region"><?php _e( 'Screedoor Region Field ID:', 'iip-map' )?></label>
+        <div class="map-input-div">
+          <input
+            id="iip-map-screendoor-region"
+            type="text"
+            name="_iip_map_screendoor_region"
+            class="map-admin-project-info-input"
+            value="<?php if ( isset ( $screendoor_region ) ) echo $screendoor_region; ?>"
+          />
+        </div><br/>
       </div>
 
       <div class="map-admin-clearfix">
-        <label for="_iip_map_screendoor_country"><?php _e( 'Screendoor Country Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-country"
-          type="text"
-          name="_iip_map_screendoor_country"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_country ) ) echo $screendoor_country; ?>"
-        /><br/>
+        <label class="map-admin-label" for="_iip_map_screendoor_country"><?php _e( 'Screendoor Country Field ID:', 'iip-map' )?></label>
+        <div class="map-input-div">
+          <input
+            id="iip-map-screendoor-country"
+            type="text"
+            name="_iip_map_screendoor_country"
+            class="map-admin-project-info-input"
+            value="<?php if ( isset ( $screendoor_country ) ) echo $screendoor_country; ?>"
+          />
+        </div><br/>
+      </div>
+
+    </div>
+    <?php
+  }
+
+  public function geocoder_metabox( $post ) {
+    wp_nonce_field( 'geocoder_info', 'geocoder_info_nonce' );
+
+    ?>
+    <div class="map-project-info-box" id="map-project-info-box">
+
+      <div class="map-admin-clearfix">
+        <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Trigger Status:', 'iip-map' )?></label>
+        <div class="map-input-div">
+          <input
+            id="iip-map-geocoder-trigger"
+            type="text"
+            name="_iip_map_geocoder_trigger"
+            class="map-admin-project-info-input"
+            value="<?php ?>"
+          />
+        </div><br/>
+      </div>
+
+      <div class="map-admin-clearfix">
+        <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor Completed Status:', 'iip-map' )?></label>
+        <div class="map-input-div">
+          <input
+            id="iip-map-geocoder-complete"
+            type="text"
+            name="_iip_map_geocoder_complete"
+            class="map-admin-project-info-input"
+            value="<?php ?>"
+          />
+        </div><br/>
+      </div>
+
+      <div class="map-admin-clearfix">
+        <button class="button button-primary button-large" id="iip-map-geocode" type="button" name="geocode">Geocode Events</button>
       </div>
 
     </div>
