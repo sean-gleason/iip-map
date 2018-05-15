@@ -88,9 +88,7 @@ class IIP_Map {
     $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_ajax, 'map_ajax' );
     $this->loader->add_action( 'wp_ajax_nopriv_map_ajax', $plugin_ajax, 'map_ajax' );
     // Post type hooks
-    $this->loader->add_action( 'init', $plugin_post_type, 'create_map_post_type' );
-    $this->loader->add_action( 'save_post', $plugin_post_type, 'save_map_shortcode_meta', 10, 2 );
-    $this->loader->add_action( 'save_post', $plugin_post_type, 'save_map_project_info_meta', 10, 2 );
+    $this->loader->add_action( 'init', $plugin_post_type, 'create_map_post_type' );    $this->loader->add_action( 'save_post', $plugin_post_type, 'save_map_meta', 10, 2 );
   }
 
   // Register all of the hooks related to the public-facing functionality

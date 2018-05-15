@@ -112,7 +112,7 @@ class IIP_Map_Admin {
 
   // The admin area view for the plugin settings page
   public function display_keys_partial() {
-    include_once IIP_MAP_DIR . 'admin/partials/iip-map-admin-display-keys.php';
+    include_once IIP_MAP_DIR . 'admin/partials/keys-admin.php';
   }
 
   public function get_map_variables() {

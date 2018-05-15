@@ -47,6 +47,7 @@ class IIP_Map_Post_Type {
     register_post_type( $this->name, $args );
   }
 
+  // Add custom metaboxes to backend dashboard
   public function map_add_metaboxes() {
     add_meta_box(
       'iip_map_project_info',
@@ -74,234 +75,22 @@ class IIP_Map_Post_Type {
     );
   }
 
+  // Pull in metabox partials
   public function project_info_metabox( $post ) {
-    wp_nonce_field( 'map_project_info', 'map_project_info_nonce' );
-
-    $map_id = $post->ID;
-    $screendoor_project = get_post_meta( $post->ID, '_iip_map_screendoor_project', true);
-    $screendoor_city = get_post_meta( $post->ID, '_iip_map_screendoor_city', true);
-    $screendoor_region = get_post_meta( $post->ID, '_iip_map_screendoor_region', true);
-    $screendoor_country = get_post_meta( $post->ID, '_iip_map_screendoor_country', true);
-
-    ?>
-    <div class="map-project-info-box" id="map-project-info-box">
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Project ID:', 'iip-map' )?></label>
-        <div class="map-input-div">
-          <input
-          id="iip-map-screendoor-project"
-            type="text"
-            name="_iip_map_screendoor_project"
-            class="map-admin-project-info-input"
-            value="<?php if ( isset ( $screendoor_project ) ) echo $screendoor_project; ?>"
-          />
-        </div><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor City Field ID:', 'iip-map' )?></label>
-        <div class="map-input-div">
-          <input
-            id="iip-map-screendoor-city"
-            type="text"
-            name="_iip_map_screendoor_city"
-            class="map-admin-project-info-input"
-            value="<?php if ( isset ( $screendoor_city ) ) echo $screendoor_city; ?>"
-          />
-        </div><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-label" for="_iip_map_screendoor_region"><?php _e( 'Screedoor Region Field ID:', 'iip-map' )?></label>
-        <div class="map-input-div">
-          <input
-            id="iip-map-screendoor-region"
-            type="text"
-            name="_iip_map_screendoor_region"
-            class="map-admin-project-info-input"
-            value="<?php if ( isset ( $screendoor_region ) ) echo $screendoor_region; ?>"
-          />
-        </div><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-label" for="_iip_map_screendoor_country"><?php _e( 'Screendoor Country Field ID:', 'iip-map' )?></label>
-        <div class="map-input-div">
-          <input
-            id="iip-map-screendoor-country"
-            type="text"
-            name="_iip_map_screendoor_country"
-            class="map-admin-project-info-input"
-            value="<?php if ( isset ( $screendoor_country ) ) echo $screendoor_country; ?>"
-          />
-        </div><br/>
-      </div>
-
-    </div>
-    <?php
+    include_once( 'partials/project-info-metabox.php' );
   }
 
   public function geocoder_metabox( $post ) {
-    wp_nonce_field( 'geocoder_info', 'geocoder_info_nonce' );
-
-    ?>
-    <div class="map-project-info-box" id="map-project-info-box">
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Trigger Status:', 'iip-map' )?></label>
-        <div class="map-input-div">
-          <input
-            id="iip-map-geocoder-trigger"
-            type="text"
-            name="_iip_map_geocoder_trigger"
-            class="map-admin-project-info-input"
-            value="<?php ?>"
-          />
-        </div><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor Completed Status:', 'iip-map' )?></label>
-        <div class="map-input-div">
-          <input
-            id="iip-map-geocoder-complete"
-            type="text"
-            name="_iip_map_geocoder_complete"
-            class="map-admin-project-info-input"
-            value="<?php ?>"
-          />
-        </div><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <button class="button button-primary button-large" id="iip-map-geocode" type="button" name="geocode">Geocode Events</button>
-      </div>
-
-    </div>
-    <?php
+    include_once( 'partials/geocoder-metabox.php' );
   }
 
   public function shortcode_metabox( $post ) {
-    wp_nonce_field( 'map_shortcode', 'map_shortcode_nonce' );
-
-    $map_id = $post->ID;
-    $map_height = get_post_meta( $post->ID, '_iip_map_height', true);
-    $map_zoom = get_post_meta( $post->ID, '_iip_map_zoom', true);
-    $map_lat = get_post_meta( $post->ID, '_iip_map_lat', true);
-    $map_lng = get_post_meta( $post->ID, '_iip_map_lng', true);
-
-    ?>
-    <div class="map-shortcode-box" id="map-shortcode-box">
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-shortcode-label" for="_iip_map_height"><?php _e( 'Map Height:', 'iip-map' )?></label>
-        <input
-          id="iip-map-height"
-          type="text"
-          name="_iip_map_height"
-          class="map-admin-shortcode-input"
-          value="<?php if ( isset ( $map_height ) ) echo $map_height; ?>"
-        /><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-shortcode-label" for="_iip_map_zoom"><?php _e( 'Map Zoom:', 'iip-map' )?></label>
-        <input
-          id="iip-map-zoom"
-          type="text"
-          name="_iip_map_zoom"
-          class="map-admin-shortcode-input"
-          value="<?php if ( isset ( $map_zoom ) ) echo $map_zoom; ?>"
-        /><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-shortcode-label" for="_iip_map_lat"><?php _e( 'Map Center Latitude:', 'iip-map' )?></label>
-        <input
-          id="iip-map-lat"
-          type="text"
-          name="_iip_map_lat"
-          class="map-admin-shortcode-input"
-          value="<?php if ( isset ( $map_lat ) ) echo $map_lat; ?>"
-        /><br/>
-      </div>
-
-      <div class="map-admin-clearfix">
-        <label class="map-admin-shortcode-label" for="_iip_map_lng"><?php _e( 'Map Center Longitude:', 'iip-map' )?></label>
-        <input
-          id="iip-map-lng"
-          type="text"
-          name="_iip_map_lng"
-          class="map-admin-shortcode-input"
-          value="<?php if ( isset ( $map_lng ) ) echo $map_lng; ?>"
-        /><br/>
-      </div>
-
-      <div class="map-admin-shortcode-output">
-        <label class="map-shortcode-output-label" for="iip_map_shortcode_output"><?php _e( 'Your Shortcode Is:', 'iip-map' )?></label><br/>
-        <div class="map-shortcode-output">
-          <?php echo '[map id=' . $map_id . ' height=' . $map_height . ' lat=' . $map_lat . ' lng=' . $map_lng . ']';?>
-        </div>
-      </div>
-
-    </div>
-    <?php
+    include_once( 'partials/shortcode-metabox.php' );
   }
 
-  public function save_map_project_info_meta( $post_id, $post_object ) { // second parameter has useful info about current post
-
-    // Checks save status
-   	$is_revision = wp_is_post_revision( $post_id );
-   	$is_valid_nonce = ( isset( $_POST[ 'map_project_info_nonce' ] ) && wp_verify_nonce( $_POST[ 'map_project_info_nonce' ], 'map_project_info' ) ) ? 'true' : 'false';
-
-    // Exits script depending on save status
-   	if ( $is_revision || !$is_valid_nonce ) {
-   		return;
-   	}
-
-    if( !empty( $_POST['_iip_map_screendoor_project'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_screendoor_project', sanitize_text_field( $_POST['_iip_map_screendoor_project'] ) );
-    }
-
-    if( !empty( $_POST['_iip_map_screendoor_city'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_screendoor_city', sanitize_text_field( $_POST['_iip_map_screendoor_city'] ) );
-    }
-
-    if( !empty( $_POST['_iip_map_screendoor_region'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_screendoor_region', sanitize_text_field( $_POST['_iip_map_screendoor_region'] ) );
-    }
-
-    if( !empty( $_POST['_iip_map_screendoor_country'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_screendoor_country', sanitize_text_field( $_POST['_iip_map_screendoor_country'] ) );
-    }
+  // Sanitize and store map post metadata values
+  public function save_map_meta( $post_id, $post_object ) {
+    include_once( 'partials/save-map-metadata.php' );
   }
 
-  public function save_map_shortcode_meta( $post_id, $post_object ) { // second parameter has useful info about current post
-
-    // Checks save status
-   	$is_revision = wp_is_post_revision( $post_id );
-   	$is_valid_nonce = ( isset( $_POST[ 'map_shortcode_nonce' ] ) && wp_verify_nonce( $_POST[ 'map_shortcode_nonce' ], 'map_shortcode' ) ) ? 'true' : 'false';
-
-    // Exits script depending on save status
-   	if ( $is_revision || !$is_valid_nonce ) {
-   		return;
-   	}
-
-    if( !empty( $_POST['_iip_map_height'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_height', sanitize_text_field( $_POST['_iip_map_height'] ) );
-    }
-
-    if( !empty( $_POST['_iip_map_zoom'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_zoom', sanitize_text_field( $_POST['_iip_map_zoom'] ) );
-    }
-
-    if( !empty( $_POST['_iip_map_lat'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_lat', sanitize_text_field( $_POST['_iip_map_lat'] ) );
-    }
-
-    if( !empty( $_POST['_iip_map_lng'] ) ) {
-      update_post_meta ( $post_id, '_iip_map_lng', sanitize_text_field( $_POST['_iip_map_lng'] ) );
-    }
-  }
 }
