@@ -27,9 +27,19 @@ function getScreendoorData() {
 
   request.onload = function() {
     var data = request.response;
+    var status = request.statusText
 
     geocodeAddress(data);
+    statusDisplay('Call to Screendoor: ' + status);
   }
+}
+
+// Report out status
+function statusDisplay(status) {
+  if (typeof status !== 'string') {
+    throw new Error('statusDisplay(): argument must be a string');
+  }
+  $('#geocoder-return').append(status + `<br />`);
 }
 
 // Geocode event locations to latitude/longitude
@@ -73,7 +83,20 @@ function populateSQLTable(data) {
       type: 'post',
       dataType: 'json',
       url: iip_map_params.ajax_url,
-      data: data
+      data: data,
+      statusCode: {
+        200: function () {
+          statusDisplay("200 - Successfully Saved");
+        },
+        404: function(request, status, error) {
+          statusDisplay("404 - Not Found");
+          statusDisplay(error);
+        },
+        503: function(request, status, error) {
+          statusDisplay("503 - Server Problem");
+          statusDisplay(error);
+        }
+      }
     }
   );
 }
