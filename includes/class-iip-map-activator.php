@@ -18,21 +18,21 @@ class IIP_Map_Activator {
 
       $sql = "CREATE TABLE IF NOT EXISTS $table_name (
               id int(11) NOT NULL AUTO_INCREMENT,
-              map_id mediumint(9) NOT NULL,
-              event_name varchar(30),
+              map_id mediumint(9),
+              venue_name varchar(255),
+              venue_address varchar(255),
+              venue_city varchar(255),
+              venue_region varchar(255),
+              venue_country varchar(255),
+              lat float,
+              lng float,
+              event_name varchar(255),
               event_desc text,
-              event_date date DEFAULT '0000-00-00',
-              event_time time DEFAULT '00:00:00',
-              event_duration varchar(10),
+              event_date date,
+              event_time time,
+              event_duration varchar(255),
               event_topic text,
-              venue_name varchar(50),
-              venue_address varchar(50),
-              venue_city varchar(30),
-              venue_region varchar(30),
-              venue_country varchar(30),
-              lat float NOT NULL,
-              lng float NOT NULL,
-              contact varchar(30),
+              contact varchar(255),
               PRIMARY KEY  (id),
               KEY map_id (map_id)
       ) $charset_collate;";
@@ -40,9 +40,9 @@ class IIP_Map_Activator {
       require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
       dbDelta( $sql );
 
-      add_option( 'jal_db_version', $jal_db_version );
+      add_option( 'iip_map_db_version', $iip_map_db_version );
     }
-    
+
   }
 
 }

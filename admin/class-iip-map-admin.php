@@ -119,17 +119,35 @@ class IIP_Map_Admin {
     global $post;
     $map_id = $post->ID;
     $project_id = get_post_meta( $post->ID, '_iip_map_screendoor_project', true);
+    $venue_field = get_post_meta( $post->ID, '_iip_map_screendoor_venue', true);
+    $address_field = get_post_meta( $post->ID, '_iip_map_screendoor_venue', true);
     $city_field = get_post_meta( $post->ID, '_iip_map_screendoor_city', true);
     $region_field = get_post_meta( $post->ID, '_iip_map_screendoor_region', true);
     $country_field = get_post_meta( $post->ID, '_iip_map_screendoor_country', true);
+    $event_field = get_post_meta( $post->ID, '_iip_map_screendoor_event', true);
+    $desc_field = get_post_meta( $post->ID, '_iip_map_screendoor_desc', true);
+    $date_field = get_post_meta( $post->ID, '_iip_map_screendoor_date', true);
+    $time_field = get_post_meta( $post->ID, '_iip_map_screendoor_time', true);
+    $duration_field = get_post_meta( $post->ID, '_iip_map_screendoor_duration', true);
+    $topic_field = get_post_meta( $post->ID, '_iip_map_screendoor_topic', true);
+    $contact_field = get_post_meta( $post->ID, '_iip_map_screendoor_contact', true);
 
     // Pass Screendoor API key and project info from admin page to geocoder
     wp_localize_script( 'geocode-screendoor-entries', 'iip_map_params', array(
       'map_data_id' => $map_id,
       'screendoor_project' => $project_id,
+      'screendoor_venue' => $venue_field,
+      'screendoor_address' => $address_field,
       'screendoor_city' => $city_field,
       'screendoor_region' => $region_field,
       'screendoor_country' => $country_field,
+      'screendoor_event' => $event_field,
+      'screendoor_desc' => $desc_field,
+      'screendoor_date' => $date_field,
+      'screendoor_time' => $time_field,
+      'screendoor_duration' => $duration_field,
+      'screendoor_topic' => $topic_field,
+      'screendoor_contact' => $contact_field,
       'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
       'google_api_key' => get_option( 'iip_map_google_maps_api_key' ),
       'ajax_url' => admin_url( 'admin-ajax.php' )
