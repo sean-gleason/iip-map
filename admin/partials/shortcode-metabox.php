@@ -58,7 +58,7 @@ $map_lng = get_post_meta( $post->ID, '_iip_map_lng', true);
   <div class="map-admin-shortcode-output">
     <label class="map-shortcode-output-label" for="iip_map_shortcode_output"><?php _e( 'Your Shortcode Is:', 'iip-map' )?></label><br/>
     <div class="map-shortcode-output">
-      <?php echo '[map id=' . $map_id . ' height=' . $map_height . ' lat=' . $map_lat . ' lng=' . $map_lng . ']';?>
+      <?php echo '[map id=' . $map_id . ' height=' . $map_height . ' zoom=' . $map_zoom . ' lat=' . $map_lat . ' lng=' . $map_lng . ']';?>
     </div>
   </div>
 
