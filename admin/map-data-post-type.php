@@ -73,6 +73,14 @@ class IIP_Map_Post_Type {
       'side',
       'low'
     );
+    add_meta_box(
+      'iip_map_export',
+      __( 'Export Project Data', 'iip-map' ),
+      array( $this, 'data_export_metabox' ),
+      $this->name,
+      'side',
+      'low'
+    );
   }
 
   // Pull in metabox partials
@@ -86,6 +94,10 @@ class IIP_Map_Post_Type {
 
   public function shortcode_metabox( $post ) {
     include_once( 'partials/shortcode-metabox.php' );
+  }
+
+  public function data_export_metabox( $post ) {
+    include_once( 'partials/data-export-metabox.php' );
   }
 
   // Sanitize and store map post metadata values

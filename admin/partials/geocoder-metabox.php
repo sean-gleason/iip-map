@@ -4,7 +4,9 @@ wp_nonce_field( 'geocoder_info', 'geocoder_info_nonce' );
 
 function get_entry_number( $map_id ) {
   global $wpdb;
-  $query = "SELECT COUNT(*) FROM `wp_iip_map_data` WHERE map_id = $map_id";
+  $table = $wpdb->prefix.'iip_map_data';
+
+  $query = "SELECT COUNT(*) FROM $table WHERE map_id = $map_id";
   $event_num = $wpdb->get_var($query);
   return $event_num;
 }
@@ -15,31 +17,33 @@ $event_num = get_entry_number( $map_id );
 ?>
 <div class="map-project-info-box" id="map-project-info-box">
 
-  <div class="map-admin-clearfix">
-    <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Trigger Status:', 'iip-map' )?></label>
-    <div class="map-input-div">
-      <input
-        id="iip-map-geocoder-trigger"
-        type="text"
-        name="_iip_map_geocoder_trigger"
-        class="map-admin-project-info-input"
-        value="<?php ?>"
-      />
-    </div><br/>
-  </div>
+  <div class="map-screendoor-fields-container">
+    <div class="map-screendoor-fields">
+      <div class="map-input-div">
+        <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Trigger Status:', 'iip-map' )?></label>
+        <input
+          id="iip-map-geocoder-trigger"
+          type="text"
+          name="_iip_map_geocoder_trigger"
+          class="map-admin-project-info-input"
+          value="<?php ?>"
+        />
+      </div>
+    </div>
 
-  <div class="map-admin-clearfix">
-    <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor Completed Status:', 'iip-map' )?></label>
-    <div class="map-input-div">
-      <input
-        id="iip-map-geocoder-complete"
-        type="text"
-        name="_iip_map_geocoder_complete"
-        class="map-admin-project-info-input"
-        value="<?php ?>"
-      />
-    </div><br/>
-  </div>
+    <div class="map-screendoor-fields">
+      <div class="map-input-div">
+        <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor Completed Status:', 'iip-map' )?></label>
+        <input
+          id="iip-map-geocoder-complete"
+          type="text"
+          name="_iip_map_geocoder_complete"
+          class="map-admin-project-info-input"
+          value="<?php ?>"
+        />
+      </div>
+    </div>
+  </div> <!-- end map-screendoor-fields-container -->
 
   <div class="map-admin-clearfix">
     <button class="button button-primary button-large" id="iip-map-geocode" type="button" name="geocode">Geocode Events</button>

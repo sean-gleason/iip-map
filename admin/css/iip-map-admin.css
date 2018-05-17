@@ -2,27 +2,59 @@
   padding: 0.35em;
 }
 
+.map-screendoor-project-container {
+  background-color: #F9F9F9;
+  border: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  margin: 10px 5px 5px;
+}
+
+.map-project-input-div {
+  flex-basis: 75%;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.map-project-btn-div {
+  align-self: center;
+  flex-basis: 15%;
+  padding: 5px 5px 0 30px;
+}
+
+button#iip-map-get-fields {
+  margin: auto 0;
+}
+
+.map-screendoor-fields-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.map-screendoor-fields {
+  flex-basis: 33%;
+  flex-grow: 1;
+}
+
 .map-admin-clearfix::after {
-  /* border: 1px solid #e5e5e5; */
   clear: both;
   content: "";
   display: table;
-  /* padding: 10px; */
-}
-
-.map-admin-label {
-  background-color: #F9F9F9;
-  border: 1px solid #e5e5e5;
-  float: left;
-  padding: 10px;
-  width: 30%;
 }
 
 .map-input-div {
+  background-color: #F9F9F9;
   border: 1px solid #e5e5e5;
-  float: left;
-  padding: 5.5px 10px;
-  width: 63%;
+  margin: 5px;
+  padding: 10px;
+}
+
+.map-admin-label {
+  font-weight: 500;
 }
 
 .map-admin-project-info-input {
@@ -57,4 +89,8 @@ pre#geocoder-return {
 
 .map-shortcode-output-label {
   font-weight: bold;
+}
+
+button#iip-map-export {
+  float: right;
 }
