@@ -1,90 +1,75 @@
 // Set Screendoor API endpoint
-var endpoint = 'https://screendoor.dobt.co/api/projects/' + iip_map_params.screendoor_project + '/responses?per_page=20&v=0&api_key=' + iip_map_params.screendoor_api_key;
+let responsesEndpoint = 'https://screendoor.dobt.co/api/projects/' + iip_map_params.screendoor_project + '/responses?per_page=20s&v=0&api_key=' + iip_map_params.screendoor_api_key;
 
 // Get field IDs
-var googleKey = iip_map_params.google_api_key;
-var mapId = iip_map_params.map_data_id;
-var venueField = iip_map_params.screendoor_venue;
-var addressField = iip_map_params.screendoor_address;
-var cityField = iip_map_params.screendoor_city;
-var regionField = iip_map_params.screendoor_region;
-var countryField = iip_map_params.screendoor_country;
-var eventField = iip_map_params.screendoor_event;
-var descField = iip_map_params.screendoor_desc;
-var dateField = iip_map_params.screendoor_date;
-var timeField = iip_map_params.screendoor_time;
-var durationField = iip_map_params.screendoor_duration;
-var topicField = iip_map_params.screendoor_topic;
-var contactField = iip_map_params.screendoor_contact
+let googleKey = iip_map_params.google_api_key;
+let mapId = iip_map_params.map_data_id;
+
+let venueField = iip_map_params.venue_field;
+let addressField = iip_map_params.address_field;
+let cityField = iip_map_params.city_field;
+let regionField = iip_map_params.region_field;
+let countryField = iip_map_params.country_field;
+let eventField = iip_map_params.event_field;
+let descField = iip_map_params.desc_field;
+let dateField = iip_map_params.date_field;
+let timeField = iip_map_params.time_field;
+let durationField = iip_map_params.duration_field;
+let topicField = iip_map_params.topic_field;
+let contactField = iip_map_params.contact_field;
 
 document.addEventListener('DOMContentLoaded', function () {
-  var maps_api_js = document.createElement('script');
+  const maps_api_js = document.createElement('script');
   maps_api_js.type = 'text/javascript';
   maps_api_js.src = 'https://maps.googleapis.com/maps/api/js?key=' + googleKey;
   document.getElementsByTagName('head')[0].appendChild(maps_api_js);
 });
 
-const btn = document.getElementById('iip-map-geocode');
-btn.addEventListener('click', getScreendoorData);
+const geocodeBtn = document.getElementById('iip-map-geocode');
+geocodeBtn.addEventListener('click', getScreendoorData);
 
 function getScreendoorData() {
   // Make request to Screendoor API
-  var request = new XMLHttpRequest();
-  request.open('GET', endpoint);
+  let request = new XMLHttpRequest();
+  request.open('GET', responsesEndpoint);
   request.responseType = 'json';
   request.send();
 
   request.onload = function() {
-    var data = request.response;
-    var status = request.statusText
+    let data = request.response;
+    let status = request.statusText
 
     geocodeAddress(data);
     statusDisplay('Call to Screendoor: ' + status);
   }
 }
 
-// Report out status
-function statusDisplay(status) {
-  if (typeof status !== 'string') {
-    throw new Error('statusDisplay(): argument must be a string');
-  }
-  $('#geocoder-return').append(status + `<br />`);
-}
-
-// Geocode event locations to latitude/longitude
+// Extract event data and geocode event locations to latitude/longitude
 function geocodeAddress(jsonObj) {
   jsonObj.forEach(function(item) {
 
+    let venue_address = item.responses[addressField];
+    let venue_city = item.responses[cityField];
+    let venue_region = item.responses[regionField];
+    let venue_country = item.responses[countryField];
+    let event_name = item.responses[eventField];
+
     // Pull out address info and write to a string
-    var address = item.responses[addressField] + ', ' + item.responses[cityField] + ', ' + item.responses[countryField];
-    var addressSimplified = item.responses[cityField] + ', ' + item.responses[countryField];
+    let address = venue_address + ', ' + venue_city + ', ' + venue_country;
+    let addressSimplified = venue_city + ', ' + venue_country;
+    let data = {};
 
-    var map_id = mapId;
-    var venue_name = item.responses[venueField];
-    var venue_address = item.responses[addressField];
-    var venue_city = item.responses[cityField];
-    var venue_region = item.responses[regionField];
-    var venue_country = item.responses[countryField];
-    var event_name = item.responses[eventField];
-    var event_desc = item.responses[descField];
-    var event_date = item.responses[dateField];
-    var event_time = item.responses[timeField];
-    var event_duration = item.responses[durationField];
-    var event_topic = item.responses[topicField];
-    var contact = item.responses[contactField];
-
-
-    var geocoder = new google.maps.Geocoder();
+    const geocoder = new google.maps.Geocoder();
     geocoder.geocode( { 'address': address }, function(results, status) {
       statusDisplay('Google geocoding status for < ' + event_name + ' > : ' + status);
-      if (status == 'OK') {
-        var lat = results[0].geometry.location.lat();
-        var lng = results[0].geometry.location.lng();
+      if (status === 'OK') {
+        let lat = results[0].geometry.location.lat();
+        let lng = results[0].geometry.location.lng();
 
-        var data = {
+        data = {
           'action': 'map_ajax',
-          'map_id': map_id,
-          'venue_name': venue_name,
+          'map_id': mapId,
+          'venue_name': item.responses[venueField],
           'venue_address': venue_address,
           'venue_city': venue_city,
           'venue_region': venue_region,
@@ -92,16 +77,51 @@ function geocodeAddress(jsonObj) {
           'lat': lat,
           'lng': lng,
           'event_name': event_name,
-          'event_desc': event_desc,
-          'event_date': event_date,
-          'event_time': event_time,
-          'event_duration': event_duration,
-          'event_topic': event_topic,
-          'contact': contact
+          'event_desc': item.responses[descField],
+          'event_date': item.responses[dateField],
+          'event_time': item.responses[timeField],
+          'event_duration': item.responses[durationField],
+          'event_topic': item.responses[topicField],
+          'contact': item.responses[contactField]
         };
 
         statusDisplay('Saving...');
         populateSQLTable(data);
+      } else if (status === 'ZERO_RESULTS') {
+        // Run geocoder on fallback address if full address fails
+        geocoder.geocode( { 'address': addressSimplified }, function(results, status) {
+          statusDisplay('Address not valid. Attempting to geocode fallback address for < ' + event_name + ' >');
+          if (status === 'OK') {
+            let lat = results[0].geometry.location.lat();
+            let lng = results[0].geometry.location.lng();
+
+            data = {
+              'action': 'map_ajax',
+              'map_id': mapId,
+              'venue_name': item.responses[venueField],
+              'venue_address': venue_address,
+              'venue_city': venue_city,
+              'venue_region': venue_region,
+              'venue_country': venue_country,
+              'lat': lat,
+              'lng': lng,
+              'event_name': event_name,
+              'event_desc': item.responses[descField],
+              'event_date': item.responses[dateField],
+              'event_time': item.responses[timeField],
+              'event_duration': item.responses[durationField],
+              'event_topic': item.responses[topicField],
+              'contact': item.responses[contactField]
+            };
+
+            statusDisplay('Saving fallback...');
+            populateSQLTable(data);
+          } else {
+            statusDisplay(status + ': Cannot map this event - < ' + event_name + ' >');
+          }
+        });
+      } else {
+        statusDisplay(status + ': Cannot map this event - < ' + event_name + ' >');
       }
     });
   });
@@ -121,8 +141,16 @@ function populateSQLTable(data) {
         }
       },
       error: function(err) {
-        statusDisplay('< ' + data.event_name + ' > Status: Error ' + err.status + ' - ' + err.statusText)
+        statusDisplay('< ' + data.event_name + ' > Status: Error ' + err.status + ' - ' + err.statusText + '. Could not save.')
       }
     }
   );
+}
+
+// Report out status
+function statusDisplay(status) {
+  if (typeof status !== 'string') {
+    throw new Error('statusDisplay(): argument must be a string');
+  }
+  $('#geocoder-return').append(status + `<br />`);
 }
