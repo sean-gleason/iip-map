@@ -1,6 +1,6 @@
 <?php
 
-class IIP_Map_Ajax {
+class IIP_Map_Import {
   function map_ajax() {
   	global $wpdb;
 

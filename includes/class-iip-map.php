@@ -63,6 +63,7 @@ class IIP_Map {
     // The class responsible for defining all actions that occur in the admin area.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-iip-map-admin.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/map-data-post-type.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/export-map-data.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/save-map-data.php';
 
     // The class responsible for defining all actions that occur in the public-facing side of the site.
@@ -75,18 +76,19 @@ class IIP_Map {
   // Register all of the hooks related to the admin area functionality of the plugin.
   private function define_admin_hooks() {
     $plugin_admin = new IIP_Map_Admin( $this->get_plugin_name(), $this->get_version() );
-    $plugin_ajax = new IIP_Map_Ajax();
+    $plugin_export = new IIP_Map_Export();
+    $plugin_import = new IIP_Map_Import();
     $plugin_post_type = new IIP_Map_Post_Type();
 
     // Admin hooks
     $this->loader->add_action( 'admin_init', $plugin_admin, 'iip_map_settings_sections' );
     $this->loader->add_action( 'admin_init', $plugin_admin, 'iip_map_settings_fields' );
     $this->loader->add_action( 'admin_menu', $plugin_admin, 'iip_map_admin_menu' );
-    $this->loader->add_action( 'admin_notices', $plugin_admin, 'get_map_variables' );
+    $this->loader->add_action( 'admin_notices', $plugin_admin, 'iip_map_localize_variables' );
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'iip_map_admin_enqueue' );
     // Ajax hooks
-    $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_ajax, 'map_ajax' );
-    $this->loader->add_action( 'wp_ajax_nopriv_map_ajax', $plugin_ajax, 'map_ajax' );
+    $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_import, 'map_ajax' );
+    $this->loader->add_action( 'wp_ajax_export_data_ajax', $plugin_export, 'export_data_ajax' );
     // Post type hooks
     $this->loader->add_action( 'init', $plugin_post_type, 'create_map_post_type' );
     $this->loader->add_action( 'save_post', $plugin_post_type, 'save_map_meta', 10, 2 );
