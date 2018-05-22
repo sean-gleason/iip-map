@@ -1,0 +1,13 @@
+h1.iip-map-infowin-header {
+  font-size: 1.5em;
+  margin: .5em 0;
+}
+
+h3.iip-map-infowin-header {
+  font-size: 1em;
+  margin: .5em 0;
+}
+
+.iip-map-infowin-body > p {
+  font-size: 1em;
+}

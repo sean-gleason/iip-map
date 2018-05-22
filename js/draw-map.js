@@ -33,16 +33,39 @@ function initMap() {
     .then(plotMarkers);
 }
 
-var markers;
+var markers = [];
 
 function plotMarkers(m) {
-  markers = [];
+  var infoWin = new google.maps.InfoWindow();
 
   m.forEach(function (entry) {
     entry.forEach(function (item, index) {
       var latLng = new google.maps.LatLng(parseFloat(item.lat), parseFloat(item.lng))
       var marker = new google.maps.Marker({
-        position: latLng
+        position: latLng,
+      });
+
+      var windowContent = '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<h1 id="firstHeading" class="iip-map-infowin-header">' + item.event_name + ' </h1>' +
+      '<div id="bodyContent" class="iip-map-infowin-body">' +
+      '<h3 class="iip-map-infowin-header">Topic: ' + item.event_topic + '</h3>' +
+      '<p>' + item.event_desc + '</p>'+
+      '<h3 class="iip-map-infowin-header">When: </h3>' +
+      '<p> On ' + item.event_date + ' at ' + item.event_time + '. <br />' +
+      'The event will last ' + item.event_duration + '</p>' +
+      '<h3 class="iip-map-infowin-header">Where: </h3>' +
+      '<p>' + item.venue_name + '<br />' +
+      item.venue_address + '<br />' +
+      item.venue_city + '<br />' +
+      'Contact: ' + item.contact + '<br />' +
+      '</div>' +
+      '</div>';
+
+      google.maps.event.addListener(marker, 'click', function(evt) {
+        infoWin.setContent(windowContent);
+        infoWin.open(map, marker);
       });
       markers.push(marker);
     });

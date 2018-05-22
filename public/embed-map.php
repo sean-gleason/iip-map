@@ -11,6 +11,8 @@ class IIP_Map_Embed {
   // Register script that embeds the map
   public function iip_map_register_embed() {
     wp_register_script( 'draw-map', IIP_MAP_URL . 'js/draw-map.js', array(), null, true );
+
+    wp_enqueue_style( 'iip-map-frontend', plugin_dir_url( __FILE__ ) . 'css/iip-map-frontend.css', array(), $this->version, 'all' );
   }
 
   // The output of the map shortcode

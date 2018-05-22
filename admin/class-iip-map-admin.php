@@ -20,7 +20,7 @@ class IIP_Map_Admin {
       if( is_object( $screen ) && $cpt == $screen->post_type ){
 
         // Register the stylesheets for the admin area.
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
+        wp_enqueue_style( 'iip-map-admin', plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
 
         // Enqueue script to retrieve Screendoor fields
         wp_enqueue_script( 'retrieve-screendoor-fields', IIP_MAP_URL . 'js/screendoor.js', array(), null, true );
@@ -149,6 +149,8 @@ class IIP_Map_Admin {
     wp_localize_script( 'retrieve-screendoor-fields', 'screendoor_params', array(
       'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
       'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
+      'screendoor_trigger_status' => get_post_meta($post->ID, '_iip_map_geocoder_trigger', true),
+      'screendoor_trigger_complete' => get_post_meta($post->ID, '_iip_map_geocoder_complete', true)
     ));
 
     // Pass Screendoor API key and project info from admin page to geocoder
