@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var maps_clusters_js = document.createElement('script');
     maps_clusters_js.type = 'text/javascript';
-    maps_clusters_js.src = '/wp-content/plugins/iip-map/js/markerclusterer.js' ;
+    maps_clusters_js.src = '/wp-content/plugins/iip-map/public/js/markerclusterer.js' ;
     document.getElementsByTagName('head')[0].appendChild(maps_clusters_js);
   }
 });

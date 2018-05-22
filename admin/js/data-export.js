@@ -1,10 +1,9 @@
 const exportDataBtn = document.getElementById('iip-map-export');
 exportDataBtn.addEventListener('click', getMapProjectData);
 
-let projectId = export_params.map_data_id;
-
 // Pull project information from the database
 function getMapProjectData() {
+  let projectId = export_params.map_data_id;
   let data = {
     'action': 'export_data_ajax',
     'map_id': projectId
