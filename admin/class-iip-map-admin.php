@@ -140,6 +140,8 @@ class IIP_Map_Admin {
       'duration_field' => get_post_meta( $post->ID, '_iip_map_screendoor_duration', true),
       'topic_field' => get_post_meta( $post->ID, '_iip_map_screendoor_topic', true),
       'contact_field' => get_post_meta( $post->ID, '_iip_map_screendoor_contact', true),
+      'trigger_status' => get_post_meta( $post->ID, '_iip_map_geocoder_trigger', true),
+      'complete_status' => get_post_meta( $post->ID, '_iip_map_geocoder_complete', true),
       'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
       'google_api_key' => get_option( 'iip_map_google_maps_api_key' ),
       'ajax_url' => admin_url( 'admin-ajax.php' )

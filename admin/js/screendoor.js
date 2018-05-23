@@ -1,6 +1,6 @@
 // Set Screendoor API endpoint
 let screendoorEndpoint = 'https://screendoor.dobt.co/api/projects/' + screendoor_params.screendoor_project;
-const screendoorKey = '?&v=0&api_key=' + screendoor_params.screendoor_api_key;
+const screendoorKey = '&v=0&api_key=' + screendoor_params.screendoor_api_key;
 
 // Identify button to get Screendoor data
 const getFieldsBtn = document.getElementById('iip-map-get-fields');
@@ -13,7 +13,7 @@ function getScreendoorMeta() {
 
 // Get Screendoor field ids and labels
 function getScreendoorFields() {
-  let formEndpoint = screendoorEndpoint + '/form' + screendoorKey;
+  let formEndpoint = screendoorEndpoint + '/form?' + screendoorKey;
   // Make request to Screendoor API
   let formXHR = new XMLHttpRequest();
   formXHR.open('GET', formEndpoint);
@@ -31,23 +31,23 @@ function getScreendoorFields() {
 // Add Screedoor field ids as dropdown options
 function populateScreendoorFields(data) {
   let screendoorFields = document.querySelectorAll('.map-admin-project-info-select');
-  let options = [];
+  let fieldOptions = [];
 
-  options.push( "<option>- Select -</option>" );
+  fieldOptions.push( "<option>- Select -</option>" );
   data.forEach( function(item) {
-    options.push( "<option id='" + item.id + "' value='" + item.id + "'>" + item.label + "</option>" );
+    fieldOptions.push( "<option id='" + item.id + "' value='" + item.id + "'>" + item.label + "</option>" );
   });
 
-  let optionsList = options.join('');
+  let fieldOptionsList = fieldOptions.join('');
 
   screendoorFields.forEach( function(item){
-    item.innerHTML += optionsList
+    item.innerHTML += fieldOptionsList
   });
 }
 
 // Get Screendoor statuses
 function getStatuses() {
-  let statusEndpoint = screendoorEndpoint + '/statuses' + screendoorKey;
+  let statusEndpoint = screendoorEndpoint + '/statuses?' + screendoorKey;
   // Make request to Screendoor API
   let statusXHR = new XMLHttpRequest();
   statusXHR.open('GET', statusEndpoint);
@@ -66,14 +66,14 @@ function getStatuses() {
 function populateStatuses(data) {
   let triggerStatusSelect = document.getElementById('iip-map-geocoder-trigger');
   let completeStatusSelect = document.getElementById('iip-map-geocoder-complete');
-  let options = [];
+  let statusOptions = [];
 
-   options.push( "<option>- Select -</option>" );
+   statusOptions.push( "<option>- Select -</option>" );
    data.forEach( function(item) {
-      options.push( "<option id='" + item.name + "' value='" + item.name + "'>" + item.name + "</option>" );
+      statusOptions.push( "<option id='" + item.name + "' value='" + item.name + "'>" + item.name + "</option>" );
   });
 
-  let optionsList = options.join('');
-  triggerStatusSelect.innerHTML += optionsList;
-  completeStatusSelect.innerHTML += optionsList;
+  let statusOptionsList = statusOptions.join('');
+  triggerStatusSelect.innerHTML += statusOptionsList;
+  completeStatusSelect.innerHTML += statusOptionsList;
 }

@@ -1,5 +1,3 @@
-// Set Screendoor API endpoint
-let responsesEndpoint = 'https://screendoor.dobt.co/api/projects/' + iip_map_params.screendoor_project + '/responses?per_page=100s&v=0&api_key=' + iip_map_params.screendoor_api_key;
 
 // Get field IDs
 let googleKey = iip_map_params.google_api_key;
@@ -20,6 +18,7 @@ let contactField = iip_map_params.contact_field;
 
 let onBatch = 0;
 let dataArray = [];
+let responsesArray = [];
 
 // Load Google Maps API script (needed for geocoding)
 document.addEventListener('DOMContentLoaded', function () {
@@ -33,6 +32,9 @@ const geocodeBtn = document.getElementById('iip-map-geocode');
 geocodeBtn.addEventListener('click', getScreendoorData);
 
 function getScreendoorData() {
+  // Set Screendoor API endpoint
+  let responsesEndpoint = screendoorEndpoint + '/responses?per_page=10&status=' + iip_map_params.trigger_status + screendoorKey;
+
   // Make request to Screendoor API
   let request = new XMLHttpRequest();
   request.open('GET', responsesEndpoint);
@@ -52,7 +54,7 @@ function getScreendoorData() {
 function geocodeAddress(jsonObj) {
 
   let screendoorItems = jsonObj.length;
-  statusDisplay('Returned <b>' + screendoorItems + ' results</b>.')
+  statusDisplay('Returned <b>' + screendoorItems + ' results</b> with status ' + iip_map_params.trigger_status)
 
   // Set batching for geocoding and database writes
   let interval = 1000; // Interval between Ajax calls (in milliseconds)
@@ -63,7 +65,7 @@ function geocodeAddress(jsonObj) {
   let batchRemainder = screendoorItems % batchSize;
 
   // Geocode each Screendoor entry
-  jsonObj.forEach(function(item) {
+  jsonObj.forEach( function(item) {
     promise = promise.then(function () {
 
       let venue_address = item.responses[addressField];
@@ -71,6 +73,7 @@ function geocodeAddress(jsonObj) {
       let venue_region = item.responses[regionField];
       let venue_country = item.responses[countryField];
       let event_name = item.responses[eventField];
+      let responseId = item.id;
 
       // Pull out address info and write to a string
       let address = venue_address + ', ' + venue_city + ', ' + venue_country;
@@ -103,7 +106,7 @@ function geocodeAddress(jsonObj) {
           };
 
           statusDisplay('Queuing results...');
-          batchResponses(data, batchSize, batchNumber, batchRemainder);
+          batchResponses(data, responseId, batchSize, batchNumber, batchRemainder);
         } else if (status === 'ZERO_RESULTS') {
           // Run geocoder on fallback address if full address fails
           geocoder.geocode( { 'address': addressSimplified }, function(results, status) {
@@ -131,7 +134,7 @@ function geocodeAddress(jsonObj) {
               };
 
               statusDisplay('Queuing fallback results...');
-              batchResponses(data, batchSize, batchNumber, batchRemainder);
+              batchResponses(data, responseId, batchSize, batchNumber, batchRemainder);
             } else {
               statusDisplay(status + ': Cannot map this event - < ' + event_name + ' >');
             }
@@ -151,32 +154,41 @@ function geocodeAddress(jsonObj) {
 }
 
 // Batch results into groups for writing to the DB (to reduce the number of Ajax calls)
-function batchResponses(data, batchSize, batchNumber, batchRemainder) {
+function batchResponses(data, responseId, batchSize, batchNumber, batchRemainder) {
 
   if (onBatch < batchNumber) {
+
     dataArray.push(data);
+    responsesArray.push(responseId);
+
     if (dataArray.length === batchSize) {
       statusDisplay('<b>SAVING ' + batchSize + ' results...</b>');
-      populateSQLTable(dataArray);
+      populateSQLTable(dataArray,responsesArray);
 
       dataArray = [];
+      responsesArray = [];
       onBatch++;
     }
   // Handle the remainder if number of responses not divisible by batch size
   } else {
+
     dataArray.push(data);
+    responsesArray.push(responseId);
+
     if (dataArray.length === batchRemainder) {
       statusDisplay('<b>SAVING ' + batchRemainder + ' results...</b>');
-      populateSQLTable(dataArray);
+      populateSQLTable(dataArray, responsesArray);
 
       dataArray = [];
+      responsesArray = [];
       onBatch = 0;
     }
   }
 }
 
 // Write event information to the database
-function populateSQLTable(data) {
+function populateSQLTable(data, responses) {
+  let updateNumber = responses.length;
 
   jQuery.ajax(
     {
@@ -187,6 +199,8 @@ function populateSQLTable(data) {
       statusCode: {
         200: function () {
           statusDisplay('Status 200: <b>' + data.length + ' events successfully saved</b>: < ' + data.map(a => a.event_name).join(', ') + ' >');
+          statusDisplay('Updating Screendoor statuses...');
+          updateScreendoorStatus(responses, updateNumber);
         }
       },
       error: function(err) {
@@ -194,6 +208,52 @@ function populateSQLTable(data) {
       }
     }
   );
+}
+
+// Update the Screendoor status for a response to complete once saved
+function updateScreendoorStatus(responses, updateNumber) {
+
+  let finalStatus = iip_map_params.complete_status;
+  let statusCount = 0;
+  let loopNumber = 0;
+
+  responses.forEach( function(item) {
+    let singleResponseEndpoint = screendoorEndpoint + '/responses/' + item + '?' + screendoorKey;
+
+    jQuery.ajax(
+      {
+        type: 'put',
+        dataType: 'json',
+        url: singleResponseEndpoint,
+        data: { 'status': finalStatus },
+        statusCode: {
+          200: function () {
+            statusCount++;
+            loopNumber++;
+            if (loopNumber === updateNumber) {
+              reportStatusResults(statusCount, finalStatus);
+              loopNumber = 0;
+            }
+          }
+        },
+        error: function(err) {
+          statusDisplay('<b>ERROR ' + err.status + '</b> - ' + err.statusText + '. Could not update Screendoor status for response #'  + item);
+          loopNumber++;
+          if (loopNumber === updateNumber) {
+            reportStatusResults(statusCount, finalStatus);
+            loopNumber = 0;
+          }
+        }
+      }
+    );
+
+  });
+
+}
+
+//
+function reportStatusResults(statusCount, finalStatus) {
+  statusDisplay('Successfully updated ' + statusCount + ' Screendoor responses to status < ' + finalStatus + ' >');
 }
 
 // Report out status to the on-page log
