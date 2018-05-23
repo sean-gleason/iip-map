@@ -34,6 +34,12 @@ let markers = [];
 function plotMarkers(m) {
   let infoWin = new google.maps.InfoWindow();
 
+  let markerSpiderfier = new OverlappingMarkerSpiderfier(map, {
+    markersWontMove: true,
+    markersWontHide: true,
+    basicFormatEvents: true
+  });
+
   m.forEach(function (entry) {
     entry.forEach(function (item, index) {
       let latLng = new google.maps.LatLng(parseFloat(item.lat), parseFloat(item.lng))
@@ -69,9 +75,12 @@ function plotMarkers(m) {
         infoWin.setContent(windowContent);
         infoWin.open(map, marker);
       });
+
       markers.push(marker);
+      markerSpiderfier.addMarker(marker);
     });
   })
 
   let markerCluster = new MarkerClusterer(map, markers, {imagePath: '/wp-content/plugins/iip-map/images/m'});
+  markerCluster.setMaxZoom(15);
 }

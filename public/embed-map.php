@@ -14,6 +14,8 @@ class IIP_Map_Embed {
 
     wp_register_script( 'marker-clusterer', plugin_dir_url( __FILE__ ) . 'js/markerclusterer.js', array(), null, false);
 
+    wp_register_script( 'marker-spiderfy', plugin_dir_url( __FILE__ ) . 'js/overlapping-marker-spiderfy.min.js', array(), null, true);
+
     wp_enqueue_style( 'iip-map-frontend', plugin_dir_url( __FILE__ ) . 'css/iip-map-frontend.css', array(), $this->version, 'all' );
   }
 
@@ -46,6 +48,7 @@ class IIP_Map_Embed {
     // Load MarkerClusterer and return map
     wp_enqueue_script( 'marker-clusterer' );
     wp_enqueue_script( 'draw-map' );
+    wp_enqueue_script( 'marker-spiderfy' );
 
     $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
     return $html;
