@@ -63,8 +63,8 @@ class IIP_Map {
     // The class responsible for defining all actions that occur in the admin area.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-iip-map-admin.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/map-data-post-type.php';
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/export-map-data.php';
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/save-map-data.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/export-map-data.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/save-map-data.php';
 
     // The class responsible for defining all actions that occur in the public-facing side of the site.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/embed-map.php';

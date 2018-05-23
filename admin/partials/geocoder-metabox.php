@@ -14,6 +14,9 @@ function get_entry_number( $map_id ) {
 $map_id = $post->ID;
 $event_num = get_entry_number( $map_id );
 
+$trigger_status = get_post_meta( $post->ID, '_iip_map_geocoder_trigger', true);
+$complete_status = get_post_meta( $post->ID, '_iip_map_geocoder_complete', true);
+
 ?>
 <div class="map-project-info-box" id="map-project-info-box">
 
@@ -21,26 +24,18 @@ $event_num = get_entry_number( $map_id );
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Trigger Status:', 'iip-map' )?></label>
-        <input
-          id="iip-map-geocoder-trigger"
-          type="text"
-          name="_iip_map_geocoder_trigger"
-          class="map-admin-project-info-input"
-          value="<?php ?>"
-        />
+        <select id="iip-map-geocoder-trigger" name="_iip_map_geocoder_trigger" class="map-admin-project-info-select">
+          <?php if ( isset ( $trigger_status ) ) echo '<option value="' . $trigger_status . '">' . $trigger_status . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor Completed Status:', 'iip-map' )?></label>
-        <input
-          id="iip-map-geocoder-complete"
-          type="text"
-          name="_iip_map_geocoder_complete"
-          class="map-admin-project-info-input"
-          value="<?php ?>"
-        />
+        <select id="iip-map-geocoder-complete" name="_iip_map_geocoder_complete" class="map-admin-project-info-select">
+          <?php if ( isset ( $complete_status ) ) echo '<option value="' . $complete_status . '">' . $complete_status . '</option>'; ?>
+        </select>
       </div>
     </div>
   </div> <!-- end map-screendoor-fields-container -->

@@ -61,6 +61,10 @@ button#iip-map-get-fields {
   width: 100%;
 }
 
+.map-admin-project-info-select {
+  width: 100%;
+}
+
 button#iip-map-geocode {
   float: right;
   margin-top: 15px;

@@ -102,7 +102,9 @@ class IIP_Map_Post_Type {
 
   // Sanitize and store map post metadata values
   public function save_map_meta( $post_id, $post_object ) {
-    include_once( 'partials/save-map-metadata.php' );
+    include_once( 'partials/project-info-save-metadata.php' );
+    include_once( 'partials/geocoder-save-metadata.php' );
+    include_once( 'partials/shortcode-save-metadata.php' );
   }
 
 }
