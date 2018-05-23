@@ -79,6 +79,10 @@ pre#geocoder-return {
   white-space: pre-wrap;
 }
 
+.map-admin-geocoder-select {
+  width: 100%;
+}
+
 .map-admin-shortcode-input {
   float: right;
   width: 100px;

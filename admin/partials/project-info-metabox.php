@@ -40,156 +40,108 @@ $screendoor_contact = get_post_meta( $post->ID, '_iip_map_screendoor_contact', t
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_venue"><?php _e( 'Screendoor Venue Name Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-venue"
-          type="text"
-          name="_iip_map_screendoor_venue"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_venue ) ) echo $screendoor_venue; ?>"
-        />
+        <select id="iip-map-screendoor-venue" name="_iip_map_screendoor_venue" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_venue ) ) echo '<option value="' . $screendoor_venue . '">' . $screendoor_venue . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_address"><?php _e( 'Screendoor Venue Address Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-address"
-          type="text"
-          name="_iip_map_screendoor_address"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_address ) ) echo $screendoor_address; ?>"
-        />
+        <select id="iip-map-screendoor-address" name="_iip_map_screendoor_address" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_address ) ) echo '<option value="' . $screendoor_address . '">' . $screendoor_address . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_city"><?php _e( 'Screendoor Venue City Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-city"
-          type="text"
-          name="_iip_map_screendoor_city"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_city ) ) echo $screendoor_city; ?>"
-        />
+        <select id="iip-map-screendoor-city" name="_iip_map_screendoor_city" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_city ) ) echo '<option value="' . $screendoor_city . '">' . $screendoor_city . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_region"><?php _e( 'Screedoor Venue Region Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-region"
-          type="text"
-          name="_iip_map_screendoor_region"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_region ) ) echo $screendoor_region; ?>"
-        />
+        <select id="iip-map-screendoor-region" name="_iip_map_screendoor_region" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_region ) ) echo '<option value="' . $screendoor_region . '">' . $screendoor_region . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_country"><?php _e( 'Screendoor Country Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-country"
-          type="text"
-          name="_iip_map_screendoor_country"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_country ) ) echo $screendoor_country; ?>"
-        />
+        <select id="iip-map-screendoor-country" name="_iip_map_screendoor_country" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_country ) ) echo '<option value="' . $screendoor_country . '">' . $screendoor_country . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_event"><?php _e( 'Screendoor Event Name Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-event"
-          type="text"
-          name="_iip_map_screendoor_event"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_event ) ) echo $screendoor_event; ?>"
-        />
+        <select id="iip-map-screendoor-event" name="_iip_map_screendoor_event" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_event ) ) echo '<option value="' . $screendoor_event . '">' . $screendoor_event . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_desc"><?php _e( 'Screendoor Event Description Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-desc"
-          type="text"
-          name="_iip_map_screendoor_desc"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_desc ) ) echo $screendoor_desc; ?>"
-        />
+        <select id="iip-map-screendoor-desc" name="_iip_map_screendoor_desc" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_desc ) ) echo '<option value="' . $screendoor_desc . '">' . $screendoor_desc . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_date"><?php _e( 'Screendoor Event Date Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-date"
-          type="text"
-          name="_iip_map_screendoor_date"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_date ) ) echo $screendoor_date; ?>"
-        />
+        <select id="iip-map-screendoor-date" name="_iip_map_screendoor_date" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_date ) ) echo '<option value="' . $screendoor_date . '">' . $screendoor_date . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_time"><?php _e( 'Screendoor Event Time Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-time"
-          type="text"
-          name="_iip_map_screendoor_time"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_time ) ) echo $screendoor_time; ?>"
-        />
+        <select id="iip-map-screendoor-time" name="_iip_map_screendoor_time" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_time ) ) echo '<option value="' . $screendoor_time . '">' . $screendoor_time . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_duration"><?php _e( 'Screendoor Event Duration Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-duration"
-          type="text"
-          name="_iip_map_screendoor_duration"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_duration ) ) echo $screendoor_duration; ?>"
-        />
+        <select id="iip-map-screendoor-duration" name="_iip_map_screendoor_duration" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_duration ) ) echo '<option value="' . $screendoor_duration . '">' . $screendoor_duration . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_topic"><?php _e( 'Screendoor Event Topic Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-topic"
-          type="text"
-          name="_iip_map_screendoor_topic"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_topic ) ) echo $screendoor_topic; ?>"
-        />
+        <select id="iip-map-screendoor-topic" name="_iip_map_screendoor_topic" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_topic ) ) echo '<option value="' . $screendoor_topic . '">' . $screendoor_topic . '</option>'; ?>
+        </select>
       </div>
     </div>
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_contact"><?php _e( 'Screendoor Event Contact Field ID:', 'iip-map' )?></label>
-        <input
-          id="iip-map-screendoor-contact"
-          type="text"
-          name="_iip_map_screendoor_contact"
-          class="map-admin-project-info-input"
-          value="<?php if ( isset ( $screendoor_contact ) ) echo $screendoor_contact; ?>"
-        />
+        <select id="iip-map-screendoor-contact" name="_iip_map_screendoor_contact" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_contact ) ) echo '<option value="' . $screendoor_contact . '">' . $screendoor_contact . '</option>'; ?>
+        </select>
       </div>
     </div>
 
