@@ -1,7 +1,7 @@
 {
     "name": "iip-design/iip-map",
     "type": "wordpress-plugin",
-    "description" : "Adds ability to embed a Google map onto a WordPress site",
+    "description" : "Adds ability to embed a Google map onto a WordPress site by pulling in data via the Screendoor API",
     "authors": [
         {
             "name": "Office of Design, Bureau of International Information Programs",
