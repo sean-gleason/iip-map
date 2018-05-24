@@ -1,6 +1,6 @@
 {
   "name": "iip-map",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "WordPress plugin used to embed Google maps and populate it with data via the Screendoor API",
   "repository": {
     "type": "git",
@@ -13,10 +13,12 @@
   },
   "homepage": "https://github.com/IIP-Design/iip-map#readme",
   "scripts": {
+    "build": "npm run build:css & npm run build:css",
     "build:css": "postcss admin/css/iip-map-admin.css -u autoprefixer -r",
     "build:js": "npm run uglifyAdmin & npm run uglifyFront",
     "uglifyAdmin": "uglifyjs admin/js/*.js -o admin/js/dist/admin.min.js -c -m --source-map",
-    "uglifyFront": "uglifyjs public/js/draw-map.js -o public/js/dist/draw-map.min.js -c -m --source-map & uglifyjs public/js/markerclusterer.js -o public/js/dist/markerclusterer.min.js -c -m --source-map"
+    "uglifyFront": "uglifyjs public/js/draw-map.js -o public/js/dist/draw-map.min.js -c -m --source-map & uglifyjs public/js/markerclusterer.js -o public/js/dist/markerclusterer.min.js -c -m --source-map",
+    "version": "versionbump 'version.json' 'package.json' && npm run build && git add --all"
   },
   "devDependencies": {
     "autoprefixer": "^8.5.0",
