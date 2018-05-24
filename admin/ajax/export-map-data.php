@@ -2,6 +2,8 @@
 
 class IIP_Map_Export {
   function export_data_ajax() {
+    check_ajax_referer( 'iip-map-export-nonce', 'security' );
+
     global $wpdb;
 
     $map_id = $_POST['map_id'];

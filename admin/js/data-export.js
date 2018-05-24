@@ -6,7 +6,8 @@ function getMapProjectData() {
   let projectId = iip_map_params.map_data_id;
   let data = {
     'action': 'export_data_ajax',
-    'map_id': projectId
+    'map_id': projectId,
+    'security': iip_map_params.export_nonce
   }
 
   jQuery.ajax(

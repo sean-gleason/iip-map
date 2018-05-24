@@ -194,7 +194,7 @@ function populateSQLTable(data, responses) {
       type: 'post',
       dataType: 'json',
       url: iip_map_params.ajax_url,
-      data: {'action': 'map_ajax', data},
+      data: {'action': 'map_ajax', data, 'security': iip_map_params.geocode_nonce},
       statusCode: {
         200: function () {
           statusDisplay('Status 200: <b>' + data.length + ' events successfully saved</b>: < ' + data.map(a => a.event_name).join(', ') + ' >');

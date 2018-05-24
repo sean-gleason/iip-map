@@ -138,7 +138,9 @@ class IIP_Map_Admin {
       'complete_status' => get_post_meta( $post->ID, '_iip_map_geocoder_complete', true),
       'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
       'google_api_key' => get_option( 'iip_map_google_maps_api_key' ),
-      'ajax_url' => admin_url( 'admin-ajax.php' )
+      'ajax_url' => admin_url( 'admin-ajax.php' ),
+      'geocode_nonce' => wp_create_nonce('iip-map-geocode-nonce'),
+      'export_nonce' => wp_create_nonce('iip-map-export-nonce')
     ));
 
   }

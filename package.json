@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/IIP-Design/iip-map#readme",
   "scripts": {
-    "build": "npm run build:css & npm run build:css",
+    "build": "npm run build:css & npm run build:js",
     "build:css": "postcss admin/css/iip-map-admin.css -u autoprefixer -r",
     "build:js": "npm run uglifyAdmin & npm run uglifyFront",
     "uglifyAdmin": "uglifyjs admin/js/*.js -o admin/js/dist/admin.min.js -c -m --source-map",

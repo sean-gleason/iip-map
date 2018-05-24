@@ -2,7 +2,9 @@
 
 class IIP_Map_Import {
   function map_ajax() {
-  	global $wpdb;
+  	check_ajax_referer( 'iip-map-geocode-nonce', 'security' );
+
+    global $wpdb;
     $table = $wpdb->prefix.'iip_map_data';
 
     $data = $_POST['data'];
