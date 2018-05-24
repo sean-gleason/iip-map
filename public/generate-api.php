@@ -40,7 +40,10 @@ class IIP_Map_API_Route extends WP_REST_Controller {
 
   public function prepare_item_for_response( $item, $request ) {
     global $wpdb;
-    $query = "SELECT map_id, venue_name, venue_address, venue_city, venue_region, venue_country, lat, lng, event_name, event_desc, event_date, event_time, event_duration, event_topic, contact FROM `wp_iip_map_data`";
+
+    $table_name = $wpdb->prefix . 'iip_map_data';
+
+    $query = "SELECT map_id, venue_name, venue_address, venue_city, venue_region, venue_country, lat, lng, event_name, event_desc, event_date, event_time, event_duration, event_topic, contact FROM $table_name";
     $list = $wpdb->get_results($query);
     return $list;
   }
