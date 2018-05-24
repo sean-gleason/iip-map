@@ -50,7 +50,7 @@ class IIP_Map_Embed {
     wp_enqueue_script( 'draw-map' );
     wp_enqueue_script( 'marker-spiderfy' );
 
-    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '">';
+    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"></div>';
     return $html;
 
   }
