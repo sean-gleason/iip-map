@@ -24,9 +24,18 @@ function initMap() {
     zoom: parseInt(zoom)
   });
 
-  fetch('/wp-json/iip-map/v1/map/' + map_id)
-    .then(function(response){return response.json()})
-    .then(plotMarkers);
+  let mapDataEndpoint = '/wp-json/iip-map/v1/map/' + map_id;
+  let mapDataXHR = new XMLHttpRequest();
+  mapDataXHR.open('GET', mapDataEndpoint);
+  mapDataXHR.responseType = 'json';
+  mapDataXHR.send();
+
+  mapDataXHR.onload = function() {
+    let mapDataData = mapDataXHR.response;
+    let mapDataStatus = mapDataXHR.statusText
+
+    plotMarkers(mapDataData);
+  }
 }
 
 let markers = [];
