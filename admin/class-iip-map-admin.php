@@ -127,6 +127,7 @@ class IIP_Map_Admin {
       'city_field' => get_post_meta( $post->ID, '_iip_map_screendoor_city', true),
       'region_field' => get_post_meta( $post->ID, '_iip_map_screendoor_region', true),
       'country_field' => get_post_meta( $post->ID, '_iip_map_screendoor_country', true),
+      'host_field' => get_post_meta( $post->ID, '_iip_map_screendoor_hostname', true),
       'event_field' => get_post_meta( $post->ID, '_iip_map_screendoor_event', true),
       'desc_field' => get_post_meta( $post->ID, '_iip_map_screendoor_desc', true),
       'date_field' => get_post_meta( $post->ID, '_iip_map_screendoor_date', true),

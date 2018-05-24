@@ -23,6 +23,7 @@ class IIP_Map_Export {
     $csv_fields[] = 'venue_country';
     $csv_fields[] = 'lat';
     $csv_fields[] = 'lng';
+    $csv_fields[] = 'host_name';
     $csv_fields[] = 'event_name';
     $csv_fields[] = 'event_desc';
     $csv_fields[] = 'event_date';

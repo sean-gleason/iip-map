@@ -26,6 +26,7 @@ class IIP_Map_Activator {
               venue_country varchar(255),
               lat float,
               lng float,
+              host_name varchar(255),
               event_name varchar(255),
               event_desc text,
               event_date date,

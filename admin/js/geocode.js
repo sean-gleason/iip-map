@@ -7,6 +7,7 @@ let addressField = iip_map_params.address_field;
 let cityField = iip_map_params.city_field;
 let regionField = iip_map_params.region_field;
 let countryField = iip_map_params.country_field;
+let hostField = iip_map_params.host_field;
 let eventField = iip_map_params.event_field;
 let descField = iip_map_params.desc_field;
 let dateField = iip_map_params.date_field;
@@ -95,6 +96,7 @@ function geocodeAddress(jsonObj) {
             'venue_country': venue_country,
             'lat': lat,
             'lng': lng,
+            'host_name': item.responses[hostField],
             'event_name': event_name,
             'event_desc': item.responses[descField],
             'event_date': item.responses[dateField],
@@ -123,6 +125,7 @@ function geocodeAddress(jsonObj) {
                 'venue_country': venue_country,
                 'lat': lat,
                 'lng': lng,
+                'host_name': item.responses[hostField],
                 'event_name': event_name,
                 'event_desc': item.responses[descField],
                 'event_date': item.responses[dateField],

@@ -9,6 +9,7 @@ $screendoor_address = get_post_meta( $post->ID, '_iip_map_screendoor_venue', tru
 $screendoor_city = get_post_meta( $post->ID, '_iip_map_screendoor_city', true);
 $screendoor_region = get_post_meta( $post->ID, '_iip_map_screendoor_region', true);
 $screendoor_country = get_post_meta( $post->ID, '_iip_map_screendoor_country', true);
+$screendoor_hostname = get_post_meta( $post->ID, '_iip_map_screendoor_hostname', true);
 $screendoor_event = get_post_meta( $post->ID, '_iip_map_screendoor_event', true);
 $screendoor_desc = get_post_meta( $post->ID, '_iip_map_screendoor_desc', true);
 $screendoor_date = get_post_meta( $post->ID, '_iip_map_screendoor_date', true);
@@ -84,6 +85,15 @@ $screendoor_contact = get_post_meta( $post->ID, '_iip_map_screendoor_contact', t
 
     <div class="map-screendoor-fields">
       <div class="map-input-div">
+        <label class="map-admin-label" for="_iip_map_screendoor_hostname"><?php _e( 'Screendoor Host Name Field ID:', 'iip-map' )?></label>
+        <select id="iip-map-screendoor-hostname" name="_iip_map_screendoor_hostname" class="map-admin-project-info-select">
+          <?php if ( isset ( $screendoor_hostname ) ) echo '<option value="' . $screendoor_hostname . '">' . $screendoor_hostname . '</option>'; ?>
+        </select>
+      </div>
+    </div>
+
+    <div class="map-screendoor-fields">
+      <div class="map-input-div">
         <label class="map-admin-label" for="_iip_map_screendoor_event"><?php _e( 'Screendoor Event Name Field ID:', 'iip-map' )?></label>
         <select id="iip-map-screendoor-event" name="_iip_map_screendoor_event" class="map-admin-project-info-select">
           <?php if ( isset ( $screendoor_event ) ) echo '<option value="' . $screendoor_event . '">' . $screendoor_event . '</option>'; ?>
@@ -144,6 +154,10 @@ $screendoor_contact = get_post_meta( $post->ID, '_iip_map_screendoor_contact', t
         </select>
       </div>
     </div>
+
+    <div class="map-screendoor-fields"><!-- Placeholder to fill unused flex space --></div>
+    <div class="map-screendoor-fields"><!-- Placeholder to fill unused flex space --></div> 
+
 
   </div> <!-- End map-screendoor-fields-container -->
 </div>

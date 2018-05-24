@@ -53,9 +53,19 @@ function plotMarkers(m) {
         topicLine = '<div></div>';
       }
 
+      if ( item.host_name !== null ) {
+        hostLine = 'Hosted by: ' + item.host_name + '<br />';
+      } else {
+        hostLine = '';
+      }
+
+      if ( item.contact !== null && item.contact !== '') {
+        contactLine = 'Contact: ' + item.contact;
+      } else {
+        contactLine = '';
+      }
+
       let windowContent = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
       '<h1 id="firstHeading" class="iip-map-infowin-header">' + item.event_name + ' </h1>' +
       '<div id="bodyContent" class="iip-map-infowin-body">' +
       topicLine +
@@ -64,10 +74,10 @@ function plotMarkers(m) {
       '<p> On ' + item.event_date + ' at ' + item.event_time + '. <br />' +
       'Estimated duration: ' + item.event_duration + '</p>' +
       '<h3 class="iip-map-infowin-header">Where: </h3>' +
-      '<p>' + item.venue_name + '<br />' +
+      '<p>' + hostLine +
       item.venue_address + '<br />' +
       item.venue_city + '<br />' +
-      'Contact: ' + item.contact + '<br />' +
+      contactLine + '</p>' +
       '</div>' +
       '</div>';
 

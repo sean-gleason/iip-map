@@ -34,6 +34,10 @@ if( !empty( $_POST['_iip_map_screendoor_country'] ) ) {
   update_post_meta ( $post_id, '_iip_map_screendoor_country', sanitize_text_field( $_POST['_iip_map_screendoor_country'] ) );
 }
 
+if( !empty( $_POST['_iip_map_screendoor_hostname'] ) ) {
+  update_post_meta ( $post_id, '_iip_map_screendoor_hostname', sanitize_text_field( $_POST['_iip_map_screendoor_hostname'] ) );
+}
+
 if( !empty( $_POST['_iip_map_screendoor_event'] ) ) {
   update_post_meta ( $post_id, '_iip_map_screendoor_event', sanitize_text_field( $_POST['_iip_map_screendoor_event'] ) );
 }
