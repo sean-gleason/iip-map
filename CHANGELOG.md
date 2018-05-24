@@ -10,10 +10,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Filtering of markers based on topic and date
 - Ability to edit/update/delete existing markers
 - Internationalization and localization
+- Region-based dropdown to automatically add lat. and lng. in shortcode generator
 
 ### Changed
 - Force download of CSV file when exporting project data
-- Plugin deactivation hook to give option to delete all project and map data
+- Add plugin deactivation hook to give option to delete all project and map data
+
+## [1.0.1] - 2018-05-24
+### Added
+- Host name an event parameter
+
+### Fixed
+- Allow for non-default table prefixes when generating API endpoint
+- Add CSS rule to prevent zoom and other Google map icons from appearing blurry
+- Add closing <div> tag to shortcode output to allow for content to be added below the map
+
+### Security
+- Add nonces to internal Ajax calls
 
 ## [1.0.0] - 2018-05-24
 ### Added
