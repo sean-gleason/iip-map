@@ -11,3 +11,8 @@ h3.iip-map-infowin-header {
 .iip-map-infowin-body > p {
   font-size: 1em;
 }
+
+/* Prevent zoom and other Google map icons from blurring */
+#map img {
+  max-width: none !important;
+}
