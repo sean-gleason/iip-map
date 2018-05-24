@@ -1,4 +1,3 @@
-
 // Get field IDs
 let googleKey = iip_map_params.google_api_key;
 let mapId = iip_map_params.map_data_id;

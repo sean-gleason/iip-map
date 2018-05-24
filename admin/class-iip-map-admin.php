@@ -22,14 +22,8 @@ class IIP_Map_Admin {
         // Register the stylesheets for the admin area.
         wp_enqueue_style( 'iip-map-admin', plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
 
-        // Enqueue script to retrieve Screendoor fields
-        wp_enqueue_script( 'retrieve-screendoor-fields', IIP_MAP_URL . 'admin/js/screendoor.js', array(), null, true );
-
-        // Enqueue geocoding script
-        wp_enqueue_script( 'geocode-screendoor-entries', IIP_MAP_URL . 'admin/js/geocode.js', array(), null, true );
-
-        // Enqueue script to export project data
-        wp_enqueue_script( 'export-project-data', IIP_MAP_URL . 'admin/js/data-export.js', array(), null, true );
+        // Enqueue admin JavaScript bundle
+        wp_enqueue_script( 'iip-map-admin-js', IIP_MAP_URL . 'admin/js/dist/admin.min.js', array(), null, true );
 
       }
     }
@@ -124,8 +118,8 @@ class IIP_Map_Admin {
   public function iip_map_localize_variables() {
     global $post;
 
-    // Pass API keys and Screendoor project info from admin page to geocoder
-    wp_localize_script( 'geocode-screendoor-entries', 'iip_map_params', array(
+    // Pass all PHP variable to admin JS
+    wp_localize_script( 'iip-map-admin-js', 'iip_map_params', array(
       'map_data_id' => $post->ID,
       'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
       'venue_field' => get_post_meta( $post->ID, '_iip_map_screendoor_venue', true),
@@ -147,19 +141,5 @@ class IIP_Map_Admin {
       'ajax_url' => admin_url( 'admin-ajax.php' )
     ));
 
-    // Pass project info into admin page
-    wp_localize_script( 'retrieve-screendoor-fields', 'screendoor_params', array(
-      'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
-      'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
-      'ajax_url' => admin_url( 'admin-ajax.php' )
-    ));
-
-    // Pass project id and Ajax URL to
-    wp_localize_script( 'export-project-data', 'export_params', array(
-      'map_data_id' => $post->ID,
-      'ajax_url' => admin_url( 'admin-ajax.php' )
-    ));
   }
-
-
 }

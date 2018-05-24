@@ -10,11 +10,11 @@ class IIP_Map_Embed {
 
   // Register script that embeds the map
   public function iip_map_register_embed() {
-    wp_register_script( 'draw-map', plugin_dir_url( __FILE__ ) . 'js/draw-map.js', array(), null, true );
+    wp_register_script( 'draw-map', plugin_dir_url( __FILE__ ) . 'js/dist/draw-map.min.js', array(), null, true );
 
-    wp_register_script( 'marker-clusterer', plugin_dir_url( __FILE__ ) . 'js/markerclusterer.js', array(), null, false);
+    wp_register_script( 'marker-clusterer', plugin_dir_url( __FILE__ ) . 'js/dist/markerclusterer.min.js', array(), null, false);
 
-    wp_register_script( 'marker-spiderfy', plugin_dir_url( __FILE__ ) . 'js/overlapping-marker-spiderfy.min.js', array(), null, true);
+    wp_register_script( 'marker-spiderfy', plugin_dir_url( __FILE__ ) . 'js/dist/overlapping-marker-spiderfy.min.js', array(), null, true);
 
     wp_enqueue_style( 'iip-map-frontend', plugin_dir_url( __FILE__ ) . 'css/iip-map-frontend.css', array(), $this->version, 'all' );
   }

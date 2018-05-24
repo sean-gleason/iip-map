@@ -1,6 +1,6 @@
 // Set Screendoor API endpoint
-let screendoorEndpoint = 'https://screendoor.dobt.co/api/projects/' + screendoor_params.screendoor_project;
-const screendoorKey = '&v=0&api_key=' + screendoor_params.screendoor_api_key;
+let screendoorEndpoint = 'https://screendoor.dobt.co/api/projects/' + iip_map_params.screendoor_project;
+const screendoorKey = '&v=0&api_key=' + iip_map_params.screendoor_api_key;
 
 // Identify button to get Screendoor data
 const getFieldsBtn = document.getElementById('iip-map-get-fields');

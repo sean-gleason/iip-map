@@ -3,7 +3,7 @@ exportDataBtn.addEventListener('click', getMapProjectData);
 
 // Pull project information from the database
 function getMapProjectData() {
-  let projectId = export_params.map_data_id;
+  let projectId = iip_map_params.map_data_id;
   let data = {
     'action': 'export_data_ajax',
     'map_id': projectId
@@ -12,7 +12,7 @@ function getMapProjectData() {
   jQuery.ajax(
     {
       type: 'post',
-      url: export_params.ajax_url,
+      url: iip_map_params.ajax_url,
       data: data,
       success: function() {
           console.log("Download worked!");
