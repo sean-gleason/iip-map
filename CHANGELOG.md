@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Force download of CSV file when exporting project data
 - Add plugin deactivation hook to give option to delete all project and map data
 
+## [1.0.2] - 2018-05-25
+### Changed
+- Increase geocoding batch size from 10 responses to 100 responses
+- Switch from fetch to an AJAX call when retrieving map data (promise was throwing CORS error)
+
 ## [1.0.1] - 2018-05-24
 ### Added
 - Host name an event parameter
@@ -26,7 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add closing <div> tag to shortcode output to allow for content to be added below the map
 
 ### Security
-- Add nonces to internal Ajax calls
+- Add nonces to internal AJAX calls
 
 ## [1.0.0] - 2018-05-24
 ### Added
