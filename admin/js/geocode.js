@@ -33,7 +33,7 @@ geocodeBtn.addEventListener('click', getScreendoorData);
 
 function getScreendoorData() {
   // Set Screendoor API endpoint
-  let responsesEndpoint = screendoorEndpoint + '/responses?per_page=10&status=' + iip_map_params.trigger_status + screendoorKey;
+  let responsesEndpoint = screendoorEndpoint + '/responses?per_page=100&status=' + iip_map_params.trigger_status + screendoorKey;
 
   // Make request to Screendoor API
   let request = new XMLHttpRequest();
