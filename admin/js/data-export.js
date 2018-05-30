@@ -15,12 +15,13 @@ function getMapProjectData() {
       type: 'post',
       url: iip_map_params.ajax_url,
       data: data,
-      success: function() {
-          console.log("Download worked!");
-          // window.location.href = "/Data_for_Map_" + projectId + ".csv";
+      success: function(data) {
+        console.log('Successfully exported data!');
+        var uri = 'data:application/csv,' + data;
+        window.location.href = uri;
       },
       error: function(jqXHR, status, err) {
-          console.log("Failed due to " + status + "! \n" + err);
+        console.log("Failed due to " + status + "! \n" + err);
       }
 
     }
