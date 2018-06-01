@@ -2,6 +2,19 @@
   padding: 0.35em;
 }
 
+.map-admin-spinner {
+  background: url('../../images/spinner.gif') no-repeat;
+  background-size: 20px 20px;
+  display: none;
+  filter: alpha(opacity=70);
+  float: right;
+  height: 20px;
+  margin: 0;
+  opacity: .7;
+  vertical-align: middle;
+  width: 20px;
+}
+
 .map-admin-clearfix::after {
   clear: both;
   content: "";
@@ -96,6 +109,7 @@ pre#geocoder-return {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
+  align-items: center;
 }
 
 .map-admin-shortcode-label {
@@ -120,6 +134,37 @@ pre#geocoder-return {
 
 .map-shortcode-output-label {
   font-weight: bold;
+}
+
+/* Update Marker Metabox */
+.map-update-marker-text {
+  width: 80%;
+}
+
+.map-update-marker-input {
+  width: 20%;
+}
+
+.map-admin-hidden {
+  display: none;
+  padding-bottom: 10px;
+}
+
+label.map-update-marker-values {
+  width: 40%;
+}
+
+input.map-update-marker-values {
+  width: 60%;
+}
+
+.map-admin-button-row {
+  margin: 10px 0;
+}
+
+.map-update-marker-button {
+  float: right;
+  padding-top: 10px;
 }
 
 /* Map Data Export Metabox */

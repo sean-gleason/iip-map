@@ -141,6 +141,7 @@ class IIP_Map_Admin {
       'google_api_key' => get_option( 'iip_map_google_maps_api_key' ),
       'ajax_url' => admin_url( 'admin-ajax.php' ),
       'geocode_nonce' => wp_create_nonce('iip-map-geocode-nonce'),
+      'update_nonce' => wp_create_nonce('iip-map-update-nonce'),
       'export_nonce' => wp_create_nonce('iip-map-export-nonce')
     ));
 
