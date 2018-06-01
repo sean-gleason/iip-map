@@ -69,15 +69,13 @@ function updateMarker() {
     success: function(data) {
       statusDisplay('Successfully update marker #' + eventId)
       restoreEventInput()
+      hiddenDiv.style.display = 'none';
     },
     error: function(jqXHR, status, err) {
       statusDisplay('Failed due to ' + status + '! \n' + err);
       restoreEventInput()
     }
   });
-
-  // Collapse marker data div
-  hiddenDiv.style.display = 'none';
 }
 
 // Delete marker
@@ -100,15 +98,13 @@ function deleteMarker() {
     success: function(data) {
       statusDisplay('Successfully deleted marker #' + eventId)
       restoreEventInput()
+      hiddenDiv.style.display = 'none';
     },
     error: function(jqXHR, status, err) {
       statusDisplay('Failed due to ' + status + '! \n' + err);
       restoreEventInput()
     }
   });
-
-  // Collapse marker data div
-  hiddenDiv.style.display = 'none';
 }
 
 function populateMarkerData(data) {
