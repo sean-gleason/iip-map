@@ -5,7 +5,7 @@ wp_nonce_field( 'map_project_info', 'map_project_info_nonce' );
 $map_id = $post->ID;
 $screendoor_project = get_post_meta( $post->ID, '_iip_map_screendoor_project', true);
 $screendoor_venue = get_post_meta( $post->ID, '_iip_map_screendoor_venue', true);
-$screendoor_address = get_post_meta( $post->ID, '_iip_map_screendoor_venue', true);
+$screendoor_address = get_post_meta( $post->ID, '_iip_map_screendoor_address', true);
 $screendoor_city = get_post_meta( $post->ID, '_iip_map_screendoor_city', true);
 $screendoor_region = get_post_meta( $post->ID, '_iip_map_screendoor_region', true);
 $screendoor_country = get_post_meta( $post->ID, '_iip_map_screendoor_country', true);
@@ -33,7 +33,7 @@ $screendoor_contact = get_post_meta( $post->ID, '_iip_map_screendoor_contact', t
       />
     </div>
     <div class="map-project-btn-div">
-      <button class="button button-primary button-large" type="button" id="iip-map-get-fields">Get Project Field ID's</button>
+      <button class="button button-primary button-large" type="button" id="iip-map-get-fields"><?php _e( 'Get Project Field ID\'s', 'iip-map' )?></button>
     </div>
   </div>
 
@@ -156,7 +156,7 @@ $screendoor_contact = get_post_meta( $post->ID, '_iip_map_screendoor_contact', t
     </div>
 
     <div class="map-screendoor-fields"><!-- Placeholder to fill unused flex space --></div>
-    <div class="map-screendoor-fields"><!-- Placeholder to fill unused flex space --></div> 
+    <div class="map-screendoor-fields"><!-- Placeholder to fill unused flex space --></div>
 
 
   </div> <!-- End map-screendoor-fields-container -->
