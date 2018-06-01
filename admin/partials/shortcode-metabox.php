@@ -20,6 +20,7 @@ $map_type = get_post_meta( $post->ID, '_iip_map_type', true);
         type="text"
         name="_iip_map_height"
         class="map-admin-shortcode-input"
+        placeholder="600"
         value="<?php if ( isset ( $map_height ) ) echo $map_height; ?>"
       /><br/>
     </div>
@@ -31,6 +32,7 @@ $map_type = get_post_meta( $post->ID, '_iip_map_type', true);
         type="text"
         name="_iip_map_zoom"
         class="map-admin-shortcode-input"
+        placeholder="2"
         value="<?php if ( isset ( $map_zoom ) ) echo $map_zoom; ?>"
       /><br/>
     </div>
@@ -42,6 +44,7 @@ $map_type = get_post_meta( $post->ID, '_iip_map_type', true);
         type="text"
         name="_iip_map_lat"
         class="map-admin-shortcode-input"
+        placeholder="30"
         value="<?php if ( isset ( $map_lat ) ) echo $map_lat; ?>"
       /><br/>
     </div>
@@ -53,6 +56,7 @@ $map_type = get_post_meta( $post->ID, '_iip_map_type', true);
         type="text"
         name="_iip_map_lng"
         class="map-admin-shortcode-input"
+        placeholder="0"
         value="<?php if ( isset ( $map_lng ) ) echo $map_lng; ?>"
       /><br/>
     </div>
