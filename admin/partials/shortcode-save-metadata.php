@@ -24,3 +24,7 @@ if( !empty( $_POST['_iip_map_lat'] ) ) {
 if( !empty( $_POST['_iip_map_lng'] ) ) {
   update_post_meta ( $post_id, '_iip_map_lng', sanitize_text_field( $_POST['_iip_map_lng'] ) );
 }
+
+if( !empty( $_POST['_iip_map_type'] ) ) {
+  update_post_meta ( $post_id, '_iip_map_type', sanitize_text_field( $_POST['_iip_map_type'] ) );
+}

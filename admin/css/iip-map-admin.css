@@ -2,6 +2,13 @@
   padding: 0.35em;
 }
 
+.map-admin-clearfix::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+/* Screendoor Project Info Metabox */
 .map-screendoor-project-container {
   background-color: #F9F9F9;
   border: 1px solid #e5e5e5;
@@ -40,12 +47,6 @@ button#iip-map-get-fields {
   flex-grow: 1;
 }
 
-.map-admin-clearfix::after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
 .map-input-div {
   background-color: #F9F9F9;
   border: 1px solid #e5e5e5;
@@ -65,6 +66,7 @@ button#iip-map-get-fields {
   width: 100%;
 }
 
+/* Geocoder Metabox */
 button#iip-map-geocode {
   float: right;
   margin-top: 15px;
@@ -83,9 +85,29 @@ pre#geocoder-return {
   width: 100%;
 }
 
+/* Shortcode Generator Metabox */
+.map-admin-shortcode-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-admin-shortcode-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.map-admin-shortcode-label {
+  width: 60%;
+}
+
 .map-admin-shortcode-input {
-  float: right;
-  width: 100px;
+  width: 40%;
+}
+
+.map-admin-shortcode-select {
+  width: 40%;
 }
 
 .map-admin-shortcode-output {
@@ -100,6 +122,7 @@ pre#geocoder-return {
   font-weight: bold;
 }
 
+/* Map Data Export Metabox */
 button#iip-map-export {
   float: right;
 }
