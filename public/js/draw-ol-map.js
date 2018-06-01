@@ -1,9 +1,19 @@
-let googleKey = iip_map_params.google_api_key;
-
+// Import shortcode parameters
 let map_id = iip_map_params.map_id;
 let zoom = iip_map_params.map_zoom;
 let lat = iip_map_params.map_center_lat;
 let lng = iip_map_params.map_center_lng;
+
+// Load popup script on page load (required for the info windows)
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelectorAll('#map').length > 0)
+  {
+    let maps_api_js = document.createElement('script');
+    maps_api_js.type = 'text/javascript';
+    maps_api_js.src = 'https://unpkg.com/ol-popup@3.0.0';
+    document.getElementsByTagName('head')[0].appendChild(maps_api_js);
+  }
+});
 
 // Pull map data from iip-maps API
 let mapDataEndpoint = '/wp-json/iip-map/v1/maps/' + map_id;
@@ -19,6 +29,7 @@ mapDataXHR.onload = function() {
   plotMarkers(mapDataData);
 }
 
+// Set up map embed
 const markerSource = new ol.source.Vector();
 
 var markerStyle = new ol.style.Style({
@@ -62,7 +73,7 @@ function plotMarkers(m) {
 
     // Conditionals for the InfoWindows
     if ( item.event_topic !== null ) {
-      topicLine = '<h3 class="iip-map-infowin-header">Topic: ' + item.event_topic + '</h3>';
+      topicLine = '<h3 class="iip-map-ol-popup-header">Topic: ' + item.event_topic + '</h3>';
     } else {
       topicLine = '<div></div>';
     }
@@ -80,15 +91,15 @@ function plotMarkers(m) {
     }
 
     // Text of the InfoWindow
-    let windowContent = '<div id="infowindow-' + item.id + '">'+
-    '<h1 id="firstHeading" class="iip-map-infowin-header">' + item.event_name + ' </h1>' +
-    '<div id="bodyContent" class="iip-map-infowin-body">' +
+    let windowContent = '<div class="iip-map-ol-popup" id="infowindow-' + item.id + '">'+
+    '<h1 id="firstHeading" class="iip-map-ol-popup-header">' + item.event_name + ' </h1>' +
+    '<div id="bodyContent" class="iip-map-ol-popup-body">' +
     topicLine +
     '<p>' + item.event_desc + '</p>'+
-    '<h3 class="iip-map-infowin-header">When: </h3>' +
+    '<h3 class="iip-map-ol-popup-header">When: </h3>' +
     '<p> On ' + item.event_date + ' at ' + item.event_time + '. <br />' +
     'Estimated duration: ' + item.event_duration + '</p>' +
-    '<h3 class="iip-map-infowin-header">Where: </h3>' +
+    '<h3 class="iip-map-ol-popup-header">Where: </h3>' +
     '<p>' + hostLine +
     item.venue_address + '<br />' +
     item.venue_city + '<br />' +
@@ -96,7 +107,7 @@ function plotMarkers(m) {
     '</div>' +
     '</div>';
 
-
+    // Define markers
     var marker = new ol.Feature({
       geometry: new ol.geom.Point(ol.proj.transform(latLng, 'EPSG:4326',
         'EPSG:3857')),
@@ -108,32 +119,16 @@ function plotMarkers(m) {
   });
 }
 
-let popupElement = document.getElementById('popup');
-
-let popup = new ol.Overlay({
-  element: popupElement,
-  positioning: 'bottom-center',
-  stopEvent: false,
-  offset: [0, -50]
-});
-map.addOverlay(popup);
-
-// Display popup on click
+// Add click event to markers to show infowindow
 map.on('click', function(evt) {
   let feature = map.forEachFeatureAtPixel(evt.pixel,
-      function(feature) {
-        return feature;
-      });
-  if (feature) {
-    let coordinates = feature.getGeometry().getCoordinates();
-    popup.setPosition(coordinates);
-    popupElement.popover({
-      'placement': 'top',
-      'html': true,
-      'content': feature.get('content')
-    });
-    popupElement.popover('show');
-  } else {
-    popupElement.popover('destroy');
-  }
+    function(feature) {
+      return feature;
+    }
+  );
+
+  let popup = new Popup({insertFirst: false});
+  map.addOverlay(popup);
+
+  popup.show(evt.coordinate, '<div><p>' + feature.get('content') + '</p></div>');
 });

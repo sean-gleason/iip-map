@@ -74,6 +74,14 @@ class IIP_Map_Post_Type {
       'low'
     );
     add_meta_box(
+      'iip_map_update_marker',
+      __( 'Update/Delete Marker', 'iip-map' ),
+      array( $this, 'update_marker_metabox' ),
+      $this->name,
+      'side',
+      'low'
+    );
+    add_meta_box(
       'iip_map_export',
       __( 'Export Project Data', 'iip-map' ),
       array( $this, 'data_export_metabox' ),
@@ -94,6 +102,10 @@ class IIP_Map_Post_Type {
 
   public function shortcode_metabox( $post ) {
     include_once( 'partials/shortcode-metabox.php' );
+  }
+
+  public function update_marker_metabox( $post ) {
+    include_once( 'partials/update-marker-metabox.php' );
   }
 
   public function data_export_metabox( $post ) {

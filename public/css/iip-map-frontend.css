@@ -16,3 +16,22 @@ h3.iip-map-infowin-header {
 #map img {
   max-width: none !important;
 }
+
+.iip-map-ol-popup {
+  background: #ffffff;
+  padding: 10px;
+}
+
+h1.iip-map-ol-popup-header {
+  font-size: 1em;
+  margin: .5em 0;
+}
+
+h3.iip-map-ol-popup-header {
+  font-size: .75em;
+  margin: .5em 0;
+}
+
+.iip-map-ol-popup-body > p {
+  font-size: .75em;
+}

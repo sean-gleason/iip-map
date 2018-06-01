@@ -41,12 +41,12 @@ $complete_status = get_post_meta( $post->ID, '_iip_map_geocoder_complete', true)
   </div> <!-- end map-screendoor-fields-container -->
 
   <div class="map-admin-clearfix">
-    <button class="button button-primary button-large" id="iip-map-geocode" type="button" name="geocode">Geocode Events</button>
+    <button class="button button-primary button-large" id="iip-map-geocode" type="button" name="geocode"><?php _e( 'Geocode Events', 'iip-map' )?></button>
   </div>
   <label for="_iip_map_geocoder_return" style="margin-left: 10px; font-weight: 600;"><?php _e( 'Geocoding Status:', 'iip-map' )?></label>
   <div class="inside" style="margin-right: 10px;">
-    <div> There are <?php echo $event_num ?> events saved to this map.</div>
-    <pre id="geocoder-return">Log:<br /></pre>
+    <div> <?php _e( 'There are', 'iip-map' )?> <?php echo $event_num ?> <?php _e( 'events saved to this map.', 'iip-map' )?> </div>
+    <pre id="geocoder-return"><?php _e( 'Log:', 'iip-map' )?><br /></pre>
   </div>
 
 </div>
