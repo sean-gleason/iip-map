@@ -6,15 +6,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- Distinct API endpoints allowing for multiple map projects on one site
 - Filtering of markers based on topic and date
 - Ability to edit/update/delete existing markers
 - Internationalization and localization
-- Region-based dropdown to automatically add lat. and lng. in shortcode generator
+- Region-based dropdown to automatically add latitude and longitude in shortcode generator
+- Info windows and clustering on OpenLayers maps
 
 ### Changed
-- Force download of CSV file when exporting project data
 - Add plugin deactivation hook to give option to delete all project and map data
+
+## [1.0.3] - 2018-06-01
+### Added
+- Distinct API endpoints allowing for multiple map projects on one site
+- Option to display map using OpenLayers rather than Google Maps
+
+### Changed
+- Force download of file when exporting project data
+
+### Fixed
+- Venue address was displaying the wrong value in the administrative panel
 
 ## [1.0.2] - 2018-05-25
 ### Changed
