@@ -79,7 +79,7 @@ function plotMarkers(m) {
     }
 
     // Text of the InfoWindow
-    let windowContent = '<div id="content">'+
+    let windowContent = '<div id="infowindow-' + item.id + '">'+
     '<h1 id="firstHeading" class="iip-map-infowin-header">' + item.event_name + ' </h1>' +
     '<div id="bodyContent" class="iip-map-infowin-body">' +
     topicLine +
