@@ -3,6 +3,10 @@ exportDataBtn.addEventListener('click', getMapProjectData);
 
 // Pull project information from the database
 function getMapProjectData() {
+  const mapExportSpinner = document.getElementById('map-export-spinner');
+  mapExportSpinner.style.display = 'block';
+  statusDisplay('Initiating data export...');
+
   let projectId = iip_map_params.map_data_id;
   let data = {
     'action': 'export_data_ajax',
@@ -16,12 +20,14 @@ function getMapProjectData() {
       url: iip_map_params.ajax_url,
       data: data,
       success: function(data) {
-        console.log('Successfully exported data!');
         var uri = 'data:application/csv,' + data;
         window.location.href = uri;
+        mapExportSpinner.style.display = 'none';
+        statusDisplay('Exported complete!');
       },
       error: function(jqXHR, status, err) {
-        console.log("Failed due to " + status + "! \n" + err);
+        mapExportSpinner.style.display = 'none';
+        statusDisplay("Failed due to " + status + "! \n" + err);
       }
 
     }
