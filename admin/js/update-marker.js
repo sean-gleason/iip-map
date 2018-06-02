@@ -49,7 +49,7 @@ function getMarkerData() {
   });
 }
 
-// Update marker
+// Update marker with new values
 function updateMarker() {
   let eventId = document.getElementById('iip-map-event-id').value;
 
@@ -59,6 +59,9 @@ function updateMarker() {
   let data = {
     'action': 'update_marker_ajax',
     'id': eventId,
+    'event_name': eventName.value,
+    'lat': eventLat.value,
+    'lng': eventLng.value,
     'security': eventNonce
   }
 
@@ -78,7 +81,7 @@ function updateMarker() {
   });
 }
 
-// Delete marker
+// Delete marker from database
 function deleteMarker() {
   let eventId = document.getElementById('iip-map-event-id').value;
 
