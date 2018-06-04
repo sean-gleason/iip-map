@@ -61,7 +61,7 @@ class IIP_Map_Embed {
       'map_center_lng' => $lng
     ));
 
-    if ($type == 'ol') {
+    if ($type == 'ol' || $type == '') {
       // Load MarkerClusterer and return map
       wp_enqueue_script( 'openlayers' );
       wp_enqueue_script( 'draw-ol-map' );

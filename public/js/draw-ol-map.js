@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 let mapDataEndpoint = '/wp-json/iip-map/v1/maps/' + map_id;
 let mapDataXHR = new XMLHttpRequest();
 mapDataXHR.open('GET', mapDataEndpoint);
-mapDataXHR.responseType = 'json';s
+mapDataXHR.responseType = 'json';
 mapDataXHR.send();
 
 mapDataXHR.onload = function() {
@@ -29,10 +29,11 @@ mapDataXHR.onload = function() {
   plotMarkers(mapDataData);
 }
 
-// Set up map embed
+// Set up markers
 const markerSource = new ol.source.Vector();
 
-var markerStyle = new ol.style.Style({
+// Set marker style
+let markerStyle = new ol.style.Style({
   image: new ol.style.Icon( ({
     anchor: [0.5, 46],
     anchorXUnits: 'fraction',
@@ -42,6 +43,58 @@ var markerStyle = new ol.style.Style({
   }))
 });
 
+// Add clustering
+let clusterSource = new ol.source.Cluster({
+  distance: (50),
+  source: markerSource
+});
+
+// Set cluster style
+let styleCache = {};
+function clusterStyle(feature) {
+  let size = feature.get('features').length;
+  let style = styleCache[size];
+
+  if (!style) {
+    style = new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 15,
+        stroke: new ol.style.Stroke({
+          color: '#fff'
+        }),
+        fill: new ol.style.Fill({
+          color: '#0081FF'
+        })
+      }),
+      text: new ol.style.Text({
+        text: size.toString(),
+        fill: new ol.style.Fill({
+          color: '#fff'
+        })
+      })
+    });
+    styleCache[size] = style;
+  }
+  
+  return style;
+}
+
+// Establish map layers
+let baseLayer = new ol.layer.Tile({
+  source: new ol.source.OSM(),
+});
+
+let clusterLayer = new ol.layer.Vector({
+  source: clusterSource,
+  style: clusterStyle,
+});
+
+let markerLayer = new ol.layer.Vector({
+  source: clusterSource,
+  style: markerStyle,
+});
+
+// Create the map
 let map = new ol.Map({
   target: 'map',
   controls: ol.control.defaults({
@@ -50,13 +103,8 @@ let map = new ol.Map({
     }
   }),
   layers: [
-    new ol.layer.Tile({
-      source: new ol.source.OSM(),
-    }),
-    new ol.layer.Vector({
-      source: markerSource,
-      style: markerStyle,
-    }),
+    baseLayer,
+    clusterLayer
   ],
   view: new ol.View({
     center: ol.proj.fromLonLat([parseFloat(lng), parseFloat(lat)]),
@@ -121,14 +169,29 @@ function plotMarkers(m) {
 
 // Add click event to markers to show infowindow
 map.on('click', function(evt) {
-  let feature = map.forEachFeatureAtPixel(evt.pixel,
-    function(feature) {
+
+  let popup = new Popup();
+  map.addOverlay(popup);
+
+  let feature = map.forEachFeatureAtPixel(
+    evt.pixel,
+    function(feature, layer) {
       return feature;
     }
   );
 
-  let popup = new Popup({insertFirst: false});
-  map.addOverlay(popup);
+  console.log(feature);
 
-  popup.show(evt.coordinate, '<div><p>' + feature.get('content') + '</p></div>');
+  if (feature) {
+    let coord = evt.coordinate;
+    if (typeof feature.get('features') === 'undefined') {
+      let content = feature.get('content');
+    }
+
+    popup.show(coord, content);
+
+  } else {
+    popup.hide();
+  }
+
 });
