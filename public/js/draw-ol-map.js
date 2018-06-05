@@ -4,17 +4,6 @@ let zoom = iip_map_params.map_zoom;
 let lat = iip_map_params.map_center_lat;
 let lng = iip_map_params.map_center_lng;
 
-// Load popup script on page load (required for the info windows)
-document.addEventListener('DOMContentLoaded', function () {
-  if (document.querySelectorAll('#map').length > 0)
-  {
-    let maps_api_js = document.createElement('script');
-    maps_api_js.type = 'text/javascript';
-    maps_api_js.src = 'https://unpkg.com/ol-popup@3.0.0';
-    document.getElementsByTagName('head')[0].appendChild(maps_api_js);
-  }
-});
-
 // Pull map data from iip-maps API
 let mapDataEndpoint = '/wp-json/iip-map/v1/maps/' + map_id;
 let mapDataXHR = new XMLHttpRequest();
@@ -75,7 +64,7 @@ function clusterStyle(feature) {
     });
     styleCache[size] = style;
   }
-  
+
   return style;
 }
 
@@ -139,9 +128,7 @@ function plotMarkers(m) {
     }
 
     // Text of the InfoWindow
-    let windowContent = '<div class="iip-map-ol-popup" id="infowindow-' + item.id + '">'+
-    '<h1 id="firstHeading" class="iip-map-ol-popup-header">' + item.event_name + ' </h1>' +
-    '<div id="bodyContent" class="iip-map-ol-popup-body">' +
+    let windowText = '<div id="bodyContent-' + item.id + '" class="iip-map-ol-popup-body">' +
     topicLine +
     '<p>' + item.event_desc + '</p>'+
     '<h3 class="iip-map-ol-popup-header">When: </h3>' +
@@ -152,14 +139,22 @@ function plotMarkers(m) {
     item.venue_address + '<br />' +
     item.venue_city + '<br />' +
     contactLine + '</p>' +
-    '</div>' +
+    '</div>';
+
+    // Div for InfoWindow
+    let windowContent = '<div class="iip-map-ol-popup" id="infowindow-' + item.id + '">' +
+    '<h1 id="firstHeading" class="iip-map-ol-popup-header">' + item.event_name + ' </h1>' +
+    windowText +
     '</div>';
 
     // Define markers
     var marker = new ol.Feature({
+      content: windowContent,
       geometry: new ol.geom.Point(ol.proj.transform(latLng, 'EPSG:4326',
         'EPSG:3857')),
-      content: windowContent
+      id: item.id,
+      text: windowText,
+      title: item.event_name
     });
 
     markerSource.addFeature(marker);
@@ -173,6 +168,7 @@ map.on('click', function(evt) {
   let popup = new Popup();
   map.addOverlay(popup);
 
+  //Set event listener for eech marker
   let feature = map.forEachFeatureAtPixel(
     evt.pixel,
     function(feature, layer) {
@@ -180,17 +176,55 @@ map.on('click', function(evt) {
     }
   );
 
-  console.log(feature);
-
   if (feature) {
     let coord = evt.coordinate;
-    if (typeof feature.get('features') === 'undefined') {
-      let content = feature.get('content');
+    let data = feature.get('features');
+    let content = data[0].N.content;
+    let featureNum = data.length;
+
+    // Show infowindow if only one event in cluster
+    if (featureNum === 1) {
+      popup.show(coord, content);
+
+    // Show accoridon of events if multiple events in cluster
+    } else {
+      let titleList = document.createElement('div');
+      titleList.className = 'iip-map-ol-popup';
+
+      for ( var i = 0; i < featureNum; i++) {
+
+        let itemId = data[i].N.id;
+        let itemTitle = '<h1 class="marker-event-title iip-map-ol-popup-header" id="title-marker-' + itemId + '">' + data[i].N.title + '</h1>';
+        let itemText = '<div class="marker-text" id="text-marker-' + itemId + '">' + data[i].N.text + '</div>';
+        let itemContainer = '<div class="marker-accordion closed">' + itemTitle + itemText + '</div>';
+
+        titleList.insertAdjacentHTML('afterbegin', itemContainer);
+
+      }
+      popup.show(coord, titleList);
+
+      // Toggle description text when clicking on event title
+      let accItem = document.getElementsByClassName('marker-accordion');
+      let accHead = document.getElementsByClassName('marker-event-title');
+      for (var i = 0; i < accHead.length; i++) {
+        accHead[i].addEventListener('click', toggleItem, false);
+      }
+
+      function toggleItem() {
+
+        let itemClass = this.parentNode.className;
+
+        for (var i = 0; i < accItem.length; i++) {
+          accItem[i].className = 'marker-accordion closed';
+        }
+        if (itemClass == 'marker-accordion closed') {
+          this.parentNode.className = 'marker-accordion opened';
+        }
+      }
+
     }
 
-    popup.show(coord, content);
-
-  } else {
+  } else if (!feature) {
     popup.hide();
   }
 

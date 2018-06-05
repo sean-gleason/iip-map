@@ -1,3 +1,4 @@
+/* Style Google Maps info-windows */
 h1.iip-map-infowin-header {
   font-size: 1.5em;
   margin: .5em 0;
@@ -17,9 +18,21 @@ h3.iip-map-infowin-header {
   max-width: none !important;
 }
 
+/* Style OpenLayers info-windows */
 .iip-map-ol-popup {
   background: #ffffff;
+  border: solid 1px #cccccc;
   padding: 10px;
+  position: absolute;
+  transform: translateX(-50%);
+  width: 600px;
+}
+
+.iip-map-ol-popup::before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
 }
 
 h1.iip-map-ol-popup-header {
@@ -34,4 +47,41 @@ h3.iip-map-ol-popup-header {
 
 .iip-map-ol-popup-body > p {
   font-size: .75em;
+}
+
+.marker-event-title {
+  padding-bottom: 10px;
+}
+
+.closed .marker-text {
+  display: none;
+}
+
+.opened .marker-text {
+  display: block;
+}
+
+.ol-popup {
+  display: inline-block;
+  max-height: 654px;
+  max-width: 654px;
+  overflow: auto;
+}
+
+.ol-popup-closer {
+  padding: 0 4px;
+  position: absolute;
+  right: -295px;
+  text-decoration: none;
+  top: 2px;
+  z-index: 1;
+}
+
+.ol-popup-closer:hover {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+.ol-popup-closer:after {
+  content: "\2716";
 }

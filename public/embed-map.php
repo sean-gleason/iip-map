@@ -12,7 +12,7 @@ class IIP_Map_Embed {
   public function iip_map_register_embed() {
     wp_register_script( 'draw-gmap', plugin_dir_url( __FILE__ ) . 'js/dist/draw-gmap.min.js', array(), null, true );
 
-    wp_register_script( 'draw-ol-map', plugin_dir_url( __FILE__ ) . 'js/draw-ol-map.js', array(), null, true );
+    wp_register_script( 'draw-ol-map', plugin_dir_url( __FILE__ ) . 'js/dist/draw-ol-map.min.js', array(), null, true );
 
     wp_register_script( 'openlayers', plugin_dir_url( __FILE__ ) . 'js/dist/ol.js', array(), null, true );
 
