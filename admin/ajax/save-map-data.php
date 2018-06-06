@@ -22,8 +22,10 @@ class IIP_Map_Import {
       // Convert time to proper format
       $time_array = $entry['event_time'];
       if ($time_array != null) {
-        if ($time_array['am_pm'] == 'PM') {
+        if ($time_array['am_pm'] == 'PM' && $time_array['hours'] < 12) {
           $hours = $time_array['hours'] + 12;
+        } elseif ($time_array['am_pm'] == 'AM' && $time_array['hours'] == 12) {
+          $hours = $time_array['hours'] - 12;
         } else {
           $hours = $time_array['hours'];
         }

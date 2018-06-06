@@ -47,6 +47,7 @@ function getScreendoorData() {
 
     statusDisplay('Call to Screendoor API: ' + status);
     geocodeAddress(data);
+    console.log(data);
   }
 }
 
@@ -73,6 +74,7 @@ function geocodeAddress(jsonObj) {
       let venue_region = item.responses[regionField];
       let venue_country = item.responses[countryField];
       let event_name = item.responses[eventField];
+      let event_duration = item.responses[durationField].checked[0];
       let responseId = item.id;
 
       // Pull out address info and write to a string
@@ -101,7 +103,7 @@ function geocodeAddress(jsonObj) {
             'event_desc': item.responses[descField],
             'event_date': item.responses[dateField],
             'event_time': item.responses[timeField],
-            'event_duration': item.responses[durationField],
+            'event_duration': event_duration,
             'event_topic': item.responses[topicField],
             'contact': item.responses[contactField]
           };
@@ -130,7 +132,7 @@ function geocodeAddress(jsonObj) {
                 'event_desc': item.responses[descField],
                 'event_date': item.responses[dateField],
                 'event_time': item.responses[timeField],
-                'event_duration': item.responses[durationField],
+                'event_duration': event_duration,
                 'event_topic': item.responses[topicField],
                 'contact': item.responses[contactField]
               };
