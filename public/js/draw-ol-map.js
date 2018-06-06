@@ -127,12 +127,20 @@ function plotMarkers(m) {
       contactLine = '';
     }
 
+    // Convert date from YYYY-MM-DD format
+    let locale = 'en-us';
+    let eventDate = new Date(item.event_date);
+
+    let eventDay = eventDate.getDate();
+    let eventMonth = eventDate.toLocaleString(locale, { month: 'long' });
+    let dateLine = eventMonth + ' ' + eventDay;
+
     // Text of the InfoWindow
     let windowText = '<div id="bodyContent-' + item.id + '" class="iip-map-ol-popup-body">' +
     topicLine +
     '<p>' + item.event_desc + '</p>'+
     '<h3 class="iip-map-ol-popup-header">When: </h3>' +
-    '<p> On ' + item.event_date + ' at ' + item.event_time + '. <br />' +
+    '<p> On ' + dateLine + ' at ' + item.event_time + '. <br />' +
     'Estimated duration: ' + item.event_duration + '</p>' +
     '<h3 class="iip-map-ol-popup-header">Where: </h3>' +
     '<p>' + hostLine +

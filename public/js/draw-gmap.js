@@ -78,6 +78,14 @@ function plotMarkers(m) {
       contactLine = '';
     }
 
+    // Convert date from YYYY-MM-DD format
+    let locale = 'en-us';
+    let eventDate = new Date(item.event_date);
+
+    let eventDay = eventDate.getDate();
+    let eventMonth = eventDate.toLocaleString(locale, { month: 'long' });
+    let dateLine = eventMonth + ' ' + eventDay;
+
     // Text of the InfoWindow
     let windowContent = '<div id="infowindow-' + item.id + '">'+
     '<h1 id="firstHeading" class="iip-map-infowin-header">' + item.event_name + ' </h1>' +
@@ -85,7 +93,7 @@ function plotMarkers(m) {
     topicLine +
     '<p>' + item.event_desc + '</p>'+
     '<h3 class="iip-map-infowin-header">When: </h3>' +
-    '<p> On ' + item.event_date + ' at ' + item.event_time + '. <br />' +
+    '<p> On ' + dateLine + ' at ' + item.event_time + '. <br />' +
     'Estimated duration: ' + item.event_duration + '</p>' +
     '<h3 class="iip-map-infowin-header">Where: </h3>' +
     '<p>' + hostLine +
