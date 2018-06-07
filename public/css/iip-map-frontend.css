@@ -13,6 +13,12 @@ h3.iip-map-infowin-header {
   font-size: 1em;
 }
 
+@media screen and (max-width: 720px) {
+  .gm-style-iw {
+    max-width: 80vw;
+  }
+}
+
 /* Prevent zoom and other Google map icons from blurring */
 #map img {
   max-width: none !important;
@@ -26,6 +32,16 @@ h3.iip-map-infowin-header {
   position: absolute;
   transform: translateX(-50%);
   width: 600px;
+}
+
+@media screen and (max-width: 720px) {
+  .iip-map-ol-popup {
+    width: 80vw;
+  }
+
+  .ol-popup-closer {
+    right: -39vw !important;
+  }
 }
 
 .iip-map-ol-popup::before {
@@ -78,8 +94,8 @@ h3.iip-map-ol-popup-header {
 }
 
 .ol-popup-closer:hover {
-  text-decoration: none;
   border-bottom: none;
+  text-decoration: none;
 }
 
 .ol-popup-closer:after {

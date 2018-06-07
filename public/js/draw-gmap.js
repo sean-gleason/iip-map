@@ -108,6 +108,10 @@ function plotMarkers(m) {
       infoWin.open(map, marker);
     });
 
+    google.maps.event.addListener(map, 'click', function(evt) {
+      infoWin.close();
+    });
+
     markers.push(marker);
     markerSpiderfier.addMarker(marker);
   })

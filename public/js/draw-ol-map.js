@@ -84,6 +84,11 @@ let markerLayer = new ol.layer.Vector({
 });
 
 // Create the map
+let mapCenter = new ol.View({
+  center: ol.proj.fromLonLat([parseFloat(lng), parseFloat(lat)]),
+  zoom: parseInt(zoom),
+});
+
 let map = new ol.Map({
   target: 'map',
   controls: ol.control.defaults({
@@ -95,10 +100,7 @@ let map = new ol.Map({
     baseLayer,
     clusterLayer
   ],
-  view: new ol.View({
-    center: ol.proj.fromLonLat([parseFloat(lng), parseFloat(lat)]),
-    zoom: parseInt(zoom),
-  })
+  view: mapCenter
 });
 
 // Plot markers onto map
@@ -211,6 +213,13 @@ map.on('click', function(evt) {
       }
       popup.show(coord, titleList);
 
+      // Center the map on infowindow
+      let mapSize = map.getSize();
+      let mapCenterX = mapSize[0] / 2;
+      let mapCenterY = mapSize[1] / 4;
+
+      mapCenter.centerOn(coord, map.getSize(), [mapCenterX, mapCenterY]);
+
       // Toggle description text when clicking on event title
       let accItem = document.getElementsByClassName('marker-accordion');
       let accHead = document.getElementsByClassName('marker-event-title');
@@ -232,7 +241,7 @@ map.on('click', function(evt) {
 
     }
 
-  } else if (!feature) {
+  } else {
     popup.hide();
   }
 
