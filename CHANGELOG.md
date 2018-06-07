@@ -7,13 +7,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Filtering of markers based on topic and date
-- Ability to edit/update/delete existing markers
 - Internationalization and localization
 - Region-based dropdown to automatically add latitude and longitude in shortcode generator
-- Info windows and clustering on OpenLayers maps
+- Add on/off toggle for clustering
+- Add alert about API rate-limits when map type is set to Google Maps
 
 ### Changed
 - Add plugin deactivation hook to give option to delete all project and map data
+- Pull out only required methods from the OpenLayers library to reduce the amount of JavaScript loaded onto the page
+
+## [1.1.0] - 2018-06-06
+### Added
+- Map type dropdown to shortcode generator
+- Ability to edit the location of or entirely delete existing markers
+- InfoWindow popups and clustering on OpenLayers maps
+
+### Changed
+- Set event duration field to
+
+### Fixed
+- When set to noon, event time was being converted to midnight
 
 ## [1.0.3] - 2018-06-01
 ### Added
@@ -21,9 +34,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Option to display map using OpenLayers rather than Google Maps
 
 ### Changed
-- Force download of file when exporting project data
+- Display date in InfoWindow in 'Month DD' format rather than YYYY-MM-DD
 
 ### Fixed
+- Force download of file with data when exporting project data
 - Venue address was displaying the wrong value in the administrative panel
 
 ## [1.0.2] - 2018-05-25
