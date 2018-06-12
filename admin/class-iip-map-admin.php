@@ -123,7 +123,7 @@ class IIP_Map_Admin {
       'map_data_id' => $post->ID,
       'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
       'venue_field' => get_post_meta( $post->ID, '_iip_map_screendoor_venue', true),
-      'address_field' => get_post_meta( $post->ID, '_iip_map_screendoor_venue', true),
+      'address_field' => get_post_meta( $post->ID, '_iip_map_screendoor_address', true),
       'city_field' => get_post_meta( $post->ID, '_iip_map_screendoor_city', true),
       'region_field' => get_post_meta( $post->ID, '_iip_map_screendoor_region', true),
       'country_field' => get_post_meta( $post->ID, '_iip_map_screendoor_country', true),
