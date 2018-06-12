@@ -60,31 +60,54 @@ function plotMarkers(m) {
     });
 
     // Conditionals for the InfoWindows
-    if ( item.event_topic !== null ) {
+    if ( item.event_topic !== null && item.event_topic !== '' ) {
       topicLine = '<h3 class="iip-map-infowin-header">Topic: ' + item.event_topic + '</h3>';
     } else {
       topicLine = '<div></div>';
     }
 
-    if ( item.host_name !== null ) {
-      hostLine = 'Hosted by: ' + item.host_name + '<br />';
+    if ( item.event_duration !== null && item.event_duration !== '' ) {
+      durationLine = 'Estimated duration: ' + item.event_duration + '</p>';
+    } else {
+      durationLine = '';
+    }
+
+    if ( item.host_name !== null && item.host_name !== '' ) {
+      hostLine = item.host_name;
     } else {
       hostLine = '';
     }
 
-    if ( item.contact !== null && item.contact !== '') {
-      contactLine = 'Contact: ' + item.contact;
+    if ( item.contact !== null && item.contact !== '' ) {
+      contactLine = item.contact;
     } else {
       contactLine = '';
     }
 
+    if ( hostLine !== '' && contactLine !== '' ) {
+      contactBlock = '<h3 class="iip-map-infowin-header">Contact: </h3>' +
+      '<p>' + hostLine + '<br />' +
+      contactLine + '</p>';
+    } else if ( hostLine === '' && contactLine !== '' ) {
+      contactBlock = '<h3 class="iip-map-infowin-header">Contact: </h3>' +
+      '<p>' + contactLine + '</p>';
+    } else if ( hostLine !== '' && contactLine === '' )  {
+      contactBlock = '<h3 class="iip-map-infowin-header">Contact: </h3>' +
+      '<p>' + hostLine + '</p>';
+    } else {
+      contactBlock = '';
+    }
+
     // Convert date from YYYY-MM-DD format
     let locale = 'en-us';
-    let eventDate = new Date(item.event_date);
+    let eventDate = new Date(item.event_date + " " + item.event_time);
 
     let eventDay = eventDate.getDate();
     let eventMonth = eventDate.toLocaleString(locale, { month: 'long' });
     let dateLine = eventMonth + ' ' + eventDay;
+    let eventHour = eventDate.getHours();
+    let eventMinutes = eventDate.getMinutes();
+    let timeLine = eventHour + ':' + eventMinutes;
 
     // Text of the InfoWindow
     let windowContent = '<div id="infowindow-' + item.id + '">'+
@@ -93,17 +116,17 @@ function plotMarkers(m) {
     topicLine +
     '<p>' + item.event_desc + '</p>'+
     '<h3 class="iip-map-infowin-header">When: </h3>' +
-    '<p> On ' + dateLine + ' at ' + item.event_time + '. <br />' +
-    'Estimated duration: ' + item.event_duration + '</p>' +
+    '<p> On ' + dateLine + ' at ' + timeLine + '. <br />' +
+    durationLine +
     '<h3 class="iip-map-infowin-header">Where: </h3>' +
-    '<p>' + hostLine +
-    item.venue_address + '<br />' +
+    '<p>' + item.venue_name + '<br />' +
     item.venue_city + '<br />' +
-    contactLine + '</p>' +
+    contactBlock +
     '</div>' +
     '</div>';
 
     google.maps.event.addListener(marker, 'click', function(evt) {
+      map.panTo(marker.getPosition());
       infoWin.setContent(windowContent);
       infoWin.open(map, marker);
     });

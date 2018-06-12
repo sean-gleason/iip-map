@@ -111,44 +111,66 @@ function plotMarkers(m) {
     let latLng = [parseFloat(item.lng), parseFloat(item.lat)];
 
     // Conditionals for the InfoWindows
-    if ( item.event_topic !== null ) {
+    if ( item.event_topic !== null && item.event_topic !== '' ) {
       topicLine = '<h3 class="iip-map-ol-popup-header">Topic: ' + item.event_topic + '</h3>';
     } else {
       topicLine = '<div></div>';
     }
 
-    if ( item.host_name !== null ) {
-      hostLine = 'Hosted by: ' + item.host_name + '<br />';
+    if ( item.event_duration !== null && item.event_duration !== '' ) {
+      durationLine = 'Estimated duration: ' + item.event_duration + '</p>';
+    } else {
+      durationLine = '';
+    }
+
+    if ( item.host_name !== null && item.host_name !== '' ) {
+      hostLine = item.host_name;
     } else {
       hostLine = '';
     }
 
-    if ( item.contact !== null && item.contact !== '') {
-      contactLine = 'Contact: ' + item.contact;
+    if ( item.contact !== null && item.contact !== '' ) {
+      contactLine = item.contact;
     } else {
       contactLine = '';
     }
 
+    if ( hostLine !== '' && contactLine !== '' ) {
+      contactBlock = '<h3 class="iip-map-ol-popup-header">Contact: </h3>' +
+      '<p>' + hostLine + '<br />' +
+      contactLine + '</p>';
+    } else if ( hostLine === '' && contactLine !== '' ) {
+      contactBlock = '<h3 class="iip-map-ol-popup-header">Contact: </h3>' +
+      '<p>' + contactLine + '</p>';
+    } else if ( hostLine !== '' && contactLine === '' )  {
+      contactBlock = '<h3 class="iip-map-ol-popup-header">Contact: </h3>' +
+      '<p>' + hostLine + '</p>';
+    } else {
+      contactBlock = '';
+    }
+
     // Convert date from YYYY-MM-DD format
     let locale = 'en-us';
-    let eventDate = new Date(item.event_date);
+    let eventDate = new Date(item.event_date + " " + item.event_time);
 
     let eventDay = eventDate.getDate();
     let eventMonth = eventDate.toLocaleString(locale, { month: 'long' });
     let dateLine = eventMonth + ' ' + eventDay;
+    let eventHour = eventDate.getHours();
+    let eventMinutes = eventDate.getMinutes();
+    let timeLine = eventHour + ':' + eventMinutes;
 
     // Text of the InfoWindow
     let windowText = '<div id="bodyContent-' + item.id + '" class="iip-map-ol-popup-body">' +
     topicLine +
     '<p>' + item.event_desc + '</p>'+
     '<h3 class="iip-map-ol-popup-header">When: </h3>' +
-    '<p> On ' + dateLine + ' at ' + item.event_time + '. <br />' +
-    'Estimated duration: ' + item.event_duration + '</p>' +
+    '<p> On ' + dateLine + ' at ' + timeLine + '. <br />' +
+    durationLine +
     '<h3 class="iip-map-ol-popup-header">Where: </h3>' +
-    '<p>' + hostLine +
-    item.venue_address + '<br />' +
+    '<p>' + item.venue_name + '<br />' +
     item.venue_city + '<br />' +
-    contactLine + '</p>' +
+    contactBlock +
     '</div>';
 
     // Div for InfoWindow
@@ -178,6 +200,8 @@ map.on('click', function(evt) {
   let popup = new Popup();
   map.addOverlay(popup);
 
+  let coord = evt.coordinate;
+
   //Set event listener for eech marker
   let feature = map.forEachFeatureAtPixel(
     evt.pixel,
@@ -187,7 +211,7 @@ map.on('click', function(evt) {
   );
 
   if (feature) {
-    let coord = evt.coordinate;
+
     let data = feature.get('features');
     let content = data[0].N.content;
     let featureNum = data.length;
@@ -195,6 +219,7 @@ map.on('click', function(evt) {
     // Show infowindow if only one event in cluster
     if (featureNum === 1) {
       popup.show(coord, content);
+      centerMap();
 
     // Show accoridon of events if multiple events in cluster
     } else {
@@ -212,13 +237,7 @@ map.on('click', function(evt) {
 
       }
       popup.show(coord, titleList);
-
-      // Center the map on infowindow
-      let mapSize = map.getSize();
-      let mapCenterX = mapSize[0] / 2;
-      let mapCenterY = mapSize[1] / 4;
-
-      mapCenter.centerOn(coord, map.getSize(), [mapCenterX, mapCenterY]);
+      centerMap();
 
       // Toggle description text when clicking on event title
       let accItem = document.getElementsByClassName('marker-accordion');
@@ -243,6 +262,15 @@ map.on('click', function(evt) {
 
   } else {
     popup.hide();
+  }
+
+  function centerMap() {
+    // Center the map on infowindow
+    let mapSize = map.getSize();
+    let mapCenterX = mapSize[0] / 2;
+    let mapCenterY = mapSize[1] / 4;
+
+    mapCenter.centerOn(coord, map.getSize(), [mapCenterX, mapCenterY]);
   }
 
 });
