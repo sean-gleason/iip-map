@@ -47,7 +47,6 @@ function getScreendoorData() {
 
     statusDisplay('Call to Screendoor API: ' + status);
     geocodeAddress(data);
-    console.log(data);
   }
 }
 

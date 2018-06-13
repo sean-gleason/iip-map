@@ -34,14 +34,6 @@ class IIP_Map_Import {
         $event_time = '00:00:00';
       }
 
-      // Get topic from array
-      $topic_array = $entry['event_topic'];
-      if ($topic_array != null) {
-        $event_topic = $topic_array['checked'][0];
-      } else {
-        $event_topic = null;
-      }
-
       $wpdb->insert(
       	$table,
       	array(
@@ -59,7 +51,7 @@ class IIP_Map_Import {
           'event_date' => $event_date,
           'event_time' => $event_time,
           'event_duration' => $entry['event_duration'],
-          'event_topic' => $event_topic,
+          'event_topic' => $entry['event_topic'],
           'contact' => $entry['contact']
       	),
       	array(
