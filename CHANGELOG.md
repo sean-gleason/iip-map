@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Pull out only required methods from the OpenLayers library to reduce the amount of JavaScript loaded onto the page
 - Add default values to shortcode generator
 
+## [1.1.2] - 2018-06-19
+### Changed
+- Add visual cues to indicate that OpenLayers InfoWindow is an accordion when more than one event listed
+
 ## [1.1.1] - 2018-06-13
 ### Changed
 - Recenter map on InfoWindow when clicking on marker (in OpenLayers and Google Maps)
