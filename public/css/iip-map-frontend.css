@@ -61,12 +61,20 @@ h3.iip-map-ol-popup-header {
   margin: .5em 0;
 }
 
+.iip-map-ol-popup-body {
+  padding-bottom: 10px;
+}
+
 .iip-map-ol-popup-body > p {
   font-size: .75em;
 }
 
 .marker-event-title {
   padding-bottom: 10px;
+}
+
+.marker-event-title:hover {
+  cursor: pointer;
 }
 
 .closed .marker-text {
@@ -100,4 +108,18 @@ h3.iip-map-ol-popup-header {
 
 .ol-popup-closer:after {
   content: "\2716";
+}
+
+.arrow {
+  display: inline-block;
+  font-size: .75em;
+  padding-left: 10px;
+}
+
+.closed .arrow {
+  transform: translateY(-10%) rotateX(180deg);
+}
+
+.opened .arrow {
+  transform: translateY(-10%);
 }

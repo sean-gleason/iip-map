@@ -175,7 +175,7 @@ function plotMarkers(m) {
 
     // Div for InfoWindow
     let windowContent = '<div class="iip-map-ol-popup" id="infowindow-' + item.id + '">' +
-    '<h1 id="firstHeading" class="iip-map-ol-popup-header">' + item.event_name + ' </h1>' +
+    '<h1 id="firstHeading" class="iip-map-ol-popup-header">' + item.event_name + ' - ' + dateLine + '</h1>' +
     windowText +
     '</div>';
 
@@ -186,7 +186,8 @@ function plotMarkers(m) {
         'EPSG:3857')),
       id: item.id,
       text: windowText,
-      title: item.event_name
+      title: item.event_name,
+      date: dateLine
     });
 
     markerSource.addFeature(marker);
@@ -229,7 +230,7 @@ map.on('click', function(evt) {
       for ( var i = 0; i < featureNum; i++) {
 
         let itemId = data[i].N.id;
-        let itemTitle = '<h1 class="marker-event-title iip-map-ol-popup-header" id="title-marker-' + itemId + '">' + data[i].N.title + '</h1>';
+        let itemTitle = '<h1 class="marker-event-title iip-map-ol-popup-header" id="title-marker-' + itemId + '">' + data[i].N.title + ' - ' + data[i].N.date + '<span class="arrow">\u25B2</span> </h1>';
         let itemText = '<div class="marker-text" id="text-marker-' + itemId + '">' + data[i].N.text + '</div>';
         let itemContainer = '<div class="marker-accordion closed">' + itemTitle + itemText + '</div>';
 
