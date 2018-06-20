@@ -157,7 +157,7 @@ function plotMarkers(m) {
     let eventMonth = eventDate.toLocaleString(locale, { month: 'long' });
     let dateLine = eventMonth + ' ' + eventDay;
     let eventHour = eventDate.getHours();
-    let eventMinutes = eventDate.getMinutes();
+    let eventMinutes = ('0' + eventDate.getMinutes()).slice(-2);
     let timeLine = eventHour + ':' + eventMinutes;
 
     // Text of the InfoWindow
