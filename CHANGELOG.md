@@ -14,8 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Add plugin deactivation hook to give option to delete all project and map data
-- Pull out only required methods from the OpenLayers library to reduce the amount of JavaScript loaded onto the page
 - Add default values to shortcode generator
+
+## [1.1.3] - 2018-06-21
+### Changed
+- Pull out only required methods from the OpenLayers library to reduce the amount of JavaScript loaded onto the page
+
+### Fixed
+- Add 0 to the front of single digit minutes in event time value
 
 ## [1.1.2] - 2018-06-19
 ### Changed
