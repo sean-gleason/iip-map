@@ -214,7 +214,7 @@ map.on('click', function(evt) {
   if (feature) {
 
     let data = feature.get('features');
-    let content = data[0].f.content;
+    let content = data[0].N.content;
     let featureNum = data.length;
 
     // Show infowindow if only one event in cluster
@@ -229,9 +229,9 @@ map.on('click', function(evt) {
 
       for ( var i = 0; i < featureNum; i++) {
 
-        let itemId = data[i].f.id;
-        let itemTitle = '<h1 class="marker-event-title iip-map-ol-popup-header" id="title-marker-' + itemId + '">' + data[i].f.title + ' - ' + data[i].f.date + '<span class="arrow">\u25B2</span> </h1>';
-        let itemText = '<div class="marker-text" id="text-marker-' + itemId + '">' + data[i].f.text + '</div>';
+        let itemId = data[i].N.id;
+        let itemTitle = '<h1 class="marker-event-title iip-map-ol-popup-header" id="title-marker-' + itemId + '">' + data[i].N.title + ' - ' + data[i].N.date + '<span class="arrow">\u25B2</span> </h1>';
+        let itemText = '<div class="marker-text" id="text-marker-' + itemId + '">' + data[i].N.text + '</div>';
         let itemContainer = '<div class="marker-accordion closed">' + itemTitle + itemText + '</div>';
 
         titleList.insertAdjacentHTML('afterbegin', itemContainer);
