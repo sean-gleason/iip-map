@@ -151,7 +151,7 @@ function plotMarkers(m) {
 
     // Convert date from YYYY-MM-DD format
     let locale = 'en-us';
-    let eventDate = new Date(item.event_date + " " + item.event_time);
+    let eventDate = new Date(item.event_date + "T" + item.event_time + "Z");
 
     let eventDay = eventDate.getDate();
     let eventMonth = eventDate.toLocaleString(locale, { month: 'long' });
