@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add plugin deactivation hook to give option to delete all project and map data
 - Add default values to shortcode generator
 
+## [1.1.4] - 2018-06-26
+### Changed
+- Revert back to full OpenLayers library
+
+### Fixed
+- Use ISO date format to avoid "Invalid Date" and `NaN` errors in Safari and mobile browsers
+
 ## [1.1.3] - 2018-06-21
 ### Changed
 - Pull out only required methods from the OpenLayers library to reduce the amount of JavaScript loaded onto the page
