@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const title = 'React admin page';
+import FormMapper from './containers/FormMapper/FormMapper';
 
 ReactDOM.render(
-  <div>{title}</div>,
+  <FormMapper />,
   document.getElementById('iip-map-admin-page')
 );
 
