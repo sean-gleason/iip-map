@@ -1,0 +1,36 @@
+#iip-map-admin-page {
+  padding-top: 10px;
+  min-width: 763px;
+}
+
+.iip-map-admin-metabox-holder {
+  margin-right: 300px;
+}
+
+h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
+  cursor: default;
+}
+
+.iip-map-admin-column-wide {
+  width: 100%;
+}
+
+.iip-map-admin-column-side {
+  float: right;
+  margin-right: -300px;
+  width: 280px
+}
+
+.iip-map-admin-screendoor-project-container {
+  margin: 10px 0;
+}
+
+.iip-map-admin-project-form {
+  align-items: center;
+  display: flex;
+  width: 100%;
+}
+
+.iip-map-admin-project-input {
+  margin: 0 10px;
+}

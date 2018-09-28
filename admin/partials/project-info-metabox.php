@@ -25,7 +25,7 @@ $screendoor_contact = get_post_meta( $post->ID, '_iip_map_screendoor_contact', t
     <div class="map-project-input-div">
       <label class="map-admin-label" for="_iip_map_screendoor_project"><?php _e( 'Screendoor Project ID:', 'iip-map' )?></label>
       <input
-      id="iip-map-screendoor-project"
+        id="iip-map-screendoor-project"
         type="text"
         name="_iip_map_screendoor_project"
         class="map-admin-project-info-input"

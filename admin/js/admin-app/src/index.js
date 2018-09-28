@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import FormMapper from './containers/FormMapper/FormMapper';
+import MapAdminPage from './containers/MapAdminPage';
+
+import './index.css';
 
 ReactDOM.render(
-  <FormMapper />,
-  document.getElementById('iip-map-admin-page')
+  <MapAdminPage />,
+  document.getElementById( 'iip-map-admin-page' )
 );
 
 module.hot.accept();
