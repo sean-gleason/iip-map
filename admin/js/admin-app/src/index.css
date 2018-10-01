@@ -21,13 +21,38 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
   width: 280px
 }
 
+#iip-map-admin-form-select {
+  margin-left: 10px;
+}
+
+.iip-map-admin-shortcode-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.iip-map-admin-shortcode-label {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iip-map-admin-shortcode-input,
+.iip-map-admin-shortcode-select {
+  width: 40%;
+}
+
 .iip-map-admin-screendoor-project-container {
-  margin: 10px 0;
+  background-color: #F9F9F9;
+  border: 1px solid #e5e5e5;
+  margin: 10px 5px 5px;
 }
 
 .iip-map-admin-project-form {
   align-items: center;
   display: flex;
+  padding: 10px;
   width: 100%;
 }
 
