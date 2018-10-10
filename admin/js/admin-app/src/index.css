@@ -59,3 +59,28 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
 .iip-map-admin-project-input {
   margin: 0 10px;
 }
+
+.iip-map-admin-configure-box {
+  display: flex;
+  justify-content: space-between;
+}
+
+.iip-map-admin-mapbox {
+  flex-basis: 66%;
+}
+
+.iip-map-admin-shortcode-box {
+  flex-basis: 33%;
+}
+
+.iip-map-admin-mapbox,
+.iip-map-admin-shortcode-box {
+  background-color: #F9F9F9;
+  border: 1px solid #e5e5e5;
+  margin: 10px 5px 5px;
+  padding: 10px;
+}
+
+h4.iip-map-admin-metabox-header {
+  margin-top: 0;
+}
