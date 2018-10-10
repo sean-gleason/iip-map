@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import FormSelector from '../components/Metaboxes/FormSelector';
+import ScreendoorModal from '../components/Modals/ScreendoorModal';
 
 class FormMapper extends Component {
   constructor( props ) {
@@ -40,7 +41,10 @@ class FormMapper extends Component {
           </label>
 
           { ( formType === 'screendoor' ) && (
-            <FormSelector formType="screendoor" projectId={ projectId } setId={ this.setProjectId } />
+            <div className="iip-map-admin-screendoor">
+              <FormSelector formType="screendoor" projectId={ projectId } setId={ this.setProjectId } />
+              <ScreendoorModal projectId={ projectId } />
+            </div>
           ) }
 
           { ( formType === 'formidable' ) && (

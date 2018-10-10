@@ -29,10 +29,20 @@ export const getScreendoorFields = ( projectId, apiKey ) => {
   formXHR.send();
 
   formXHR.onload = function setResponses() {
-    const formData = formXHR.response;
+    const formData = formXHR.response.field_data;
     const formStatus = formXHR.statusText;
 
-    console.log( formData, formStatus );
+    const fields = [];
+
+    formData.forEach( ( element ) => {
+      const { label } = element;
+      const { id } = element;
+      const fieldObj = { name: label, field: id };
+
+      fields.push( fieldObj );
+    } );
+
+    return fields;
 
   //   populateScreendoorFields( formData.field_data );
   };

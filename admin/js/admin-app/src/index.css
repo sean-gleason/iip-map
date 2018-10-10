@@ -4,7 +4,7 @@
 }
 
 .iip-map-admin-metabox-holder {
-  margin-right: 300px;
+  display: flex;
 }
 
 h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
@@ -16,21 +16,39 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
 }
 
 .iip-map-admin-column-side {
-  float: right;
-  margin-right: -300px;
-  width: 280px
+  margin-left: 20px;
+  width: 280px;
+}
+
+@media screen and (max-width: 950px) {
+  .iip-map-admin-metabox-holder {
+    flex-direction: column;
+  }
+  
+  .iip-map-admin-column-side {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .iip-map-admin-small-metabox {
+    flex-basis: 49%;
+  }
 }
 
 #iip-map-admin-form-select {
   margin-left: 10px;
 }
 
-.iip-map-admin-shortcode-container {
+.iip-map-admin-shortcode-container,
+.iip-map-admin-marker-container {
   display: flex;
   flex-direction: column;
 }
 
-.iip-map-admin-shortcode-label {
+.iip-map-admin-shortcode-label,
+.iip-map-admin-marker-label {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -83,4 +101,18 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
 
 h4.iip-map-admin-metabox-header {
   margin-top: 0;
+}
+
+.iip-map-admin-marker-container {
+  margin: 20px 0;
+}
+
+.iip-map-admin-marker-input {
+  width: 50%;
+}
+
+.iip-map-admin-button-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }

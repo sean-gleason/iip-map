@@ -1,6 +1,7 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
+import ScreendoorModal from '../Modals/ScreendoorModal';
 import { getScreendoorFields } from '../../utils/screendoor';
 import { capitalize } from '../../utils/texttransforms';
 
@@ -23,7 +24,7 @@ const FormSelector = ( { formType, projectId, setId } ) => (
       <button
         className="button button-primary button-large"
         id={ `iip-map-select-${formType}-project` }
-        onClick={ () => { getScreendoorFields( projectId, '' ); } }
+        // onClick={ () => { getScreendoorFields( projectId, '' ); } }
         type="button"
       >
         Select This Project
