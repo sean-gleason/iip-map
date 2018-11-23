@@ -3,16 +3,26 @@ import React, { Component } from 'react';
 import FormSelector from '../components/Metaboxes/FormSelector';
 import ScreendoorModal from '../components/Modals/ScreendoorModal';
 
+import { getScreendoorFields } from '../utils/screendoor';
+import { screendoorApiKey } from '../utils/globals';
+
 class FormMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
+      apiKey: '',
       formType: '',
-      projectId: ''
+      projectId: '',
+      showModal: false
     };
 
     this.setProjectId = this.setProjectId.bind( this );
     this.chooseFormType = this.chooseFormType.bind( this );
+    this.handleScreendoor = this.handleScreendoor.bind( this );
+  }
+
+  componentDidMount() {
+    this.setState( { apiKey: screendoorApiKey } );
   }
 
   setProjectId( event ) {
@@ -23,8 +33,17 @@ class FormMapper extends Component {
     this.setState( { formType: event.target.value } );
   }
 
+  handleScreendoor( event ) {
+    // const { apiKey, projectId } = this.state;
+
+    // getScreendoorFields( projectId, apiKey );
+    this.setState( { showModal: true } );
+  }
+
   render() {
-    const { formType, projectId } = this.state;
+    const {
+      apiKey, formType, projectId, showModal
+    } = this.state;
 
     return (
       <div className="postbox">
@@ -42,8 +61,18 @@ class FormMapper extends Component {
 
           { ( formType === 'screendoor' ) && (
             <div className="iip-map-admin-screendoor">
-              <FormSelector formType="screendoor" projectId={ projectId } setId={ this.setProjectId } />
-              <ScreendoorModal projectId={ projectId } />
+              <FormSelector
+                apiKey={ apiKey }
+                formType="screendoor"
+                projectId={ projectId }
+                setId={ this.setProjectId }
+                getFields={ this.handleScreendoor }
+              />
+              <ScreendoorModal
+                apiKey={ apiKey }
+                projectId={ projectId }
+                show={ showModal }
+              />
             </div>
           ) }
 

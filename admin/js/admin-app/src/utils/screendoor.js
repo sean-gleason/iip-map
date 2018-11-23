@@ -42,6 +42,7 @@ export const getScreendoorFields = ( projectId, apiKey ) => {
       fields.push( fieldObj );
     } );
 
+    // console.log(fields);
     return fields;
 
   //   populateScreendoorFields( formData.field_data );
