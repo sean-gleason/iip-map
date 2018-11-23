@@ -25,6 +25,9 @@ class IIP_Map_Admin {
         // Enqueue admin JavaScript bundle
         wp_enqueue_script( 'iip-map-admin-js', IIP_MAP_URL . 'admin/js/dist/admin.min.js', array(), null, true );
 
+        // Enqueue new admin JavaScript bundle
+        wp_enqueue_script( 'admin-app-js', IIP_MAP_URL . 'admin/js/admin-app/globals.js', array(), null, true );
+
       }
     }
   }
@@ -140,6 +143,33 @@ class IIP_Map_Admin {
 
     // Pass all PHP variable to admin JS
     wp_localize_script( 'iip-map-admin-js', 'iip_map_params', array(
+      'map_data_id' => $post->ID,
+      'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
+      'venue_field' => get_post_meta( $post->ID, '_iip_map_screendoor_venue', true),
+      'address_field' => get_post_meta( $post->ID, '_iip_map_screendoor_address', true),
+      'city_field' => get_post_meta( $post->ID, '_iip_map_screendoor_city', true),
+      'region_field' => get_post_meta( $post->ID, '_iip_map_screendoor_region', true),
+      'country_field' => get_post_meta( $post->ID, '_iip_map_screendoor_country', true),
+      'host_field' => get_post_meta( $post->ID, '_iip_map_screendoor_hostname', true),
+      'event_field' => get_post_meta( $post->ID, '_iip_map_screendoor_event', true),
+      'desc_field' => get_post_meta( $post->ID, '_iip_map_screendoor_desc', true),
+      'date_field' => get_post_meta( $post->ID, '_iip_map_screendoor_date', true),
+      'time_field' => get_post_meta( $post->ID, '_iip_map_screendoor_time', true),
+      'duration_field' => get_post_meta( $post->ID, '_iip_map_screendoor_duration', true),
+      'topic_field' => get_post_meta( $post->ID, '_iip_map_screendoor_topic', true),
+      'contact_field' => get_post_meta( $post->ID, '_iip_map_screendoor_contact', true),
+      'trigger_status' => get_post_meta( $post->ID, '_iip_map_geocoder_trigger', true),
+      'complete_status' => get_post_meta( $post->ID, '_iip_map_geocoder_complete', true),
+      'screendoor_api_key' => get_option( 'iip_map_screendoor_api_key' ),
+      'google_api_key' => get_option( 'iip_map_google_maps_api_key' ),
+      'ajax_url' => admin_url( 'admin-ajax.php' ),
+      'geocode_nonce' => wp_create_nonce('iip-map-geocode-nonce'),
+      'update_nonce' => wp_create_nonce('iip-map-update-nonce'),
+      'export_nonce' => wp_create_nonce('iip-map-export-nonce')
+    ));
+
+    // Pass all PHP variable to admin JS
+    wp_localize_script( 'admin-app-js', 'iip_map_params', array(
       'map_data_id' => $post->ID,
       'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
       'venue_field' => get_post_meta( $post->ID, '_iip_map_screendoor_venue', true),
