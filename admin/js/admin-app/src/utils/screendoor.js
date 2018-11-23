@@ -9,6 +9,22 @@ export const setEndpoints = ( projectId, apiKey ) => {
   };
 };
 
+// Add Screendoor objects to and array
+export const getData = ( response ) => {
+  const formData = response.field_data;
+  const fields = [];
+
+  formData.forEach( ( element ) => {
+    const { label } = element;
+    const { id } = element;
+    const fieldObj = { name: label, field: id };
+
+    fields.push( fieldObj );
+  } );
+
+  return fields;
+};
+
 // Identify button to get Screendoor data
 // const getFieldsBtn = document.getElementById('iip-map-get-fields');
 // getFieldsBtn.addEventListener('click', getScreendoorMeta);

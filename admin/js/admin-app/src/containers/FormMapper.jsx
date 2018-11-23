@@ -3,17 +3,18 @@ import React, { Component } from 'react';
 import FormSelector from '../components/Metaboxes/FormSelector';
 import ScreendoorModal from '../components/Modals/ScreendoorModal';
 
-import { getScreendoorFields } from '../utils/screendoor';
+import { getData } from '../utils/screendoor';
 import { screendoorApiKey } from '../utils/globals';
 
 class FormMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      apiKey: '',
+      apiKey: screendoorApiKey,
       formType: '',
       projectId: '',
-      showModal: false
+      showModal: false,
+      data: null
     };
 
     this.setProjectId = this.setProjectId.bind( this );
@@ -21,8 +22,12 @@ class FormMapper extends Component {
     this.handleScreendoor = this.handleScreendoor.bind( this );
   }
 
-  componentDidMount() {
-    this.setState( { apiKey: screendoorApiKey } );
+  componentDidUpdate( prevProps, prevState ) {
+    const { apiKey, projectId } = this.state;
+
+    if ( projectId !== prevState.projectId ) {
+      this._loadData( projectId, apiKey );
+    }
   }
 
   setProjectId( event ) {
@@ -33,16 +38,19 @@ class FormMapper extends Component {
     this.setState( { formType: event.target.value } );
   }
 
-  handleScreendoor( event ) {
-    // const { apiKey, projectId } = this.state;
-
-    // getScreendoorFields( projectId, apiKey );
+  handleScreendoor() {
     this.setState( { showModal: true } );
+  }
+
+  _loadData( projectId, apiKey ) {
+    fetch( `https://screendoor.dobt.co/api/projects/${projectId}/form?&v=0&api_key=${apiKey}` )
+      .then( r => r.json() )
+      .then( response => this.setState( { data: getData( response ) } ) );
   }
 
   render() {
     const {
-      apiKey, formType, projectId, showModal
+      apiKey, data, formType, projectId, showModal
     } = this.state;
 
     return (
@@ -70,6 +78,7 @@ class FormMapper extends Component {
               />
               <ScreendoorModal
                 apiKey={ apiKey }
+                data={ data }
                 projectId={ projectId }
                 show={ showModal }
               />

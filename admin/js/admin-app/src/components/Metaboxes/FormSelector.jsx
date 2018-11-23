@@ -1,11 +1,10 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
-import ScreendoorModal from '../Modals/ScreendoorModal';
 import { capitalize } from '../../utils/texttransforms';
 
 const FormSelector = ( {
-  apiKey, formType, projectId, setId, getFields
+  formType, projectId, setId, getFields
 } ) => (
   <div className="iip-map-admin-screendoor-project-container" id={ `${formType}-project-selector` }>
     <form className="iip-map-admin-project-form">
@@ -36,10 +35,10 @@ const FormSelector = ( {
 );
 
 FormSelector.propTypes = {
-  apiKey: string,
   formType: string,
   projectId: string,
-  setId: func
+  setId: func,
+  getFields: func
 };
 
 export default FormSelector;
