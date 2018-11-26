@@ -116,3 +116,19 @@ h4.iip-map-admin-metabox-header {
   justify-content: space-between;
   margin-top: 10px;
 }
+
+#admin-map {
+  align-items: center;
+  border: 1px solid #EEEEEE;
+  display: flex;
+  justify-content: center;
+}
+
+.crosshair {
+  color: red;
+  display: block;
+  font-size: 30px;
+  margin: 0;
+  position: absolute;
+  z-index: 1000;
+}

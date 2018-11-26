@@ -5,6 +5,7 @@ import ScreendoorModal from '../components/Modals/ScreendoorModal';
 
 import { getData } from '../utils/screendoor';
 import { screendoorApiKey } from '../utils/globals';
+import { adminMap } from '../utils/map';
 
 class FormMapper extends Component {
   constructor( props ) {
@@ -20,6 +21,10 @@ class FormMapper extends Component {
     this.setProjectId = this.setProjectId.bind( this );
     this.chooseFormType = this.chooseFormType.bind( this );
     this.handleScreendoor = this.handleScreendoor.bind( this );
+  }
+
+  componentDidMount() {
+    adminMap();
   }
 
   componentDidUpdate( prevProps, prevState ) {
