@@ -26,14 +26,14 @@ class IIP_Map_Admin {
         wp_enqueue_script( 'iip-map-admin-js', IIP_MAP_URL . 'admin/js/dist/admin.min.js', array(), null, true );
 
         // Enqueue new admin JavaScript bundle
-        wp_enqueue_script( 'admin-app-js', IIP_MAP_URL . 'admin/js/admin-app/globals.js', array(), null, true );
+        wp_enqueue_script( 'admin-app-js', IIP_MAP_URL . 'admin/js/globals.js', array(), null, true );
 
       }
     }
   }
 
   public function enqueue_admin_menu2() {
-    wp_enqueue_script( 'iip-map-admin-js2', IIP_MAP_URL . 'admin/js/admin-app/admin-app.js', array(), null, true );
+    wp_enqueue_script( 'iip-map-admin-js2', IIP_MAP_URL . 'admin/js/admin-app.js', array(), null, true );
   }
 
   // Add new admin
