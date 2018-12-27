@@ -93,15 +93,26 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
 }
 
 .iip-map-admin-column-container {
+  background-color: #F1F1F1;
   border: 1px solid lightgrey;
   border-radius: 2px;
   flex-basis: 50%;
   margin: .5em;
 }
 
+.iip-map-admin-column-title {
+  background-color: #FFFFFF;
+}
+
 .iip-map-admin-column-title,
 .iip-map-admin-column-list {
-  padding: .5em;
+  margin: 0;
+  padding: 1em .5em;
+}
+
+.iip-map-admin-column-list {
+  border-top: 1px solid lightgrey;
+  min-height: 90%;
 }
 
 .iip-map-admin-column-item {
@@ -109,7 +120,7 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
   border-radius: 2px;
   padding: .5em;
   margin-bottom: .5em;
-  background-color: white;
+  background-color: #FFFFFF;
 }
 
 .iip-map-admin-shortcode-box {

@@ -40,7 +40,7 @@ class ScreendoorModal extends Component {
 
   onDragEnd( result ) {
     const { destination, draggableId, source } = result;
-    const { fields, availableFields } = this.state;
+    const { fields } = this.state;
 
     if ( !destination ) {
       return;
@@ -53,13 +53,31 @@ class ScreendoorModal extends Component {
       return;
     }
 
-    const newInputs = Array.from( availableFields );
-    newInputs.splice( source.index, 1 );
-    newInputs.splice( destination.index, 0, fields[draggableId] );
+    const startColumn = source.droppableId;
+    const endColumn = destination.droppableId;
 
-    this.setState( {
-      availableFields: newInputs
-    } );
+    if ( startColumn === endColumn ) {
+      const newOrder = Array.from( this.state[startColumn] );
+      newOrder.splice( source.index, 1 );
+      newOrder.splice( destination.index, 0, fields[draggableId] );
+
+      this.setState( {
+        [startColumn]: newOrder
+      } );
+    }
+
+    if ( startColumn !== endColumn ) {
+      const removeFromColumn = Array.from( this.state[startColumn] );
+      const addToColumn = Array.from( this.state[endColumn] );
+
+      removeFromColumn.splice( source.index, 1 );
+      addToColumn.splice( destination.index, 0, fields[draggableId] );
+
+      this.setState( {
+        [startColumn]: removeFromColumn,
+        [endColumn]: addToColumn
+      } );
+    }
   }
 
   render() {
@@ -68,8 +86,8 @@ class ScreendoorModal extends Component {
     return (
       <div className="iip-map-admin-screendoor-modal">
         <DragDropContext onDragEnd={ this.onDragEnd }>
-          <Column data={ availableFields } id="screendoor-input" title="Available Fields" />
-          <Column data={ mappedFields } id="screendoor-mapped" title="Map To:" />
+          <Column data={ availableFields } id="availableFields" title="Available Fields" />
+          <Column data={ mappedFields } id="mappedFields" title="Map To:" />
         </DragDropContext>
       </div>
     );
