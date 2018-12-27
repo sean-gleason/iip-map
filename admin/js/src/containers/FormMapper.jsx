@@ -12,10 +12,10 @@ class FormMapper extends Component {
     super( props );
     this.state = {
       apiKey: screendoorApiKey,
+      data: null,
       formType: '',
       projectId: '',
-      showModal: false,
-      data: null
+      showModal: false
     };
 
     this.setProjectId = this.setProjectId.bind( this );
@@ -29,14 +29,6 @@ class FormMapper extends Component {
     getMapProps( map );
   }
 
-  componentDidUpdate( prevProps, prevState ) {
-    const { apiKey, projectId } = this.state;
-
-    if ( projectId !== prevState.projectId ) {
-      this._loadData( projectId, apiKey );
-    }
-  }
-
   setProjectId( event ) {
     this.setState( { projectId: event.target.value } );
   }
@@ -46,13 +38,23 @@ class FormMapper extends Component {
   }
 
   handleScreendoor() {
-    this.setState( { showModal: true } );
+    const { apiKey, projectId } = this.state;
+
+    this._loadData( projectId, apiKey );
   }
 
   _loadData( projectId, apiKey ) {
+    function handleErrors( response ) {
+      if ( !response.ok ) {
+        throw Error( response.statusText );
+      }
+      return response.json();
+    }
+
     fetch( `https://screendoor.dobt.co/api/projects/${projectId}/form?&v=0&api_key=${apiKey}` )
-      .then( r => r.json() )
-      .then( response => this.setState( { data: getData( response ) } ) );
+      .then( handleErrors )
+      .then( response => this.setState( { data: getData( response ), showModal: true } ) )
+      .catch( error => console.log( 'Error:', error ) );
   }
 
   render() {
@@ -65,6 +67,7 @@ class FormMapper extends Component {
         <h2 className="iip-map-admin-metabox-header hndle ui-sortable-handle">Map Input Fields</h2>
         <div className="inside">
           <p>Use this form to map the form values from your data input source.</p>
+          { /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/label-has-for */ }
           <label htmlFor="iip-map-admin-form-select">
             Select input type:
             <select id="iip-map-admin-form-select" onChange={ this.chooseFormType } value={ formType }>
