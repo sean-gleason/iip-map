@@ -1,10 +1,10 @@
 import React from 'react';
 
-import ConfigureMap from '../components/Metaboxes/ConfigureMap';
+import ConfigureMap from '../Components/Metaboxes/ConfigureMap';
 import FormMapper from './FormMapper';
-import DataExporter from '../components/Metaboxes/DataExporter';
-import Geocoder from '../components/Metaboxes/Geocoder';
-import UpdateMarker from '../components/Metaboxes/UpdateMarker';
+import DataExporter from '../Components/Metaboxes/DataExporter';
+import Geocoder from '../Components/Metaboxes/Geocoder';
+import UpdateMarker from '../Components/Metaboxes/UpdateMarker';
 
 const MapAdminPage = () => (
   <div className="iip-map-admin-metabox-holder metabox-holder columns-2">

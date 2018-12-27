@@ -17,7 +17,7 @@ export const getData = ( response ) => {
   formData.forEach( ( element ) => {
     const { label } = element;
     const { id } = element;
-    const fieldObj = { name: label, field: id };
+    const fieldObj = { field: id, name: label };
 
     fields.push( fieldObj );
   } );

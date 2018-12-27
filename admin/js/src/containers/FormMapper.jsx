@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import FormSelector from '../components/Metaboxes/FormSelector';
-import ScreendoorModal from '../components/Modals/ScreendoorModal';
+import FormSelector from '../Components/Metaboxes/FormSelector';
+import ScreendoorModal from '../Components/Modals/ScreendoorModal';
 
 import { getData } from '../utils/screendoor';
 import { screendoorApiKey } from '../utils/globals';
@@ -12,7 +12,7 @@ class FormMapper extends Component {
     super( props );
     this.state = {
       apiKey: screendoorApiKey,
-      data: null,
+      data: [],
       formType: '',
       projectId: '',
       showModal: false
@@ -54,7 +54,7 @@ class FormMapper extends Component {
     fetch( `https://screendoor.dobt.co/api/projects/${projectId}/form?&v=0&api_key=${apiKey}` )
       .then( handleErrors )
       .then( response => this.setState( { data: getData( response ), showModal: true } ) )
-      .catch( error => console.log( 'Error:', error ) );
+      .catch( error => console.log( error ) );
   }
 
   render() {

@@ -87,6 +87,31 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
   flex-basis: 66%;
 }
 
+.iip-map-admin-screendoor-modal {
+  display: flex;
+  justify-content: space-between;
+}
+
+.iip-map-admin-column-container {
+  border: 1px solid lightgrey;
+  border-radius: 2px;
+  flex-basis: 50%;
+  margin: .5em;
+}
+
+.iip-map-admin-column-title,
+.iip-map-admin-column-list {
+  padding: .5em;
+}
+
+.iip-map-admin-column-item {
+  border: 1px solid lightgrey;
+  border-radius: 2px;
+  padding: .5em;
+  margin-bottom: .5em;
+  background-color: white;
+}
+
 .iip-map-admin-shortcode-box {
   flex-basis: 33%;
 }
