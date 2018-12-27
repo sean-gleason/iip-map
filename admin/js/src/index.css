@@ -112,6 +112,9 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
 
 .iip-map-admin-column-list {
   border-top: 1px solid lightgrey;
+}
+
+.iip-map-admin-column-item-group {
   min-height: 90%;
 }
 

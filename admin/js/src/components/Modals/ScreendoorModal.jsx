@@ -3,6 +3,7 @@ import { array } from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import Column from '../Column/Column';
+import ItemGroup from '../Column/ItemGroup';
 
 class ScreendoorModal extends Component {
   constructor( props ) {
@@ -86,8 +87,12 @@ class ScreendoorModal extends Component {
     return (
       <div className="iip-map-admin-screendoor-modal">
         <DragDropContext onDragEnd={ this.onDragEnd }>
-          <Column data={ availableFields } id="availableFields" title="Available Fields" />
-          <Column data={ mappedFields } id="mappedFields" title="Map To:" />
+          <Column title="Available Fields">
+            <ItemGroup data={ availableFields } id="availableFields" />
+          </Column>
+          <Column title="Map To:">
+            <ItemGroup data={ mappedFields } id="mappedFields" />
+          </Column>
         </DragDropContext>
       </div>
     );
