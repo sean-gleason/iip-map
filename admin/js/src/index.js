@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import MapAdminPage from './containers/MapAdminPage';
+import MapAdminPage from './Containers/MapAdminPage';
 
 import './index.css';
 

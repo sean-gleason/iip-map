@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import FormSelector from '../Components/Metaboxes/FormSelector';
-import ScreendoorModal from '../Components/Modals/ScreendoorModal';
+import ScreendoorModal from './Modals/ScreendoorModal';
 
 import { getData } from '../utils/screendoor';
 import { screendoorApiKey } from '../utils/globals';

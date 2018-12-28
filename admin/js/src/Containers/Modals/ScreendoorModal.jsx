@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { array } from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 
-import Column from '../Column/Column';
-import ItemGroup from '../Column/ItemGroup';
+import Column from '../../Components/Column/Column';
+import ItemGroup from '../../Components/Column/ItemGroup';
 
 class ScreendoorModal extends Component {
   constructor( props ) {
