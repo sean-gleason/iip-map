@@ -45,6 +45,11 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
 .iip-map-admin-marker-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.iip-map-admin-shortcode-params {
+  margin-bottom: 2em;
 }
 
 .iip-map-admin-shortcode-label,
@@ -61,9 +66,16 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
   width: 40%;
 }
 
+.iip-map-admin-shortcode-output {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  padding: .8em;
+  white-space: pre-wrap;
+}
+
 .iip-map-admin-screendoor-project-container {
   background-color: #F9F9F9;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #E5E5E5;
   margin: 10px 5px 5px;
 }
 

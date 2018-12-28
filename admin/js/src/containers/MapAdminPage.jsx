@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ConfigureMap from '../Components/Metaboxes/ConfigureMap';
+import ConfigureMap from './ConfigureMap';
 import FormMapper from './FormMapper';
 import DataExporter from '../Components/Metaboxes/DataExporter';
 import Geocoder from '../Components/Metaboxes/Geocoder';

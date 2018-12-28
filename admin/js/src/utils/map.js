@@ -1,8 +1,8 @@
 import Map from 'ol/Map';
-import View from 'ol/View';
-import Zoom from 'ol/control/Zoom';
 import TileLayer from 'ol/layer/Tile';
+import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
+import Zoom from 'ol/control/Zoom';
 
 export const adminMap = () => {
   const baseLayer = new TileLayer( {
@@ -13,6 +13,7 @@ export const adminMap = () => {
 
   const baseView = new View( {
     center: [0, 0],
+    projection: 'EPSG:4326',
     zoom: 2
   } );
 
@@ -24,18 +25,4 @@ export const adminMap = () => {
   } );
 
   return olMap;
-};
-
-export const getMapProps = ( map ) => {
-  const view = map.getView();
-  const viewCenter = view.getCenter();
-  const viewZoom = view.getZoom();
-
-  const mapProps = {
-    lat: viewCenter[1],
-    lng: viewCenter[0],
-    zoom: viewZoom
-  };
-
-  console.log( mapProps );
 };
