@@ -10,8 +10,10 @@ class ScreendoorModal extends Component {
     super( props );
     this.state = {
       fields: {},
+      additionalFields: [],
       availableFields: [],
-      mappedFields: []
+      locationFields: [],
+      nameField: []
     };
 
     this.onDragEnd = this.onDragEnd.bind( this );
@@ -82,7 +84,9 @@ class ScreendoorModal extends Component {
   }
 
   render() {
-    const { availableFields, mappedFields } = this.state;
+    const {
+      additionalFields, availableFields, locationFields, nameField
+    } = this.state;
 
     return (
       <div className="iip-map-admin-screendoor-modal">
@@ -91,7 +95,9 @@ class ScreendoorModal extends Component {
             <ItemGroup data={ availableFields } id="availableFields" />
           </Column>
           <Column title="Map To:">
-            <ItemGroup data={ mappedFields } id="mappedFields" />
+            <ItemGroup data={ nameField } id="nameField" required title="Item Name:" />
+            <ItemGroup data={ locationFields } id="locationFields" required title="Location:" />
+            <ItemGroup data={ additionalFields } id="additionalFields" title="Additional Data:" />
           </Column>
         </DragDropContext>
       </div>

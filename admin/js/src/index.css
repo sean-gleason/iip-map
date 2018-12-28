@@ -105,17 +105,23 @@ h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
 }
 
 .iip-map-admin-column-title,
-.iip-map-admin-column-list {
+.iip-map-admin-column-list,
+.iip-map-admin-column-item-group-container {
   margin: 0;
   padding: 1em .5em;
 }
 
-.iip-map-admin-column-list {
+.iip-map-admin-column-item-group-container {
   border-top: 1px solid lightgrey;
 }
 
 .iip-map-admin-column-item-group {
-  min-height: 90%;
+  min-height: 100px;
+}
+
+[data-required="true"]:after {
+  color: red;
+  content: " *";
 }
 
 .iip-map-admin-column-item {
