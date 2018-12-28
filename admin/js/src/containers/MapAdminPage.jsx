@@ -1,9 +1,10 @@
 import React from 'react';
 
 import ConfigureMap from './ConfigureMap';
-import FormMapper from './FormMapper';
 import DataExporter from '../Components/Metaboxes/DataExporter';
+import FormMapper from './FormMapper';
 import Geocoder from '../Components/Metaboxes/Geocoder';
+import SubmitBox from '../Components/Metaboxes/SubmitBox';
 import UpdateMarker from '../Components/Metaboxes/UpdateMarker';
 
 const MapAdminPage = () => (
@@ -16,6 +17,7 @@ const MapAdminPage = () => (
       </div>
     </div>
     <div className="iip-map-admin-column-side postbox-container">
+      <SubmitBox />
       <UpdateMarker />
       <DataExporter />
     </div>
