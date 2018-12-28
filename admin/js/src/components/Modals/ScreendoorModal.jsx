@@ -56,29 +56,34 @@ class ScreendoorModal extends Component {
       return;
     }
 
-    const startColumn = source.droppableId;
-    const endColumn = destination.droppableId;
+    const startGroup = source.droppableId;
+    const endGroup = destination.droppableId;
 
-    if ( startColumn === endColumn ) {
-      const newOrder = Array.from( this.state[startColumn] );
+    if ( startGroup === endGroup ) {
+      const { [startGroup]: start } = this.state;
+
+      const newOrder = Array.from( start );
       newOrder.splice( source.index, 1 );
       newOrder.splice( destination.index, 0, fields[draggableId] );
 
       this.setState( {
-        [startColumn]: newOrder
+        [startGroup]: newOrder
       } );
     }
 
-    if ( startColumn !== endColumn ) {
-      const removeFromColumn = Array.from( this.state[startColumn] );
-      const addToColumn = Array.from( this.state[endColumn] );
+    if ( startGroup !== endGroup ) {
+      const { [startGroup]: start } = this.state;
+      const { [endGroup]: end } = this.state;
+
+      const removeFromColumn = Array.from( start );
+      const addToColumn = Array.from( end );
 
       removeFromColumn.splice( source.index, 1 );
       addToColumn.splice( destination.index, 0, fields[draggableId] );
 
       this.setState( {
-        [startColumn]: removeFromColumn,
-        [endColumn]: addToColumn
+        [startGroup]: removeFromColumn,
+        [endGroup]: addToColumn
       } );
     }
   }

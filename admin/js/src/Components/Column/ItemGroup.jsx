@@ -2,7 +2,7 @@ import React from 'react';
 import { array, bool, string } from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
 
-import ColumnItem from './ColumnItem';
+import InnerList from './InnerList';
 
 const ItemGroup = ( {
   data, id, required, title
@@ -19,9 +19,7 @@ const ItemGroup = ( {
             ref={ provided.innerRef }
             { ...provided.droppableProps }
           >
-            { data.map( ( item, index ) => (
-              <ColumnItem data={ item } index={ index } key={ item.field } />
-            ) ) }
+            <InnerList data={ data } />
             { provided.placeholder }
           </div>
         ) }
