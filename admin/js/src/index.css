@@ -7,17 +7,14 @@
   display: flex;
 }
 
-h2.iip-map-admin-metabox-header.hndle.ui-sortable-handle {
+h2.iip-map-admin-metabox-header {
+  background-color: #ADD8E6;
+  border-bottom: 1px solid #EEEEEE;
   cursor: default;
 }
 
 .iip-map-admin-column-wide {
   width: 100%;
-}
-
-.iip-map-admin-column-side {
-  margin-left: 20px;
-  width: 280px;
 }
 
 @media screen and (max-width: 950px) {

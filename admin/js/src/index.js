@@ -1,13 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import MapAdminPage from './Containers/MapAdminPage';
+import MapAdminMain from './Containers/MapAdminMain';
+import MapAdminSidebar from './Containers/MapAdminSidebar';
 
 import './index.css';
 
 ReactDOM.render(
-  <MapAdminPage />,
-  document.getElementById( 'iip-map-admin-page' )
+  <MapAdminMain />,
+  document.getElementById( 'iip-map-admin-main' )
+);
+
+ReactDOM.render(
+  <MapAdminSidebar />,
+  document.getElementById( 'iip-map-admin-sidebar' )
 );
 
 module.hot.accept();

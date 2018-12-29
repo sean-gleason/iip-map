@@ -50,41 +50,17 @@ class IIP_Map_Post_Type {
   // Add custom metaboxes to backend dashboard
   public function map_add_metaboxes() {
     add_meta_box(
-      'iip_map_project_info',
-      __( 'Screendoor Project Information', 'iip-map' ),
-      array( $this, 'project_info_metabox' ),
+      'iip_map_main',
+      __( 'Configure Your Map', 'iip-map' ),
+      array( $this, 'map_main_metabox' ),
       $this->name,
       'normal',
       'high'
     );
     add_meta_box(
-      'iip_map_geocoder',
-      __( 'Geocode Events', 'iip-map' ),
-      array( $this, 'geocoder_metabox' ),
-      $this->name,
-      'normal',
-      'low'
-    );
-    add_meta_box(
-      'iip_map_shortcode',
-      __( 'Shortcode Generator', 'iip-map' ),
-      array( $this, 'shortcode_metabox' ),
-      $this->name,
-      'side',
-      'low'
-    );
-    add_meta_box(
-      'iip_map_update_marker',
-      __( 'Update/Delete Marker', 'iip-map' ),
-      array( $this, 'update_marker_metabox' ),
-      $this->name,
-      'side',
-      'low'
-    );
-    add_meta_box(
-      'iip_map_export',
-      __( 'Export Project Data', 'iip-map' ),
-      array( $this, 'data_export_metabox' ),
+      'iip_map_sidebar',
+      __( 'More Options', 'iip-map' ),
+      array( $this, 'map_sidebar_metabox' ),
       $this->name,
       'side',
       'low'
@@ -92,24 +68,16 @@ class IIP_Map_Post_Type {
   }
 
   // Pull in metabox partials
-  public function project_info_metabox( $post ) {
-    include_once( 'partials/project-info-metabox.php' );
+  public function map_main_metabox( $post ) {
+    wp_nonce_field( 'map_main', 'map_main_nonce' );
+
+    echo '<div id="iip-map-admin-main"></div>';
   }
 
-  public function geocoder_metabox( $post ) {
-    include_once( 'partials/geocoder-metabox.php' );
-  }
+  public function map_sidebar_metabox( $post ) {
+    wp_nonce_field( 'map_sidebar', 'map_sidebar_nonce' );
 
-  public function shortcode_metabox( $post ) {
-    include_once( 'partials/shortcode-metabox.php' );
-  }
-
-  public function update_marker_metabox( $post ) {
-    include_once( 'partials/update-marker-metabox.php' );
-  }
-
-  public function data_export_metabox( $post ) {
-    include_once( 'partials/data-export-metabox.php' );
+    echo '<div id="iip-map-admin-sidebar"></div>';
   }
 
   // Sanitize and store map post metadata values

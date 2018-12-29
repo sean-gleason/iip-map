@@ -2,7 +2,7 @@ import React from 'react';
 
 const UpdateMarker = ( ) => (
   <div className="iip-map-admin-small-metabox postbox">
-    <h2 className="iip-map-admin-metabox-header hndle ui-sortable-handle">Update/Delete Marker</h2>
+    <h2 className="iip-map-admin-metabox-header">Update/Delete Marker</h2>
     <div className="inside">
       <div className="iip-map-admin-update-marker-box" id="map-update-marker-box">
         <form className="iip-map-admin-form">

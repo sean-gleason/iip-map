@@ -57,7 +57,7 @@ class FormMapper extends Component {
 
     return (
       <div className="postbox">
-        <h2 className="iip-map-admin-metabox-header hndle ui-sortable-handle">Map Input Fields</h2>
+        <h2 className="iip-map-admin-metabox-header">Map Input Fields</h2>
         <div className="inside">
           <p>Use this form to map the form values from your data input source.</p>
           { /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/label-has-for */ }

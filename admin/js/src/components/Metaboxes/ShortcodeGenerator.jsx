@@ -3,7 +3,7 @@ import { object } from 'prop-types';
 
 const ShortcodeGenerator = ( { data } ) => (
   <div className="iip-map-admin-shortcode-box" id="map-shortcode-box">
-    <h4 className="iip-map-admin-metabox-header hndle ui-sortable-handle">Shortcode Generator</h4>
+    <h4 className="iip-map-admin-metabox-header">Shortcode Generator</h4>
     <div className="iip-map-admin-shortcode-container">
       <div className="iip-map-admin-shortcode-params">
         <div className="iip-map-admin-shortcode-row">

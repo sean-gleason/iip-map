@@ -35,18 +35,6 @@ class IIP_Map_Admin {
   public function enqueue_admin_menu2() {
     wp_enqueue_script( 'iip-map-admin-js2', IIP_MAP_URL . 'admin/js/admin-app.js', array(), null, true );
   }
-
-  // Add new admin
-  public function iip_map_admin_menu2() {
-    add_submenu_page(
-      'edit.php?post_type=iip_map_data',
-      __('New Admin', 'iip-map'),
-      __('New Admin', 'iip-map'),
-      'activate_plugins',
-      'iip-map-admin2',
-      array( $this, 'display_new_admin' )
-    );
-  }
   
   // Add to API keys sub-menu to Maps post type admin
   public function iip_map_admin_menu() {
@@ -132,10 +120,6 @@ class IIP_Map_Admin {
   // The admin area view for the plugin settings page
   public function display_keys_partial() {
     include_once IIP_MAP_DIR . 'admin/partials/keys-admin.php';
-  }
-
-  public function display_new_admin() {
-    include_once IIP_MAP_DIR . 'admin/partials/new-admin.php';
   }
 
   public function iip_map_localize_variables() {
