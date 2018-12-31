@@ -12,6 +12,7 @@ class ScreendoorModal extends Component {
       fields: {},
       additionalFields: [],
       availableFields: [],
+      datetimeFields: [],
       locationFields: [],
       nameField: []
     };
@@ -90,7 +91,7 @@ class ScreendoorModal extends Component {
 
   render() {
     const {
-      additionalFields, availableFields, locationFields, nameField
+      additionalFields, availableFields, datetimeFields, locationFields, nameField
     } = this.state;
 
     return (
@@ -102,6 +103,7 @@ class ScreendoorModal extends Component {
           <Column title="Map To:">
             <ItemGroup data={ nameField } id="nameField" required title="Item Name:" />
             <ItemGroup data={ locationFields } id="locationFields" required title="Location:" />
+            <ItemGroup data={ datetimeFields } id="datetimeFields" title="Date/Time:" />
             <ItemGroup data={ additionalFields } id="additionalFields" title="Additional Data:" />
           </Column>
         </DragDropContext>

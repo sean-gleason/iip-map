@@ -4,13 +4,13 @@ import FormSelector from '../Components/Metaboxes/FormSelector';
 import ScreendoorModal from './Modals/ScreendoorModal';
 
 import { getData } from '../utils/screendoor';
-import { screendoorApiKey } from '../utils/globals';
+import { screendoorKey } from '../utils/globals';
 
 class FormMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      apiKey: screendoorApiKey,
+      apiKey: screendoorKey,
       data: [],
       formType: '',
       projectId: '',

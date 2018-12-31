@@ -4,6 +4,8 @@ import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import Zoom from 'ol/control/Zoom';
 
+import { getMapMeta } from './globals';
+
 export const adminMap = () => {
   const baseLayer = new TileLayer( {
     source: new XYZ( {
@@ -11,10 +13,15 @@ export const adminMap = () => {
     } )
   } );
 
+  const { lat, lng, zoom } = getMapMeta;
+
   const baseView = new View( {
-    center: [0, 0],
+    center: [
+      lng,
+      lat
+    ],
     projection: 'EPSG:4326',
-    zoom: 2
+    zoom
   } );
 
   const olMap = new Map( {

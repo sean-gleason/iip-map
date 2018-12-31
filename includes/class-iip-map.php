@@ -86,10 +86,8 @@ class IIP_Map {
     $this->loader->add_action( 'admin_init', $plugin_admin, 'iip_map_settings_sections' );
     $this->loader->add_action( 'admin_init', $plugin_admin, 'iip_map_settings_fields' );
     $this->loader->add_action( 'admin_menu', $plugin_admin, 'iip_map_admin_menu' );
-    $this->loader->add_action( 'admin_menu', $plugin_admin, 'iip_map_admin_menu2' );
     $this->loader->add_action( 'admin_notices', $plugin_admin, 'iip_map_localize_variables' );
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'iip_map_admin_enqueue' );
-    $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_admin_menu2' );
     // Ajax hooks
     $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_import_ajax, 'map_ajax' );
     $this->loader->add_action( 'wp_ajax_export_data_ajax', $plugin_export_ajax, 'export_data_ajax' );

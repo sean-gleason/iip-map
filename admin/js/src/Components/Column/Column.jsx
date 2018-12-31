@@ -3,7 +3,7 @@ import { node, string } from 'prop-types';
 
 const Column = ( { children, title } ) => (
   <div className="iip-map-admin-column-container">
-    <h3 className="iip-map-admin-column-title">{ title }</h3>
+    <h4 className="iip-map-admin-column-title">{ title }</h4>
     { children }
   </div>
 );

@@ -2,13 +2,21 @@ import React, { Component } from 'react';
 
 import MapBox from '../Components/Metaboxes/MapBox';
 import ShortcodeGenerator from '../Components/Metaboxes/ShortcodeGenerator';
+
 import { adminMap } from '../utils/map';
+import { getMapMeta } from '../utils/globals';
 
 class ConfigureMap extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      mapProps: { lat: 0, lng: 0, zoom: 2 }
+      mapProps: {
+        height: getMapMeta.height,
+        lat: getMapMeta.lat,
+        lng: getMapMeta.lng,
+        type: getMapMeta.type,
+        zoom: getMapMeta.zoom
+      }
     };
 
     this.getMapProps = this.getMapProps.bind( this );
@@ -25,15 +33,18 @@ class ConfigureMap extends Component {
     const viewCenter = view.getCenter();
     const viewZoom = view.getZoom();
 
-    const mapProps = {
-      lat: Math.round( viewCenter[1] * 1e2 ) / 1e2,
-      lng: Math.round( viewCenter[0] * 1e2 ) / 1e2,
-      zoom: Math.round( viewZoom )
-    };
+    const lat = Math.round( viewCenter[1] * 1e2 ) / 1e2;
+    const lng = Math.round( viewCenter[0] * 1e2 ) / 1e2;
+    const zoom = Math.round( viewZoom );
 
-    this.setState( {
-      mapProps
-    } );
+    this.setState( prevState => ( {
+      mapProps: {
+        ...prevState.mapProps,
+        lat: lat,
+        lng: lng,
+        zoom: zoom
+      }
+    } ) );
   }
 
   render() {
