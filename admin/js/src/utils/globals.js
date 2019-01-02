@@ -22,6 +22,13 @@ class MapMeta {
     return 700;
   }
 
+  get id() {
+    if ( this._meta.id ) {
+      return this._meta.id;
+    }
+    return '';
+  }
+
   get lat() {
     if ( this._meta.lat ) {
       const { lat } = this._meta;

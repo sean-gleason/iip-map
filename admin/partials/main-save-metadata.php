@@ -14,6 +14,8 @@ if ( $is_revision || !$is_valid_nonce ){
 // Get serialized array of post meta values
 $map_meta = unserialize( get_post_meta( $post_id, '_iip_map_meta' ) );
 
+$map_meta[ 'id' ] = $post_id;
+
 // Add map items to map params array
 if( !empty( $_POST[ 'mapHeight' ] ) ) {
   $map_meta[ 'height' ] = ( sanitize_text_field( $_POST[ 'mapHeight' ] ) );

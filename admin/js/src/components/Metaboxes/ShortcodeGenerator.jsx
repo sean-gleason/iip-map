@@ -85,7 +85,7 @@ const ShortcodeGenerator = ( { callback, data } ) => (
       <div className="iip-map-admin-shortcode-output-container" style={ { textAlign: 'center' } }>
         <strong>Paste this shortcode into your post/page:</strong>
         <pre className="iip-map-admin-shortcode-output">
-          { `[map id=18595 height=${data.mapHeight} zoom=${data.mapZoom} lat=${data.mapLat} lng=${data.mapLng} type=${data.mapType}]` }
+          { `[map id=${data.mapId} height=${data.mapHeight} zoom=${data.mapZoom} lat=${data.mapLat} lng=${data.mapLng} type=${data.mapType}]` }
         </pre>
       </div>
     </div>

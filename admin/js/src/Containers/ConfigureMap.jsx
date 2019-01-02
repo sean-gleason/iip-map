@@ -12,6 +12,7 @@ class ConfigureMap extends Component {
     this.state = {
       mapProps: {
         mapHeight: getMapMeta.height,
+        mapId: getMapMeta.id,
         mapLat: getMapMeta.lat,
         mapLng: getMapMeta.lng,
         mapType: getMapMeta.type,
