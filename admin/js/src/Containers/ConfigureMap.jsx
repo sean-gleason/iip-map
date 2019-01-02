@@ -11,15 +11,16 @@ class ConfigureMap extends Component {
     super( props );
     this.state = {
       mapProps: {
-        height: getMapMeta.height,
-        lat: getMapMeta.lat,
-        lng: getMapMeta.lng,
-        type: getMapMeta.type,
-        zoom: getMapMeta.zoom
+        mapHeight: getMapMeta.height,
+        mapLat: getMapMeta.lat,
+        mapLng: getMapMeta.lng,
+        mapType: getMapMeta.type,
+        mapZoom: getMapMeta.zoom
       }
     };
 
     this.getMapProps = this.getMapProps.bind( this );
+    this.handleInputChange = this.handleInputChange.bind( this );
   }
 
   componentDidMount() {
@@ -33,16 +34,28 @@ class ConfigureMap extends Component {
     const viewCenter = view.getCenter();
     const viewZoom = view.getZoom();
 
-    const lat = Math.round( viewCenter[1] * 1e2 ) / 1e2;
-    const lng = Math.round( viewCenter[0] * 1e2 ) / 1e2;
-    const zoom = Math.round( viewZoom );
+    const newLat = Math.round( parseFloat( viewCenter[1] ) * 1e2 ) / 1e2;
+    const newLng = Math.round( parseFloat( viewCenter[0] ) * 1e2 ) / 1e2;
+    const newZoom = Math.round( viewZoom );
 
     this.setState( prevState => ( {
       mapProps: {
         ...prevState.mapProps,
-        lat: lat,
-        lng: lng,
-        zoom: zoom
+        mapLat: newLat,
+        mapLng: newLng,
+        mapZoom: newZoom
+      }
+    } ) );
+  }
+
+  handleInputChange( e ) {
+    const { name } = e.target;
+    const { value } = e.target;
+
+    this.setState( prevState => ( {
+      mapProps: {
+        ...prevState.mapProps,
+        [name]: value
       }
     } ) );
   }
@@ -56,7 +69,7 @@ class ConfigureMap extends Component {
         <div className="inside">
           <div className="iip-map-admin-configure-box">
             <MapBox />
-            <ShortcodeGenerator data={ mapProps } />
+            <ShortcodeGenerator callback={ this.handleInputChange } data={ mapProps } />
           </div>
         </div>
       </div>

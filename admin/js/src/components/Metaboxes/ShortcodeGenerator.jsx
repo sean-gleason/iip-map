@@ -1,7 +1,7 @@
 import React from 'react';
-import { object } from 'prop-types';
+import { func, object } from 'prop-types';
 
-const ShortcodeGenerator = ( { data } ) => (
+const ShortcodeGenerator = ( { callback, data } ) => (
   <div className="iip-map-admin-shortcode-box" id="map-shortcode-box">
     <h4 className="iip-map-admin-metabox-header">Shortcode Generator</h4>
     <div className="iip-map-admin-shortcode-container">
@@ -13,9 +13,10 @@ const ShortcodeGenerator = ( { data } ) => (
               className="iip-map-admin-shortcode-input"
               id="iip-map-height"
               name="mapHeight"
+              onChange={ callback }
               placeholder="700"
               type="text"
-              value={ data.height }
+              value={ data.mapHeight }
             />
           </label>
         </div>
@@ -28,8 +29,9 @@ const ShortcodeGenerator = ( { data } ) => (
               id="iip-map-zoom"
               name="mapZoom"
               placeholder="2"
+              readOnly
               type="text"
-              value={ data.zoom }
+              value={ data.mapZoom }
             />
           </label>
         </div>
@@ -41,9 +43,10 @@ const ShortcodeGenerator = ( { data } ) => (
               className="iip-map-admin-shortcode-input"
               id="iip-map-lat"
               name="mapLat"
+              onChange={ callback }
               placeholder="0"
               type="text"
-              value={ data.lat }
+              value={ data.mapLat }
             />
           </label>
         </div>
@@ -55,9 +58,10 @@ const ShortcodeGenerator = ( { data } ) => (
               id="iip-map-lng"
               className="iip-map-admin-shortcode-input"
               name="mapLng"
+              onChange={ callback }
               placeholder="0"
               type="text"
-              value={ data.lng }
+              value={ data.mapLng }
             />
           </label>
         </div>
@@ -67,10 +71,10 @@ const ShortcodeGenerator = ( { data } ) => (
           <label className="iip-map-admin-shortcode-label" htmlFor="mapType">
             Map Type:
             <select id="iip-map-type" name="mapType" className="iip-map-admin-shortcode-select">
-              {/* { data.type === 'gmap'
+              { data.mapType === 'gmap'
                 ? <option value="gmap">Google Maps</option>
                 : <option value="ol">OpenLayers</option>
-              } */}
+              }
               <option value="ol">OpenLayers</option>
               <option value="gmap">Google Maps</option>
             </select>
@@ -81,7 +85,7 @@ const ShortcodeGenerator = ( { data } ) => (
       <div className="iip-map-admin-shortcode-output-container" style={ { textAlign: 'center' } }>
         <strong>Paste this shortcode into your post/page:</strong>
         <pre className="iip-map-admin-shortcode-output">
-          { `[map id=18595 height=${data.height} zoom=${data.zoom} lat=${data.lat} lng=${data.lng} type=${data.type}]` }
+          { `[map id=18595 height=${data.mapHeight} zoom=${data.mapZoom} lat=${data.mapLat} lng=${data.mapLng} type=${data.mapType}]` }
         </pre>
       </div>
     </div>
@@ -89,6 +93,7 @@ const ShortcodeGenerator = ( { data } ) => (
 );
 
 ShortcodeGenerator.propTypes = {
+  callback: func,
   data: object
 };
 

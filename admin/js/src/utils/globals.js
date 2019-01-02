@@ -24,14 +24,16 @@ class MapMeta {
 
   get lat() {
     if ( this._meta.lat ) {
-      return this._meta.lat;
+      const { lat } = this._meta;
+      return parseFloat( lat );
     }
     return 0;
   }
 
   get lng() {
     if ( this._meta.lng ) {
-      return this._meta.lng;
+      const { lng } = this._meta;
+      return parseFloat( lng );
     }
     return 0;
   }
