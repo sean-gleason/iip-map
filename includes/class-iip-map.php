@@ -66,6 +66,7 @@ class IIP_Map {
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/change-marker-data.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/export-map-data.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/save-map-data.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/screendoor-save-metadata.php';
 
     // The class responsible for defining all actions that occur in the public-facing side of the site.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/embed-map.php';
@@ -80,6 +81,7 @@ class IIP_Map {
     $plugin_export_ajax = new IIP_Map_Export();
     $plugin_import_ajax = new IIP_Map_Import();
     $plugin_update_ajax = new IIP_Map_Marker_Update();
+    $plugin_fields_ajax = new IIP_Map_Save_Fields();
     $plugin_post_type = new IIP_Map_Post_Type();
 
     // Admin hooks
@@ -91,6 +93,7 @@ class IIP_Map {
     // Ajax hooks
     $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_import_ajax, 'map_ajax' );
     $this->loader->add_action( 'wp_ajax_export_data_ajax', $plugin_export_ajax, 'export_data_ajax' );
+    $this->loader->add_action( 'wp_ajax_save_screendoor_ajax', $plugin_fields_ajax, 'save_screendoor_ajax' );
     $this->loader->add_action( 'wp_ajax_get_marker_ajax', $plugin_update_ajax, 'get_marker_ajax' );
     $this->loader->add_action( 'wp_ajax_update_marker_ajax', $plugin_update_ajax, 'update_marker_ajax' );
     $this->loader->add_action( 'wp_ajax_delete_marker_ajax', $plugin_update_ajax, 'delete_marker_ajax' );

@@ -11,7 +11,7 @@ export const setEndpoints = ( projectId, apiKey ) => {
   };
 };
 
-// Add Screendoor objects to and array
+// Add Screendoor objects to an array
 export const getData = ( response ) => {
   const formData = response.field_data;
   const fields = [];
@@ -67,33 +67,39 @@ export const getScreendoorFields = ( projectId, apiKey ) => {
   };
 };
 
-// Save Screendoor field values
-export const saveScreendoorFields = ( dataObj ) => {
-  const data = {
-    action: 'save_screendoor_ajax',
-    screendoor_info: dataObj,
-    security: getMapGlobalMeta.screendoorNonce
-  };
+// Converts an JS object into a FormData object for use in AJAX calls
+// If original object has nested properties, it renders them as a string
+export const getFormData = ( obj ) => {
+  const formData = new FormData();
 
-  console.log( data );
+  function checkIfString( item ) {
+    if ( typeof item === 'string' ) {
+      return item;
+    }
+    return JSON.stringify( item );
+  }
+
+  Object.keys( obj ).forEach( key => formData.append( key, checkIfString( obj[key] ) ) );
+  return formData;
 };
 
-// Add Screedoor field ids as dropdown options
-// function populateScreendoorFields(data) {
-//   let screendoorFields = document.querySelectorAll('.map-admin-project-info-select');
-//   let fieldOptions = [];
+// Save Screendoor field id values
+export const saveScreendoorFields = ( dataObj ) => {
+  // Get WP admin AJAX URL and data
+  const url = getMapGlobalMeta.ajaxUrl;
 
-//   fieldOptions.push( "<option>- Select -</option>" );
-//   data.forEach( function(item) {
-//     fieldOptions.push( "<option id='" + item.id + "' value='" + item.id + "'>" + item.label + "</option>" );
-//   });
+  // Create the form that constitutes the AJAX request body
+  const formData = getFormData( dataObj );
+  formData.append( 'action', 'save_screendoor_ajax' );
+  formData.append( 'security', getMapGlobalMeta.screendoorNonce );
 
-//   let fieldOptionsList = fieldOptions.join('');
-
-//   screendoorFields.forEach( function(item){
-//     item.innerHTML += fieldOptionsList
-//   });
-// }
+  // AJAX POST request to save screendoor project data
+  fetch( url, {
+    method: 'post',
+    body: formData
+  } )
+    .then( response => response.json() );
+};
 
 // Get Screendoor statuses
 // function getStatuses() {

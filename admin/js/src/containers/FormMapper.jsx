@@ -4,7 +4,7 @@ import FormSelector from '../Components/Metaboxes/FormSelector';
 import ScreendoorModal from './Modals/ScreendoorModal';
 
 import { getData } from '../utils/screendoor';
-import { getMapGlobalMeta } from '../utils/globals';
+import { getMapGlobalMeta, getScreendoorFieldsMeta } from '../utils/globals';
 
 class FormMapper extends Component {
   constructor( props ) {
@@ -13,7 +13,7 @@ class FormMapper extends Component {
       apiKey: getMapGlobalMeta.screendoorKey,
       data: [],
       formType: '',
-      projectId: '',
+      projectId: getScreendoorFieldsMeta.projectId,
       showModal: false
     };
 

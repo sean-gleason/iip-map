@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { array } from 'prop-types';
+import { array, string } from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import Column from '../../Components/Column/Column';
 import ItemGroup from '../../Components/Column/ItemGroup';
 
+import { getMapMeta, getScreendoorFieldsMeta } from '../../utils/globals';
 import { saveScreendoorFields } from '../../utils/screendoor';
 
 class ScreendoorModal extends Component {
@@ -12,11 +13,11 @@ class ScreendoorModal extends Component {
     super( props );
     this.state = {
       fields: {},
-      additionalFields: [],
-      availableFields: [],
-      datetimeFields: [],
-      locationFields: [],
-      nameField: []
+      additionalFields: getScreendoorFieldsMeta.otherArr,
+      availableFields: getScreendoorFieldsMeta.availableArr,
+      datetimeFields: getScreendoorFieldsMeta.dateArr,
+      locationFields: getScreendoorFieldsMeta.locationArr,
+      nameField: getScreendoorFieldsMeta.nameArr
     };
 
     this.onDragEnd = this.onDragEnd.bind( this );
@@ -92,29 +93,43 @@ class ScreendoorModal extends Component {
   }
 
   render() {
+    const { projectId } = this.props;
     const {
       additionalFields, availableFields, datetimeFields, locationFields, nameField
     } = this.state;
 
-    function cleanData( arr ) {
-      const newObj = {};
+    // function cleanData( arr ) {
+    //   const newObj = {};
 
-      arr.forEach( ( item ) => {
-        const { name } = item;
-        const { field } = item;
-        const nameStr = name.split( ' ' ).join( '_' );
+    //   arr.forEach( ( item ) => {
+    //     const { name } = item;
+    //     const { field } = item;
+    //     const nameStr = name.split( ' ' ).join( '_' );
 
-        newObj[nameStr] = field;
-      } );
+    //     newObj[nameStr] = field;
+    //   } );
 
-      return newObj;
-    }
+    //   return newObj;
+    // }
 
     const dataObj = {
-      date: cleanData( datetimeFields ),
-      location: cleanData( locationFields ),
-      name: cleanData( nameField ),
-      other: cleanData( additionalFields )
+      available: availableFields,
+      date: datetimeFields,
+      location: locationFields,
+      name: nameField,
+      other: additionalFields,
+      postId: getMapMeta.id,
+      projectId
+    };
+
+    const clearDataObj = {
+      available: [],
+      date: [],
+      location: [],
+      name: [],
+      other: [],
+      postId: getMapMeta.id,
+      projectId: ''
     };
 
     return (
@@ -135,13 +150,17 @@ class ScreendoorModal extends Component {
         <button type="button" onClick={ () => { saveScreendoorFields( dataObj ); } }>
           Save Form Data
         </button>
+        <button type="button" onClick={ () => { saveScreendoorFields( clearDataObj ); } }>
+          Clear Form Data
+        </button>
       </div>
     );
   }
 }
 
 ScreendoorModal.propTypes = {
-  data: array
+  data: array,
+  projectId: string
 };
 
 export default ScreendoorModal;

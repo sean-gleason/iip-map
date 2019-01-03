@@ -153,9 +153,9 @@ class IIP_Map_Admin {
 
     // Pass all PHP variable to admin JS
     wp_localize_script( 'iip-map-admin-js', 'iipMapParams', array(
-      // 'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
       'mapGlobals' => $globals,
-      'mapMeta' => get_post_meta( $post->ID, '_iip_map_meta', true )
+      'mapMeta' => get_post_meta( $post->ID, '_iip_map_meta', true ),
+      'mapFieldsMeta' => get_post_meta( $post->ID, '_iip_map_fields_meta', true )
     ));
 
   }

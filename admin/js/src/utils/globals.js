@@ -2,6 +2,8 @@
  * This file creates getter functions used to access variables passed by WordPress into the global scope
  */
 
+// ----------- IIP MAP GLOBAL METAVALUES ---------- //
+
 // Gets the global meta values for IIP maps from the server
 export const mapGlobalMeta = ( function getGlobals() {
   const globals = window.iipMapParams || {};
@@ -49,6 +51,9 @@ class MapGlobalMeta {
 }
 
 export const getMapGlobalMeta = new MapGlobalMeta( mapGlobalMeta );
+
+
+// ----------- MAP VIEW METAVALUES ---------- //
 
 // Gets the map parameters from the server
 export const mapParams = ( function getParams() {
@@ -113,3 +118,68 @@ class MapMeta {
 }
 
 export const getMapMeta = new MapMeta( mapParams );
+
+// ----------- INPUT FIELD METAVALUES ---------- //
+
+// Gets the input field mappings from the server
+export const inputFields = ( function getFields() {
+  const params = window.iipMapParams || {};
+  const mapFieldsMeta = params.mapFieldsMeta || {};
+  return mapFieldsMeta;
+}() );
+
+// Creates getters for input field mappings
+class MapFieldsMeta {
+  constructor( meta ) {
+    this._meta = meta;
+  }
+
+  get meta() {
+    return this._meta;
+  }
+
+  get availableArr() {
+    if ( this._meta.available_arr ) {
+      return this._meta.available_arr;
+    }
+    return [];
+  }
+
+  get dateArr() {
+    if ( this._meta.date_arr ) {
+      return this._meta.date_arr;
+    }
+    return [];
+  }
+
+  get locationArr() {
+    if ( this._meta.location_arr ) {
+      return this._meta.location_arr;
+    }
+    return [];
+  }
+
+  get nameArr() {
+    if ( this._meta.name_arr ) {
+      return this._meta.name_arr;
+    }
+    return [];
+  }
+
+  get otherArr() {
+    if ( this._meta.other_arr ) {
+      return this._meta.other_arr;
+    }
+    return [];
+  }
+
+  get projectId() {
+    if ( this._meta.project_id ) {
+      return this._meta.project_id;
+    }
+    return null;
+  }
+}
+
+const screedoor = inputFields.screendoor || {};
+export const getScreendoorFieldsMeta = new MapFieldsMeta( screedoor );
