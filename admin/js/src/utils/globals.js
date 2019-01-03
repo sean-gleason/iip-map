@@ -1,3 +1,55 @@
+/*
+ * This file creates getter functions used to access variables passed by WordPress into the global scope
+ */
+
+// Gets the global meta values for IIP maps from the server
+export const mapGlobalMeta = ( function getGlobals() {
+  const globals = window.iipMapParams || {};
+  const mapGlobals = globals.mapGlobals || {};
+  return mapGlobals;
+}() );
+
+// Creates getters for global meta
+class MapGlobalMeta {
+  constructor( meta ) {
+    this._meta = meta;
+  }
+
+  get meta() {
+    return this._meta;
+  }
+
+  get ajaxUrl() {
+    if ( this._meta.ajaxUrl ) {
+      return this._meta.ajaxUrl;
+    }
+    return null;
+  }
+
+  get screendoorKey() {
+    if ( this._meta.screendoorApi ) {
+      return this._meta.screendoorApi;
+    }
+    return null;
+  }
+
+  get screendoorNonce() {
+    if ( this._meta.screendoorNonce ) {
+      return this._meta.screendoorNonce;
+    }
+    return null;
+  }
+
+  get googleKey() {
+    if ( this._meta.googleApi ) {
+      return this._meta.googleApi;
+    }
+    return null;
+  }
+}
+
+export const getMapGlobalMeta = new MapGlobalMeta( mapGlobalMeta );
+
 // Gets the map parameters from the server
 export const mapParams = ( function getParams() {
   const params = window.iipMapParams || {};
@@ -61,16 +113,3 @@ class MapMeta {
 }
 
 export const getMapMeta = new MapMeta( mapParams );
-
-// Get API keys
-export const screendoorKey = ( function getKey() {
-  const params = window.iipMapParams || {};
-  const key = params.screendoorApi || {};
-  return key;
-}() );
-
-export const googleKey = ( function getKey() {
-  const params = window.iipMapParams || {};
-  const key = params.googleApi || {};
-  return key;
-}() );

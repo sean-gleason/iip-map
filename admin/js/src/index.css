@@ -96,7 +96,7 @@ h2.iip-map-admin-metabox-header {
   flex-basis: 66%;
 }
 
-.iip-map-admin-screendoor-modal {
+.iip-map-admin-screendoor-dragdrop {
   display: flex;
   justify-content: space-between;
 }

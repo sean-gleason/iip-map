@@ -66,7 +66,7 @@ class ConfigureMap extends Component {
 
     return (
       <div className="postbox">
-        <h2 className="iip-map-admin-metabox-header">Configure Your Map</h2>
+        <h2 className="iip-map-admin-metabox-header">Set Your Map View</h2>
         <div className="inside">
           <div className="iip-map-admin-configure-box">
             <MapBox />

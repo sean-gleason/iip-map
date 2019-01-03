@@ -6,8 +6,8 @@ import Geocoder from '../Components/Metaboxes/Geocoder';
 
 const MapAdminMain = () => (
   <div className="iip-map-admin-column-wide">
-    <FormMapper />
     <ConfigureMap />
+    <FormMapper />
     <Geocoder />
   </div>
 );

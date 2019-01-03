@@ -1,3 +1,5 @@
+import { getMapGlobalMeta } from './globals';
+
 // Set Screendoor API endpoint
 export const setEndpoints = ( projectId, apiKey ) => {
   const screendoorEndpoint = `https://screendoor.dobt.co/api/projects/${projectId}`;
@@ -63,6 +65,17 @@ export const getScreendoorFields = ( projectId, apiKey ) => {
 
   //   populateScreendoorFields( formData.field_data );
   };
+};
+
+// Save Screendoor field values
+export const saveScreendoorFields = ( dataObj ) => {
+  const data = {
+    action: 'save_screendoor_ajax',
+    screendoor_info: dataObj,
+    security: getMapGlobalMeta.screendoorNonce
+  };
+
+  console.log( data );
 };
 
 // Add Screedoor field ids as dropdown options

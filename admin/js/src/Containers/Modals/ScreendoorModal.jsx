@@ -5,6 +5,8 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import Column from '../../Components/Column/Column';
 import ItemGroup from '../../Components/Column/ItemGroup';
 
+import { saveScreendoorFields } from '../../utils/screendoor';
+
 class ScreendoorModal extends Component {
   constructor( props ) {
     super( props );
@@ -94,19 +96,45 @@ class ScreendoorModal extends Component {
       additionalFields, availableFields, datetimeFields, locationFields, nameField
     } = this.state;
 
+    function cleanData( arr ) {
+      const newObj = {};
+
+      arr.forEach( ( item ) => {
+        const { name } = item;
+        const { field } = item;
+        const nameStr = name.split( ' ' ).join( '_' );
+
+        newObj[nameStr] = field;
+      } );
+
+      return newObj;
+    }
+
+    const dataObj = {
+      date: cleanData( datetimeFields ),
+      location: cleanData( locationFields ),
+      name: cleanData( nameField ),
+      other: cleanData( additionalFields )
+    };
+
     return (
       <div className="iip-map-admin-screendoor-modal">
-        <DragDropContext onDragEnd={ this.onDragEnd }>
-          <Column title="Available Fields">
-            <ItemGroup data={ availableFields } id="availableFields" />
-          </Column>
-          <Column title="Map To:">
-            <ItemGroup data={ nameField } id="nameField" required title="Item Name:" />
-            <ItemGroup data={ locationFields } id="locationFields" required title="Location:" />
-            <ItemGroup data={ datetimeFields } id="datetimeFields" title="Date/Time:" />
-            <ItemGroup data={ additionalFields } id="additionalFields" title="Additional Data:" />
-          </Column>
-        </DragDropContext>
+        <div className="iip-map-admin-screendoor-dragdrop">
+          <DragDropContext onDragEnd={ this.onDragEnd }>
+            <Column title="Available Fields">
+              <ItemGroup data={ availableFields } id="availableFields" />
+            </Column>
+            <Column title="Map To:">
+              <ItemGroup data={ nameField } id="nameField" required title="Item Name:" />
+              <ItemGroup data={ locationFields } id="locationFields" required title="Location:" />
+              <ItemGroup data={ datetimeFields } id="datetimeFields" title="Date/Time:" />
+              <ItemGroup data={ additionalFields } id="additionalFields" title="Additional Data:" />
+            </Column>
+          </DragDropContext>
+        </div>
+        <button type="button" onClick={ () => { saveScreendoorFields( dataObj ); } }>
+          Save Form Data
+        </button>
       </div>
     );
   }
