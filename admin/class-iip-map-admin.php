@@ -145,11 +145,16 @@ class IIP_Map_Admin {
     //   'export_nonce' => wp_create_nonce('iip-map-export-nonce')
     // ));
 
+    $globals;
+    $globals[ 'screendoorApi' ] = get_option( 'iip_map_screendoor_api_key' );
+    $globals[ 'googleApi' ] = get_option( 'iip_map_google_maps_api_key' );
+    $globals[ 'ajaxUrl' ] = admin_url( 'admin-ajax.php' );
+    $globals[ 'screendoorNonce' ] = wp_create_nonce('iip-map-screendoor-nonce');
+
     // Pass all PHP variable to admin JS
     wp_localize_script( 'iip-map-admin-js', 'iipMapParams', array(
-      'screendoorApi' => get_option( 'iip_map_screendoor_api_key' ),
-      'googleApi' => get_option( 'iip_map_google_maps_api_key' ),
-      'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
+      // 'screendoor_project' => get_post_meta( $post->ID, '_iip_map_screendoor_project', true),
+      'mapGlobals' => $globals,
       'mapMeta' => get_post_meta( $post->ID, '_iip_map_meta', true )
     ));
 
