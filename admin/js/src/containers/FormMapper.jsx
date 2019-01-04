@@ -4,7 +4,7 @@ import FormSelector from '../Components/Metaboxes/FormSelector';
 import ScreendoorModal from './Modals/ScreendoorModal';
 
 import { getData } from '../utils/screendoor';
-import { getMapGlobalMeta, getScreendoorFieldsMeta } from '../utils/globals';
+import { getMapGlobalMeta, getMapMeta, getScreendoorFieldsMeta } from '../utils/globals';
 
 class FormMapper extends Component {
   constructor( props ) {
@@ -12,7 +12,7 @@ class FormMapper extends Component {
     this.state = {
       apiKey: getMapGlobalMeta.screendoorKey,
       data: [],
-      formType: '',
+      formType: getMapMeta.formType,
       projectId: getScreendoorFieldsMeta.projectId,
       showModal: false
     };
@@ -61,9 +61,14 @@ class FormMapper extends Component {
         <div className="inside">
           <p>Use this form to map the form values from your data input source.</p>
           { /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/label-has-for */ }
-          <label htmlFor="iip-map-admin-form-select">
+          <label htmlFor="formType">
             Select input type:
-            <select id="iip-map-admin-form-select" onChange={ this.chooseFormType } value={ formType }>
+            <select
+              id="iip-map-admin-form-select"
+              name="formType"
+              onChange={ this.chooseFormType }
+              value={ formType }
+            >
               <option value="">- Select Input -</option>
               <option value="formidable">Formidable</option>
               <option value="screendoor">Screendoor</option>

@@ -37,5 +37,8 @@ if( !empty( $_POST[ 'mapType' ] ) ) {
   $map_meta[ 'type' ] = ( sanitize_text_field( $_POST[ 'mapType' ] ) );
 }
 
+if( !empty( $_POST[ 'formType' ] ) ) {
+  $map_meta[ 'formType' ] = ( sanitize_text_field( $_POST[ 'formType' ] ) );
+}
 // Send updated array of post meta values
 update_post_meta( $post_id, '_iip_map_meta', $map_meta );

@@ -72,6 +72,13 @@ class MapMeta {
     return this._meta;
   }
 
+  get formType() {
+    if ( this._meta.formType ) {
+      return this._meta.formType;
+    }
+    return '';
+  }
+
   get height() {
     if ( this._meta.height ) {
       return this._meta.height;
