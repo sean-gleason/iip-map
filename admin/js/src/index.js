@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import MapAdminMain from './Containers/MapAdminMain';
-import MapAdminSidebar from './Containers/MapAdminSidebar';
+import MapAdminMain from './Components/AdminSections/MapAdminMain';
+import MapAdminSidebar from './Components/AdminSections/MapAdminSidebar';
 
 import './index.css';
 

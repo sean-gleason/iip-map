@@ -4,7 +4,7 @@ import { func, string } from 'prop-types';
 import { capitalize } from '../../utils/texttransforms';
 
 const FormSelector = ( {
-  formType, projectId, setId, getFields
+  formType, getFields, projectId, selectView, setId
 } ) => (
   <div className="iip-map-admin-screendoor-project-container" id={ `${formType}-project-selector` }>
     <form className="iip-map-admin-project-form">
@@ -29,16 +29,36 @@ const FormSelector = ( {
       >
         Select This Project
       </button>
-
     </form>
+
+    <button
+      className="button button-large iip-map-admin-modal-button"
+      id={ `iip-map-${formType}-mappings` }
+      onClick={ () => { selectView( 'mapper' ); } }
+      type="button"
+      value="mapper"
+    >
+      Show Field Mappings
+    </button>
+
+    <button
+      className="button button-large iip-map-admin-modal-button"
+      id={ `iip-map-${formType}-card-config` }
+      onClick={ () => { selectView( 'card' ); } }
+      type="button"
+      value="card"
+    >
+      Configure Map Info Cards
+    </button>
   </div>
 );
 
 FormSelector.propTypes = {
   formType: string,
+  getFields: func,
   projectId: string,
-  setId: func,
-  getFields: func
+  selectView: func,
+  setId: func
 };
 
 export default FormSelector;

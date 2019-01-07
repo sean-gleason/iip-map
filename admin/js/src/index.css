@@ -87,6 +87,13 @@ h2.iip-map-admin-metabox-header {
   margin: 0 10px;
 }
 
+#iip-map-formidable-mappings,
+#iip-map-formidable-card-config,
+#iip-map-screendoor-mappings,
+#iip-map-screendoor-card-config {
+  margin: 2em 1em 1em;
+}
+
 .iip-map-admin-configure-box {
   display: flex;
   justify-content: space-between;
@@ -124,6 +131,12 @@ h2.iip-map-admin-metabox-header {
   border-top: 1px solid lightgrey;
 }
 
+.iip-map-admin-card-preview-container {
+  border-top: 1px solid lightgrey;
+  margin: 0;
+  padding: 1em .5em;
+}
+
 .iip-map-admin-column-item-group {
   min-height: 100px;
 }
@@ -133,6 +146,7 @@ h2.iip-map-admin-metabox-header {
   content: " *";
 }
 
+.iip-map-admin-card-preview,
 .iip-map-admin-column-item {
   border: 1px solid lightgrey;
   border-radius: 2px;

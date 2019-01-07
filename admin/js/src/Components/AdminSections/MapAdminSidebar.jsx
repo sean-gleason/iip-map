@@ -1,7 +1,7 @@
 import React from 'react';
 
-import DataExporter from '../Components/Metaboxes/DataExporter';
-import UpdateMarker from '../Components/Metaboxes/UpdateMarker';
+import DataExporter from '../Metaboxes/DataExporter';
+import UpdateMarker from '../Metaboxes/UpdateMarker';
 
 const MapAdminSidebar = () => (
   <div className="iip-map-admin-column-side">

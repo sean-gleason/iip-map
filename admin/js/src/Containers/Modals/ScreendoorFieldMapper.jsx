@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { array, string } from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 
@@ -8,7 +8,7 @@ import ItemGroup from '../../Components/Column/ItemGroup';
 import { getMapMeta, getScreendoorFieldsMeta } from '../../utils/globals';
 import { saveScreendoorFields } from '../../utils/screendoor';
 
-class ScreendoorModal extends Component {
+class ScreendoorFieldMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
@@ -133,7 +133,7 @@ class ScreendoorModal extends Component {
     };
 
     return (
-      <div className="iip-map-admin-screendoor-modal">
+      <Fragment>
         <div className="iip-map-admin-screendoor-dragdrop">
           <DragDropContext onDragEnd={ this.onDragEnd }>
             <Column title="Available Fields">
@@ -153,14 +153,14 @@ class ScreendoorModal extends Component {
         <button type="button" onClick={ () => { saveScreendoorFields( clearDataObj ); } }>
           Clear Form Data
         </button>
-      </div>
+      </Fragment>
     );
   }
 }
 
-ScreendoorModal.propTypes = {
+ScreendoorFieldMapper.propTypes = {
   data: array,
   projectId: string
 };
 
-export default ScreendoorModal;
+export default ScreendoorFieldMapper;

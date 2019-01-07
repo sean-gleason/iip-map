@@ -1,59 +1,26 @@
 import React, { Component } from 'react';
 
-import FormSelector from '../Components/Metaboxes/FormSelector';
-import ScreendoorModal from './Modals/ScreendoorModal';
+import FormidableContainer from './FormidableContainer';
+import ScreendoorContainer from './ScreendoorContainer';
 
-import { getData } from '../utils/screendoor';
-import { getMapGlobalMeta, getMapMeta, getScreendoorFieldsMeta } from '../utils/globals';
+import { getMapMeta } from '../utils/globals';
 
 class FormMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      apiKey: getMapGlobalMeta.screendoorKey,
-      data: [],
-      formType: getMapMeta.formType,
-      projectId: getScreendoorFieldsMeta.projectId,
-      showModal: false
+      formType: getMapMeta.formType
     };
 
-    this.setProjectId = this.setProjectId.bind( this );
     this.chooseFormType = this.chooseFormType.bind( this );
-    this.handleScreendoor = this.handleScreendoor.bind( this );
-  }
-
-  setProjectId( event ) {
-    this.setState( { projectId: event.target.value } );
   }
 
   chooseFormType( event ) {
     this.setState( { formType: event.target.value } );
   }
 
-  handleScreendoor() {
-    const { apiKey, projectId } = this.state;
-
-    this._loadData( projectId, apiKey );
-  }
-
-  _loadData( projectId, apiKey ) {
-    function handleErrors( response ) {
-      if ( !response.ok ) {
-        throw Error( response.statusText );
-      }
-      return response.json();
-    }
-
-    fetch( `https://screendoor.dobt.co/api/projects/${projectId}/form?&v=0&api_key=${apiKey}` )
-      .then( handleErrors )
-      .then( response => this.setState( { data: getData( response ), showModal: true } ) )
-      .catch( error => console.log( error ) );
-  }
-
   render() {
-    const {
-      apiKey, data, formType, projectId, showModal
-    } = this.state;
+    const { formType, projectId } = this.state;
 
     return (
       <div className="postbox">
@@ -76,25 +43,15 @@ class FormMapper extends Component {
           </label>
 
           { ( formType === 'screendoor' ) && (
-            <div className="iip-map-admin-screendoor">
-              <FormSelector
-                apiKey={ apiKey }
-                formType="screendoor"
-                projectId={ projectId }
-                setId={ this.setProjectId }
-                getFields={ this.handleScreendoor }
-              />
-              <ScreendoorModal
-                apiKey={ apiKey }
-                data={ data }
-                projectId={ projectId }
-                show={ showModal }
-              />
-            </div>
+            <ScreendoorContainer
+              projectId={ projectId }
+            />
           ) }
 
           { ( formType === 'formidable' ) && (
-            <FormSelector formType="formidable" projectId={ projectId } setId={ this.setProjectId } />
+            <FormidableContainer
+              projectId={ projectId }
+            />
           ) }
 
           <div id="formmapper-grid" className="" />
