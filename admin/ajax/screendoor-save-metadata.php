@@ -8,7 +8,7 @@ class IIP_Map_Save_Fields {
     $id = $_POST[ 'postId' ];
 
     // Get serialized array of screendoor meta values
-    $fields_meta = unserialize( get_post_meta( $id, '_iip_map_fields_meta' ) );
+    $fields_meta = unserialize( get_post_meta( $id, '_iip_map_fields_meta', true ) );
     
     // Add map items to map params array
     if( !empty( $_POST[ 'available' ] ) ) {
@@ -19,6 +19,10 @@ class IIP_Map_Save_Fields {
       $fields_meta[ 'screendoor' ][ 'date_arr' ] = ( json_decode( stripslashes ( $_POST[ 'date' ] ) ) );
     }
 
+    if( !empty( $_POST[ 'fields' ] ) ) {
+      $fields_meta[ 'screendoor' ][ 'fields_obj' ] = ( json_decode( stripslashes ( $_POST[ 'fields' ] ) ) );
+    }
+    
     if( !empty( $_POST[ 'location' ] ) ) {
       $fields_meta[ 'screendoor' ][ 'location_arr' ] = ( json_decode( stripslashes( $_POST[ 'location' ] ) ) );
     }

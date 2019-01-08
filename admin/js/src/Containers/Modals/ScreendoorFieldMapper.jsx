@@ -12,10 +12,10 @@ class ScreendoorFieldMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      fields: {},
       additionalFields: getScreendoorFieldsMeta.otherArr,
       availableFields: getScreendoorFieldsMeta.availableArr,
       datetimeFields: getScreendoorFieldsMeta.dateArr,
+      fields: getScreendoorFieldsMeta.fields,
       locationFields: getScreendoorFieldsMeta.locationArr,
       nameField: getScreendoorFieldsMeta.nameArr
     };
@@ -26,15 +26,7 @@ class ScreendoorFieldMapper extends Component {
   componentDidUpdate( prevProps ) {
     const { data } = this.props;
 
-    const fields = {};
-
-    data.forEach( ( item ) => {
-      fields[item.field] = {
-        field: item.field,
-        name: item.name
-      };
-    } );
-
+    const fields = this.getDraggableFields();
     const availableFields = Array.from( data );
 
     if ( data !== prevProps.data ) {
@@ -92,10 +84,25 @@ class ScreendoorFieldMapper extends Component {
     }
   }
 
+  getDraggableFields() {
+    const { data } = this.props;
+
+    const fields = {};
+
+    data.forEach( ( item ) => {
+      fields[item.field] = {
+        field: item.field,
+        name: item.name
+      };
+    } );
+
+    return fields;
+  }
+
   render() {
-    const { projectId } = this.props;
+    const { id } = this.props;
     const {
-      additionalFields, availableFields, datetimeFields, locationFields, nameField
+      additionalFields, availableFields, datetimeFields, fields, locationFields, nameField
     } = this.state;
 
     // function cleanData( arr ) {
@@ -115,16 +122,18 @@ class ScreendoorFieldMapper extends Component {
     const dataObj = {
       available: availableFields,
       date: datetimeFields,
+      fields,
       location: locationFields,
       name: nameField,
       other: additionalFields,
       postId: getMapMeta.id,
-      projectId
+      projectId: id
     };
 
     const clearDataObj = {
       available: [],
       date: [],
+      fields: {},
       location: [],
       name: [],
       other: [],
@@ -160,7 +169,7 @@ class ScreendoorFieldMapper extends Component {
 
 ScreendoorFieldMapper.propTypes = {
   data: array,
-  projectId: string
+  id: string
 };
 
 export default ScreendoorFieldMapper;

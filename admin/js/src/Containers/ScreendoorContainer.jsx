@@ -12,7 +12,7 @@ class ScreendoorContainer extends Component {
     super( props );
     this.state = {
       apiKey: getMapGlobalMeta.screendoorKey,
-      data: [],
+      data: getScreendoorFieldsMeta.availableArr,
       display: 'mapper',
       projectId: getScreendoorFieldsMeta.projectId
     };
@@ -67,10 +67,10 @@ class ScreendoorContainer extends Component {
         />
         <div className="iip-map-admin-screendoor-modal">
           { ( display === 'mapper' ) && (
-            <ScreendoorFieldMapper data={ data } />
+            <ScreendoorFieldMapper data={ data } id={ projectId } />
           ) }
           { ( display === 'card' ) && (
-            <ScreendoorConfigureCard />
+            <ScreendoorConfigureCard data={ data } />
           ) }
         </div>
       </div>

@@ -159,6 +159,13 @@ class MapFieldsMeta {
     return [];
   }
 
+  get fields() {
+    if ( this._meta.fields_obj ) {
+      return this._meta.fields_obj;
+    }
+    return {};
+  }
+
   get locationArr() {
     if ( this._meta.location_arr ) {
       return this._meta.location_arr;
