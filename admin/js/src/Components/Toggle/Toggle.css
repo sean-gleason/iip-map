@@ -1,0 +1,80 @@
+.iip-map-admin-card-preview-option-top {
+  align-items: center;
+  display: flex;
+}
+
+.iip-map-admin-card-preview-toggle-label {
+  padding-right: 1em;
+}
+
+.iip-map-admin-toggle {
+  touch-action: pan-x;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.toggle-checked > .iip-map-admin-toggle-track {
+  background-color: #4aa564;
+}
+
+.toggle-checked:hover > .iip-map-admin-toggle-track {
+  background-color: #2e8540;
+}
+
+.toggle-unchecked > .iip-map-admin-toggle-track {
+  background-color: #cd2026;
+}
+
+.toggle-unchecked:hover > .iip-map-admin-toggle-track {
+  background-color: #981b1e;
+}
+
+.toggle-unchecked > .iip-map-admin-toggle-handle {
+  left: 21px;
+}
+
+.iip-map-admin-toggle-track {
+  width: 40px;
+  height: 20px;
+  padding: 0;
+  border-radius: 30px;
+}
+
+.iip-map-admin-toggle:focus {
+  outline: none;
+}
+
+.iip-map-admin-toggle:focus > .iip-map-admin-toggle-handle {
+  border: 1px solid #3b99fc;  
+  box-shadow: 0 0 3px 3px #3b99fc;
+  outline-width: 5px;
+}
+
+.iip-map-admin-toggle-handle {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #4D4D4D;
+  border-radius: 50%;
+  background-color: #FAFAFA;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+}
+
+.iip-map-admin-toggle-checkbox {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}

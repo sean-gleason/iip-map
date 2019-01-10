@@ -155,6 +155,27 @@ h2.iip-map-admin-metabox-header {
   background-color: #FFFFFF;
 }
 
+
+.iip-map-ol-popup-preview,
+.iip-map-admin-card-preview {
+  background: #ffffff;
+  border: solid 1px #cccccc;
+  padding: 10px;
+}
+
+h1.iip-map-ol-popup-preview-header {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+h3.iip-map-ol-popup-preview-header {
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .iip-map-admin-shortcode-box {
   flex-basis: 33%;
 }

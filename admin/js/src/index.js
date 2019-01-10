@@ -16,4 +16,4 @@ ReactDOM.render(
   document.getElementById( 'iip-map-admin-sidebar' )
 );
 
-module.hot.accept();
+if ( module.hot ) { module.hot.accept(); }
