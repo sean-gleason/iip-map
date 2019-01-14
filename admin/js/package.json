@@ -35,5 +35,11 @@
     "dev": "webpack-dev-server --config ./config/webpack.config.js --mode development",
     "profile": "webpack-bundle-analyzer dist/stats.json ./"
   },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
   "eslintIgnore": ["dist/**"]
 }
