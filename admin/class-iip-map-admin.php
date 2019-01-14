@@ -23,7 +23,7 @@ class IIP_Map_Admin {
         wp_enqueue_style( 'iip-map-admin', plugin_dir_url( __FILE__ ) . 'css/iip-map-admin.css', array(), $this->version, 'all' );
 
         // Enqueue admin JavaScript bundle
-        wp_enqueue_script( 'iip-map-admin-js', IIP_MAP_URL . 'admin/js/admin-app.js', array(), null, true );
+        wp_enqueue_script( 'iip-map-admin-js', IIP_MAP_URL . 'admin/js/dist/admin-app.js', array(), null, true );
 
       }
     }

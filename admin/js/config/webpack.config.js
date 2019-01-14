@@ -1,7 +1,9 @@
 const webpack = require( 'webpack' );
+const { BundleAnalyzerPlugin } = require( 'webpack-bundle-analyzer' );
+const paths = require( './paths' );
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: paths.appIndexJs,
   module: {
     rules: [
       {
@@ -26,13 +28,20 @@ module.exports = {
     ]
   },
   output: {
-    path: __dirname,
+    path: paths.appDist,
     publicPath: '/',
     filename: 'admin-app.js'
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new BundleAnalyzerPlugin( {
+      analyzerMode: 'disabled',
+      generateStatsFile: true,
+      statsFilename: './stats.json'
+    } )
+  ],
   devServer: {
-    contentBase: './',
+    contentBase: paths.appPublic,
     hot: true
   }
 };
