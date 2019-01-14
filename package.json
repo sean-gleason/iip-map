@@ -17,13 +17,11 @@
     "build:css": "postcss admin/css/iip-map-admin.css -u autoprefixer -r",
     "build:js": "npm run uglifyAdmin & npm run uglifyFront",
     "uglifyAdmin": "uglifyjs admin/js/*.js -o admin/js/dist/admin.min.js -c -m --source-map",
-    "uglifyFront": "uglifyjs public/js/draw-gmap.js -o public/js/dist/draw-gmap.min.js -c -m --source-map & uglifyjs public/js/draw-ol-map.js public/js/ol-popup.js -o public/js/dist/draw-ol-map.min.js -c -m --source-map & uglifyjs public/js/markerclusterer.js -o public/js/dist/markerclusterer.min.js -c -m --source-map",
-    "version": "versionbump 'version.json' 'package.json' && npm run build && git add --all"
+    "uglifyFront": "uglifyjs public/js/draw-gmap.js -o public/js/dist/draw-gmap.min.js -c -m --source-map & uglifyjs public/js/draw-ol-map.js public/js/ol-popup.js -o public/js/dist/draw-ol-map.min.js -c -m --source-map & uglifyjs public/js/markerclusterer.js -o public/js/dist/markerclusterer.min.js -c -m --source-map"
   },
   "devDependencies": {
     "autoprefixer": "^8.5.0",
     "postcss-cli": "^5.0.0",
-    "uglify-es": "^3.3.9",
-    "versionbump": "git+ssh://git@github.com/IIP-Design/versionbump.git"
+    "uglify-es": "^3.3.9"
   }
 }

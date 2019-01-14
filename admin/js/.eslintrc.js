@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['airbnb'],
+  extends: 'airbnb',
   rules: {
     'array-bracket-newline': ['warn', { multiline: true, minItems: 3 }],
     'comma-dangle': ['warn', 'never'],
