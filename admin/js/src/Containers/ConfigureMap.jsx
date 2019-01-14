@@ -31,19 +31,32 @@ class ConfigureMap extends Component {
 
   getMapProps( evt ) {
     const { map } = evt;
+
+    // Gets the inital map center and zoom values
     const view = map.getView();
     const viewCenter = view.getCenter();
     const viewZoom = view.getZoom();
 
+    // Gets new lat, lng, and zoom values (rounded to 2 decimal places for lat & lng, whole number for zoom)
     const newLat = Math.round( parseFloat( viewCenter[1] ) * 1e2 ) / 1e2;
     const newLng = Math.round( parseFloat( viewCenter[0] ) * 1e2 ) / 1e2;
     const newZoom = Math.round( viewZoom );
 
+    // Wraps the longitude so that lng value always valid, even when users scroll across the whole map
+    function normalizeLng( value ) {
+      const rotation = Math.floor( ( value + 180 ) / 360 );
+      const normalized = value - ( rotation * 360 );
+      const rounded = Math.round( normalized * 1e2 ) / 1e2;
+
+      return rounded;
+    }
+
+    // Sets the updated lat, lng, and zoom values
     this.setState( prevState => ( {
       mapProps: {
         ...prevState.mapProps,
         mapLat: newLat,
-        mapLng: newLng,
+        mapLng: normalizeLng( newLng ),
         mapZoom: newZoom
       }
     } ) );
