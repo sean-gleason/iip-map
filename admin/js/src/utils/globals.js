@@ -193,6 +193,13 @@ class MapFieldsMeta {
     }
     return null;
   }
+
+  get timeArr() {
+    if ( this._meta.time_arr ) {
+      return this._meta.time_arr;
+    }
+    return [];
+  }
 }
 
 const screedoor = inputFields.screendoor || {};

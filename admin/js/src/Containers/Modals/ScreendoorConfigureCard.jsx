@@ -38,18 +38,66 @@ class ScreendoorConfigureCard extends Component {
         <Column title="Configure Card">
           <div className="iip-map-admin-card-preview-container">
             <div className="iip-map-admin-card-preview">
-              <ConfigsToggle checked label="Use name as title?">
-                <label htmlFor="cardPreviewTitle">
+              <ConfigsToggle toggled={ false } label="Show Title?">
+                <label className="iip-map-admin-label" htmlFor="cardPreTitle">
                   Add text before title?
                   <input
-                    name="cardPreviewTitle"
+                    className="iip-map-admin-project-input"
+                    name="cardPreTitle"
+                    type="text"
+                  />
+                </label>
+                <br />
+                <label className="iip-map-admin-label" htmlFor="cardPostTitle">
+                  Add text after title?
+                  <input
+                    className="iip-map-admin-project-input"
+                    name="cardPostTitle"
                     type="text"
                   />
                 </label>
               </ConfigsToggle>
-              <ConfigsToggle checked label="Add Date?" />
-              <ConfigsToggle checked label="Add Time?" />
-              <ConfigsToggle label="Add section?" />
+              <ConfigsToggle checked label="Add Date?">
+                <label className="iip-map-admin-label" htmlFor="cardDateHeader">
+                  Section header (optional):
+                  <input
+                    className="iip-map-admin-project-input"
+                    name="cardDateHeader"
+                    type="text"
+                  />
+                </label>
+                <ConfigsToggle checked label="Add Time?">
+                  <p className="iip-map-admin-card-preview-toggle-label" style={ { marginTop: '0' } }>Format:</p>
+                  <label htmlFor="cardTimeFormat-12">
+                    12 hour
+                    <input
+                      className="iip-map-admin-project-input"
+                      id="cardTimeFormat-12"
+                      name="cardTimeFormat"
+                      type="radio"
+                    />
+                  </label>
+                  <label htmlFor="cardTimeFormat-24">
+                    24 hour
+                    <input
+                      className="iip-map-admin-project-input"
+                      id="cardTimeFormat-24"
+                      name="cardTimeFormat"
+                      type="radio"
+                    />
+                  </label>
+                </ConfigsToggle>
+              </ConfigsToggle>
+              <ConfigsToggle label="Add section?">
+                <label className="iip-map-admin-label" htmlFor="cardSectionOneHeader">
+                  Section header (optional):
+                  <input
+                    className="iip-map-admin-project-input"
+                    name="cardSectionOneHeader"
+                    type="text"
+                  />
+                </label>
+              </ConfigsToggle>
             </div>
           </div>
         </Column>

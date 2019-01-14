@@ -19,6 +19,10 @@ class IIP_Map_Save_Fields {
       $fields_meta[ 'screendoor' ][ 'date_arr' ] = ( json_decode( stripslashes ( $_POST[ 'date' ] ) ) );
     }
 
+    if( !empty( $_POST[ 'time' ] ) ) {
+      $fields_meta[ 'screendoor' ][ 'time_arr' ] = ( json_decode( stripslashes ( $_POST[ 'time' ] ) ) );
+    }
+
     if( !empty( $_POST[ 'fields' ] ) ) {
       $fields_meta[ 'screendoor' ][ 'fields_obj' ] = ( json_decode( stripslashes ( $_POST[ 'fields' ] ) ) );
     }

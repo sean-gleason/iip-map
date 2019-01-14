@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { bool } from 'prop-types';
+import { bool, func } from 'prop-types';
 
 import './Toggle.css';
 
 class Toggle extends Component {
   constructor( props ) {
     super( props );
-    this.state = {
-      checked: this.props.checked
-    };
+    this.state = {};
 
     this.checkbox = null;
 
@@ -19,9 +17,20 @@ class Toggle extends Component {
     this.handleClick = this.handleClick.bind( this );
   }
 
+  componentDidMount() {
+    const { checked } = this.props;
+
+    this.setState( {
+      checked
+    } );
+  }
+
   handleClick( e ) {
+    const { onChange } = this.props;
     const { checkbox } = this;
     const newChecked = !checkbox.checked;
+
+    onChange( newChecked );
 
     this.setState( {
       checked: newChecked
@@ -54,7 +63,8 @@ class Toggle extends Component {
 }
 
 Toggle.propTypes = {
-  checked: bool
+  checked: bool,
+  onChange: func
 };
 
 export default Toggle;

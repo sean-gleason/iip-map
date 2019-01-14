@@ -5,6 +5,7 @@
 
 .iip-map-admin-card-preview-toggle-label {
   padding-right: 1em;
+  font-weight: 600;
 }
 
 .iip-map-admin-toggle {
@@ -25,12 +26,20 @@
   background-color: #2e8540;
 }
 
+.toggle-checked:hover > .iip-map-admin-toggle-handle {
+  left: 5px;
+}
+
 .toggle-unchecked > .iip-map-admin-toggle-track {
   background-color: #cd2026;
 }
 
 .toggle-unchecked:hover > .iip-map-admin-toggle-track {
   background-color: #981b1e;
+}
+
+.toggle-unchecked:hover > .iip-map-admin-toggle-handle {
+  left: 17px;
 }
 
 .toggle-unchecked > .iip-map-admin-toggle-handle {

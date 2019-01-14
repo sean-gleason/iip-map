@@ -14,10 +14,11 @@ class ScreendoorFieldMapper extends Component {
     this.state = {
       additionalFields: getScreendoorFieldsMeta.otherArr,
       availableFields: getScreendoorFieldsMeta.availableArr,
-      datetimeFields: getScreendoorFieldsMeta.dateArr,
+      dateField: getScreendoorFieldsMeta.dateArr,
       fields: getScreendoorFieldsMeta.fields,
       locationFields: getScreendoorFieldsMeta.locationArr,
-      nameField: getScreendoorFieldsMeta.nameArr
+      nameField: getScreendoorFieldsMeta.nameArr,
+      timeField: getScreendoorFieldsMeta.timeArr
     };
 
     this.onDragEnd = this.onDragEnd.bind( this );
@@ -102,7 +103,7 @@ class ScreendoorFieldMapper extends Component {
   render() {
     const { id } = this.props;
     const {
-      additionalFields, availableFields, datetimeFields, fields, locationFields, nameField
+      additionalFields, availableFields, dateField, fields, locationFields, nameField, timeField
     } = this.state;
 
     // function cleanData( arr ) {
@@ -121,13 +122,14 @@ class ScreendoorFieldMapper extends Component {
 
     const dataObj = {
       available: availableFields,
-      date: datetimeFields,
+      date: dateField,
       fields,
       location: locationFields,
       name: nameField,
       other: additionalFields,
       postId: getMapMeta.id,
-      projectId: id
+      projectId: id,
+      time: timeField
     };
 
     const clearDataObj = {
@@ -138,7 +140,8 @@ class ScreendoorFieldMapper extends Component {
       name: [],
       other: [],
       postId: getMapMeta.id,
-      projectId: ''
+      projectId: '',
+      time: []
     };
 
     return (
@@ -151,7 +154,8 @@ class ScreendoorFieldMapper extends Component {
             <Column title="Map To:">
               <ItemGroup data={ nameField } id="nameField" required title="Item Name:" />
               <ItemGroup data={ locationFields } id="locationFields" required title="Location:" />
-              <ItemGroup data={ datetimeFields } id="datetimeFields" title="Date/Time:" />
+              <ItemGroup data={ dateField } id="dateField" title="Date:" />
+              <ItemGroup data={ timeField } id="timeField" title="Time:" />
               <ItemGroup data={ additionalFields } id="additionalFields" title="Additional Data:" />
             </Column>
           </DragDropContext>
