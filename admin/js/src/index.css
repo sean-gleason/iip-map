@@ -157,6 +157,7 @@ h2.iip-map-admin-metabox-header {
 
 .iip-map-admin-card-preview-meta {
   padding: 0 0 0 10px;
+  margin-bottom: 10px;
 }
 
 input[type=radio].iip-map-admin-project-input {
