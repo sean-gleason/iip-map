@@ -1,70 +1,34 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { bool, func } from 'prop-types';
 
 import './Toggle.css';
 
-class Toggle extends Component {
-  constructor( props ) {
-    super( props );
-    this.state = {};
+const Toggle = ( { callback, checked } ) => {
+  const initialVal = checked ? 'checked' : 'unchecked';
+  const [toggleState, setToggleState] = useState( initialVal );
 
-    this.checkbox = null;
+  const toggle = () => {
+    setToggleState( toggleState === 'unchecked' ? 'checked' : 'unchecked' );
+    callback();
+  };
 
-    this.setCheckboxRef = ( element ) => {
-      this.checkbox = element;
-    };
-
-    this.handleClick = this.handleClick.bind( this );
-  }
-
-  componentDidMount() {
-    const { checked } = this.props;
-
-    this.setState( {
-      checked
-    } );
-  }
-
-  handleClick( e ) {
-    const { onChange } = this.props;
-    const { checkbox } = this;
-    const newChecked = !checkbox.checked;
-
-    onChange( newChecked );
-
-    this.setState( {
-      checked: newChecked
-    } );
-  }
-
-  render() {
-    const { checked } = this.state;
-
-    return (
-      <div
-        className={ checked ? 'iip-map-admin-toggle toggle-checked' : 'iip-map-admin-toggle toggle-unchecked' }
-        onClick={ this.handleClick }
-        onKeyPress={ this.handleClick }
-        role="button"
-        tabIndex="0"
-      >
-        <div className="iip-map-admin-toggle-track" />
-        <div className="iip-map-admin-toggle-handle" />
-        <input
-          className="iip-map-admin-toggle-checkbox"
-          checked={ checked }
-          ref={ this.setCheckboxRef }
-          type="checkbox"
-          value=""
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      className={ `iip-map-admin-toggle toggle-${toggleState}` }
+      onClick={ toggle }
+      onKeyPress={ toggle }
+      role="button"
+      tabIndex="0"
+    >
+      <div className="iip-map-admin-toggle-track" />
+      <div className="iip-map-admin-toggle-handle" />
+    </div>
+  );
+};
 
 Toggle.propTypes = {
   checked: bool,
-  onChange: func
+  callback: func
 };
 
 export default Toggle;

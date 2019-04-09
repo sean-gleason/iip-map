@@ -19,9 +19,12 @@ class ConfigsToggle extends Component {
     } );
   }
 
-  handleChange( value ) {
+  handleChange() {
+    const { toggled } = this.state;
+    const flipped = !toggled;
+
     this.setState( {
-      toggled: value
+      toggled: flipped
     } );
   }
 
@@ -33,7 +36,7 @@ class ConfigsToggle extends Component {
       <div className="iip-map-admin-card-preview-option">
         <div className="iip-map-admin-card-preview-option-top">
           <p className="iip-map-admin-card-preview-toggle-label">{ label }</p>
-          <Toggle checked={ checked } onChange={ this.handleChange } />
+          <Toggle checked={ checked } callback={ this.handleChange } />
         </div>
         { toggled && (
           <div className="iip-map-admin-card-preview-meta">
