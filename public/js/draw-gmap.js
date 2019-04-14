@@ -140,6 +140,6 @@ function plotMarkers(m) {
   })
 
   // MarkerClusterer to group adjacent markers
-  let markerCluster = new MarkerClusterer(map, markers, {imagePath: '/wp-content/plugins/iip-map/images/m'});
+  let markerCluster = new MarkerClusterer(map, markers, {imagePath: '/wp-content/plugins/iip-map/static/m'});
   markerCluster.setMaxZoom(15);
 }

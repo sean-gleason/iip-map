@@ -28,7 +28,7 @@ let markerStyle = new ol.style.Style({
     anchorXUnits: 'fraction',
     anchorYUnits: 'pixels',
     opacity: 0.75,
-    src: '/wp-content/plugins/iip-map/images/map-pin.png'
+    src: '/wp-content/plugins/iip-map/static/map-pin.png'
   }))
 });
 
