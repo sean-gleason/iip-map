@@ -87,6 +87,10 @@ h2.iip-map-admin-metabox-header {
   margin: 0 10px;
 }
 
+.iip-map-admin-project-textarea {
+  margin: .3rem 0 0;
+}
+
 #iip-map-formidable-mappings,
 #iip-map-formidable-card-config,
 #iip-map-screendoor-mappings,
@@ -156,8 +160,9 @@ h2.iip-map-admin-metabox-header {
 }
 
 .iip-map-admin-card-preview-meta {
-  padding: 0 0 0 10px;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: .5rem 0 .5rem 10px;
 }
 
 input[type=radio].iip-map-admin-project-input {
@@ -212,6 +217,26 @@ h4.iip-map-admin-metabox-header {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+}
+
+.iip-map-admin-label {
+  padding: .3rem 0;
+}
+
+.stacked {
+  display: flex;
+  flex-direction: column;
+}
+
+.iip-map-admin-new-section-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.iip-map-admin-card-preview-toggle-sublabel {
+  font-weight: 500;
+  padding-right: 1em;
+  margin: 0;
 }
 
 #admin-map {

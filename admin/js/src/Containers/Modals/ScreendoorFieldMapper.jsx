@@ -5,23 +5,21 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import Column from '../../Components/Column/Column';
 import ItemGroup from '../../Components/Column/ItemGroup';
 
-import { getMapMeta, getScreendoorFieldsMeta } from '../../utils/globals';
+import { getMapMeta, getScreendoorFields } from '../../utils/globals';
 import { saveScreendoorFields } from '../../utils/screendoor';
 
 class ScreendoorFieldMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      additionalFields: getScreendoorFieldsMeta.otherArr,
-      availableFields: getScreendoorFieldsMeta.availableArr,
-      dateField: getScreendoorFieldsMeta.dateArr,
-      fields: getScreendoorFieldsMeta.fields,
-      locationFields: getScreendoorFieldsMeta.locationArr,
-      nameField: getScreendoorFieldsMeta.nameArr,
-      timeField: getScreendoorFieldsMeta.timeArr
+      additionalFields: getScreendoorFields.otherArr,
+      availableFields: getScreendoorFields.availableArr,
+      dateField: getScreendoorFields.dateArr,
+      fields: getScreendoorFields.fields,
+      locationFields: getScreendoorFields.locationArr,
+      nameField: getScreendoorFields.nameArr,
+      timeField: getScreendoorFields.timeArr
     };
-
-    this.onDragEnd = this.onDragEnd.bind( this );
   }
 
   componentDidUpdate( prevProps ) {
@@ -38,7 +36,7 @@ class ScreendoorFieldMapper extends Component {
     }
   }
 
-  onDragEnd( result ) {
+  onDragEnd = ( result ) => {
     const { destination, draggableId, source } = result;
     const { fields } = this.state;
 

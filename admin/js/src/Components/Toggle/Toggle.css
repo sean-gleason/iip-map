@@ -18,31 +18,31 @@
   padding: 0;
 }
 
-.toggle-checked > .iip-map-admin-toggle-track {
+.toggle-toggled > .iip-map-admin-toggle-track {
   background-color: #4aa564;
 }
 
-.toggle-checked:hover > .iip-map-admin-toggle-track {
+.toggle-toggled:hover > .iip-map-admin-toggle-track {
   background-color: #2e8540;
 }
 
-.toggle-checked:hover > .iip-map-admin-toggle-handle {
+.toggle-toggled:hover > .iip-map-admin-toggle-handle {
   left: 5px;
 }
 
-.toggle-unchecked > .iip-map-admin-toggle-track {
+.toggle-untoggled > .iip-map-admin-toggle-track {
   background-color: #cd2026;
 }
 
-.toggle-unchecked:hover > .iip-map-admin-toggle-track {
+.toggle-untoggled:hover > .iip-map-admin-toggle-track {
   background-color: #981b1e;
 }
 
-.toggle-unchecked:hover > .iip-map-admin-toggle-handle {
+.toggle-untoggled:hover > .iip-map-admin-toggle-handle {
   left: 17px;
 }
 
-.toggle-unchecked > .iip-map-admin-toggle-handle {
+.toggle-untoggled > .iip-map-admin-toggle-handle {
   left: 21px;
 }
 

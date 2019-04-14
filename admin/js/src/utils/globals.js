@@ -203,4 +203,4 @@ class MapFieldsMeta {
 }
 
 const screedoor = inputFields.screendoor || {};
-export const getScreendoorFieldsMeta = new MapFieldsMeta( screedoor );
+export const getScreendoorFields = new MapFieldsMeta( screedoor );

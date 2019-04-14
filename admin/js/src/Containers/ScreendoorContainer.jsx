@@ -5,32 +5,28 @@ import ScreendoorFieldMapper from './Modals/ScreendoorFieldMapper';
 import ScreendoorConfigureCard from './Modals/ScreendoorConfigureCard';
 
 import { getData } from '../utils/screendoor';
-import { getMapGlobalMeta, getScreendoorFieldsMeta } from '../utils/globals';
+import { getMapGlobalMeta, getScreendoorFields } from '../utils/globals';
 
 class ScreendoorContainer extends Component {
   constructor( props ) {
     super( props );
     this.state = {
       apiKey: getMapGlobalMeta.screendoorKey,
-      data: getScreendoorFieldsMeta.availableArr,
+      data: getScreendoorFields.availableArr,
       display: 'mapper',
-      projectId: getScreendoorFieldsMeta.projectId
+      projectId: getScreendoorFields.projectId
     };
-
-    this.selectView = this.selectView.bind( this );
-    this.setProjectId = this.setProjectId.bind( this );
-    this.handleScreendoor = this.handleScreendoor.bind( this );
   }
 
-  setProjectId( event ) {
+  setProjectId = ( event ) => {
     this.setState( { projectId: event.target.value } );
   }
 
-  selectView( event ) {
+  selectView = ( event ) => {
     this.setState( { display: event } );
   }
 
-  handleScreendoor() {
+  handleScreendoor = () => {
     const { apiKey, projectId } = this.state;
 
     this._loadData( projectId, apiKey );
