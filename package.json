@@ -13,11 +13,13 @@
   },
   "homepage": "https://github.com/IIP-Design/iip-map#readme",
   "scripts": {
-    "build": "npm run build:css & npm run build:js",
-    "build:css": "postcss admin/css/iip-map-admin.css -u autoprefixer -r",
-    "build:js": "npm run uglifyAdmin & npm run uglifyFront",
-    "uglifyAdmin": "uglifyjs admin/js/*.js -o admin/js/dist/admin.min.js -c -m --source-map",
-    "uglifyFront": "uglifyjs public/js/draw-gmap.js -o public/js/dist/draw-gmap.min.js -c -m --source-map & uglifyjs public/js/draw-ol-map.js public/js/ol-popup.js -o public/js/dist/draw-ol-map.min.js -c -m --source-map & uglifyjs public/js/markerclusterer.js -o public/js/dist/markerclusterer.min.js -c -m --source-map",
+    "build": "npm run build:admin && npm run build:front",
+    "build:admin": "npm run build --prefix ./admin/js && npm run cssAdmin",
+    "build:front": "npm run build --prefix ./public/js",
+    "cssAdmin": "postcss admin/css/iip-map-admin.css -u autoprefixer -r",
+    "setup:admin": "npm install --prefix ./admin/js",
+    "setup:front": "npm install --prefix ./public/js",
+    "setup": "npm install && npm run setup:admin && npm run setup:front",
     "version": "node -e 'require(\"./version.js\").versionBump()'"
   },
   "devDependencies": {

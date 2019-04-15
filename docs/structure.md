@@ -43,10 +43,8 @@ The file structure can be represented as such:
 │   │   └── update-marker.js
 |   |
 │   └── partials
-│       ├── index.php
 │       ├── keys-admin.php
-│       ├── main-save-metadata.php
-│       └── sidebar-save-metadata.php
+│       └── main-save-metadata.php
 |
 ├── docs # Plugin documentation
 │

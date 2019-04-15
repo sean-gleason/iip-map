@@ -20,9 +20,7 @@ The frontend version will only compile the bundles for the event post type front
 
 ## Dev
 
-The `dev` script will either run a development server to test the current bundle or - with the `:build` option - compile a development build of the JavaScript and CSS.
-
-It can be run from either the `admin/js` or `public/js` directories to serve those particular bundles.
+The `dev` script will run a development server to test the application. It can be run from either the `admin/js` or `public/js` directories to serve those particular bundles.
 
 ## Profile
 
