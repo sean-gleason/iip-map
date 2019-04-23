@@ -15,16 +15,16 @@ The file structure can be represented as such:
 ├── package.json # Consolidated build scripts
 ├── version.js # Node scripts to update the version number throughout the plugin and tag new releases
 ├── admin # Plugin admin panel
-|   |
+│   │
 │   ├── class-iip-map-admin.php # Enqueues and localizes admin JS/CSS
 │   ├── css # 
-|   ├── map-data-post-type.php
+│   ├── map-data-post-type.php
 │   ├── ajax
 │   │   ├── change-marker-data.php
 │   │   ├── export-map-data.php
 │   │   ├── save-map-data.php
 │   │   └── screendoor-save-metadata.php
-|   |
+│   │
 │   ├── js
 │   │   ├── config # Admin Webpack configs
 │   │   ├── data-export.js
@@ -32,34 +32,34 @@ The file structure can be represented as such:
 │   │   ├── geocode.js
 │   │   ├── package.json # Admin build scripts and dependencies
 │   │   ├── public # Static assets used by admin panel dev server
-|   |   |
+│   │   │
 │   │   ├── src # Admin panel React app
 │   │   │   ├── Components
 │   │   │   ├── Containers
 │   │   │   ├── index.css
 │   │   │   ├── index.js
 │   │   │   └── utils
-|   |   |
+│   │   │
 │   │   └── update-marker.js
-|   |
+│   │
 │   └── partials
 │       ├── keys-admin.php
 │       └── main-save-metadata.php
-|
+│
 ├── docs # Plugin documentation
 │
 ├── includes # Plugin hooks and actions
-│   |
+│   │
 │   ├── class-iip-map-activator.php # Creates table in database for map data
 │   ├── class-iip-map-deactivator.php # Cleans up database when plugin is uninstalled
 │   ├── class-iip-map-loader.php # Register all actions and filters for the plugin.
 │   └── class-iip-map.php # Defines all hooks for the plugin
-|
+│
 ├── public # Plugin frontend 
 │   ├── css
 │   ├── embed-map.php
 │   ├── generate-api.php
-│   |
+│   │
 │   └── js
 │       ├── dist  # Production & dev builds of frontend JS and CSS bundle
 │       ├── draw-gmap.js
