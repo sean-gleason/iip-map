@@ -3,6 +3,6 @@
   "version": "v1.1.4",
   "private": true,
   "scripts": {
-    "build": "uglifyjs ./draw-gmap.js -o ./dist/draw-gmap.min.js -c -m --source-map & uglifyjs ./draw-ol-map.js ./ol-popup.js -o ./dist/draw-ol-map.min.js -c -m --source-map & uglifyjs ./markerclusterer.js -o ./dist/markerclusterer.min.js -c -m --source-map"
+    "build": "uglifyjs ./draw-gmap.js -o ./dist/draw-gmap.min.js -c -m --source-map & uglifyjs ./draw-ol-map.js ./ol-popup.js -o ./dist/draw-ol-map.min.js -c -m --source-map & uglifyjs ./markerclusterer.js -o ./dist/markerclusterer.min.js -c -m  & uglifyjs ./table.js -o ./dist/table.min.js -c -m --source-map"
   }
 }

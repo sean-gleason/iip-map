@@ -23,6 +23,14 @@ class IIP_Map_Embed {
     wp_enqueue_style( 'iip-map-frontend', plugin_dir_url( __FILE__ ) . 'css/iip-map-frontend.css', array(), $this->version, 'all' );
 
     wp_enqueue_style( 'ol-frontend', plugin_dir_url( __FILE__ ) . 'css/ol.css', array(), $this->version, 'all' );
+
+    wp_enqueue_style( 'iip-table', plugin_dir_url( __FILE__ ) . 'css/results.css', array(), $this->version, 'all' );
+
+	wp_register_script( 'table', plugin_dir_url( __FILE__ ) . 'js/dist/table.min.js', array(), null, true );
+
+	wp_register_script( 'table-2', plugin_dir_url( __FILE__ ) . 'table/js/dist/table-app.js', array(), null, true );
+
+	wp_enqueue_style( 'iip-table-frontend', plugin_dir_url( __FILE__ ) . 'table/css/table.css', array(), $this->version, 'all' );
   }
 
   // The output of the map shortcode
@@ -65,14 +73,18 @@ class IIP_Map_Embed {
       // Load MarkerClusterer and return map
       wp_enqueue_script( 'openlayers' );
       wp_enqueue_script( 'draw-ol-map' );
+	  wp_enqueue_script( 'table' );
+	  wp_enqueue_script( 'table-2' );
     } elseif ($type == 'gmap') {
       // Load MarkerClusterer and return map
       wp_enqueue_script( 'marker-clusterer' );
       wp_enqueue_script( 'draw-gmap' );
       wp_enqueue_script( 'marker-spiderfy' );
+      wp_enqueue_script( 'table' );
+      wp_enqueue_script( 'table-2' );
     }
 
-    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div>';
+    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div><button onclick="toggleTable()" id="toggle-table" data-text-original="View this map as a table" data-text-swap="Hide table">View this map as a table</button><div id="event-list" style="display: none;"></div>';
     return $html;
 
   }
