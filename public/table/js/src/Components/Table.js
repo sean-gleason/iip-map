@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // Import shortcode parameters
 const mapID = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
-
 const baseURL = '/wp-json/iip-map/v1/maps/' + mapID; // eslint-disable-line prefer-template
 
 class Table extends Component {
@@ -21,7 +20,7 @@ class Table extends Component {
   };
 
   fetchUsers() {
-    fetch( baseURL ) // @todo: get base url and variable for map_id
+    fetch( baseURL )
       .then( response => response.json() )
       .then( data => this.setState( {
         events: data,
