@@ -16,7 +16,7 @@ mapDataXHR.onload = function() {
   let mapDataStatus = mapDataXHR.statusText
 
   plotMarkers(mapDataData);
-}
+};
 
 // Set up markers
 const markerSource = new ol.source.Vector();
@@ -95,6 +95,9 @@ let map = new ol.Map({
     attributionOptions: {
       collapsible: true
     }
+  }),
+  interactions: ol.interaction.defaults({
+    mouseWheelZoom: false,
   }),
   layers: [
     baseLayer,
