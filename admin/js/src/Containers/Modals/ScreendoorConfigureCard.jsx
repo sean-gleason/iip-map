@@ -16,22 +16,22 @@ class ScreendoorConfigureCard extends Component {
         hasTime: false,
         time: collapseArr( getScreendoorFields.timeArr ),
         timeFormat: '12hour',
-        toggled: ( getScreendoorFields.dateArr && getScreendoorFields.dateArr.length > 0 ) ? true : false
+        toggled: !!( ( getScreendoorFields.dateArr && getScreendoorFields.dateArr.length > 0 ) )
       },
       locationSection: {
         heading: 'Where:',
         location: collapseArr( getScreendoorFields.locationArr ),
-        toggled: ( getScreendoorFields.locationArr && getScreendoorFields.locationArr.length > 0 ) ? true : false
+        toggled: !!( ( getScreendoorFields.locationArr && getScreendoorFields.locationArr.length > 0 ) )
       },
       titleSection: {
         name: collapseArr( getScreendoorFields.nameArr ),
         postTitle: '',
         preTitle: '',
-        toggled: ( getScreendoorFields.nameArr && getScreendoorFields.nameArr.length > 0 ) ? true : false
+        toggled: !!( ( getScreendoorFields.nameArr && getScreendoorFields.nameArr.length > 0 ) )
       },
       additionalSection: {
         fields: getScreendoorFields.otherArr,
-        toggled: ( getScreendoorFields.otherArr && getScreendoorFields.otherArr.length > 0 ) ? true : false
+        toggled: !!( ( getScreendoorFields.otherArr && getScreendoorFields.otherArr.length > 0 ) )
       },
       added: []
     };
@@ -47,7 +47,7 @@ class ScreendoorConfigureCard extends Component {
     this.setState( prevState => ( {
       [group]: [...prevState[group], obj]
     } ) );
-  }
+  };
 
   handleArrayInput = ( e ) => {
     const { group, index } = e.target.dataset;
@@ -58,7 +58,7 @@ class ScreendoorConfigureCard extends Component {
     obj[index][property] = e.target.value;
 
     this.setState( { [group]: obj } );
-  }
+  };
 
   handleDeleteItem = ( e ) => {
     const { group, index } = e.target.dataset;
@@ -69,7 +69,7 @@ class ScreendoorConfigureCard extends Component {
     this.setState( {
       [group]: obj
     } );
-  }
+  };
 
   handleInput = ( e ) => {
     const { group } = e.target.dataset;
@@ -80,10 +80,10 @@ class ScreendoorConfigureCard extends Component {
     obj[property] = e.target.value;
 
     this.setState( { [group]: obj } );
-  }
-  
-  updateToggleState = e => {
-    console.log( e )
+  };
+
+  updateToggleState = ( e ) => {
+    console.log( e );
   };
 
   render() {
@@ -98,23 +98,23 @@ class ScreendoorConfigureCard extends Component {
             <div className="iip-map-ol-popup-preview" id="infowindow-1">
               { titleSection.toggled && (
                 <h1 id="firstHeading" className="iip-map-ol-popup-preview-header">
-                  { `${titleSection.preTitle} { ${ titleSection.name } } ${titleSection.postTitle}` }
+                  { `${titleSection.preTitle} { ${titleSection.name} } ${titleSection.postTitle}` }
                 </h1>
               ) }
               <div id="bodyContent-1" className="iip-map-ol-popup-preview-body">
                 { dateSection.toggled && (
                   <Fragment>
                     <h3 className="iip-map-ol-popup-preview-header">{ dateSection.heading || '' }</h3>
-                    <p>{ `{ ${ dateSection.date } }` }</p>
+                    <p>{ `{ ${dateSection.date} }` }</p>
                     { dateSection.hasTime && (
-                      <p>{ `{ ${ dateSection.time } }` }</p>
+                      <p>{ `{ ${dateSection.time} }` }</p>
                     ) }
                   </Fragment>
                 ) }
                 { locationSection.toggled && (
                   <Fragment>
                     <h3 className="iip-map-ol-popup-preview-header">{ locationSection.heading || '' }</h3>
-                    <p>{ `{ ${ locationSection.location } }` }</p>
+                    <p>{ `{ ${locationSection.location} }` }</p>
                   </Fragment>
                 ) }
                 { added.length > 0 && (
@@ -122,7 +122,9 @@ class ScreendoorConfigureCard extends Component {
                     { added.map( item => (
                       <Fragment>
                         <h3 className="iip-map-ol-popup-preview-header">{ item.heading }</h3>
-                        <p style={{ whiteSpace: 'pre-wrap' }}>{ `${ item.inlinePre } { ${ item.field } } ${ item.inlinePost }` }</p>
+                        <p style={ { whiteSpace: 'pre-wrap' } }>
+                          { `${item.inlinePre} { ${item.field} } ${item.inlinePost}` }
+                        </p>
                       </Fragment>
                     ) ) }
                   </div>
@@ -210,85 +212,87 @@ class ScreendoorConfigureCard extends Component {
                 </label>
               </ConfigsToggle>
               { additionalSection.toggled && (
-                  <div className="iip-map-admin-card-preview-option">
-                    <div className="iip-map-admin-card-preview-option-top">
-                      <p className="iip-map-admin-card-preview-toggle-label">Add section?</p>
-                      <button
-                        onClick={ () => { this.handleAddArrayInput( 'added', 'field', 'heading', 'inlinePre', 'inlinePost' ); } }
-                        type="button"
-                      >
+              <div className="iip-map-admin-card-preview-option">
+                <div className="iip-map-admin-card-preview-option-top">
+                  <p className="iip-map-admin-card-preview-toggle-label">Add section?</p>
+                  <button
+                    onClick={ () => {
+                      this.handleAddArrayInput( 'added', 'field', 'heading', 'inlinePre', 'inlinePost' );
+                    } }
+                    type="button"
+                  >
                         +
-                      </button>
-                    </div>
-                    { added.map( ( value, index ) => {
-                      const position = index + 1;
-                      return (
-                        <div className="iip-map-admin-card-preview-meta">
-                          <div className="iip-map-admin-new-section-header">
-                            <p className="iip-map-admin-card-preview-toggle-sublabel">
-                              { `Custom Section #${position}` }
-                            </p>
-                            <button
-                              className="iip-event-close-btn"
-                              data-group="added"
-                              data-index={ index }
-                              onClick={ this.handleDeleteItem }
-                              type="button"
-                            >
+                  </button>
+                </div>
+                { added.map( ( value, index ) => {
+                  const position = index + 1;
+                  return (
+                    <div className="iip-map-admin-card-preview-meta">
+                      <div className="iip-map-admin-new-section-header">
+                        <p className="iip-map-admin-card-preview-toggle-sublabel">
+                          { `Custom Section #${position}` }
+                        </p>
+                        <button
+                          className="iip-event-close-btn"
+                          data-group="added"
+                          data-index={ index }
+                          onClick={ this.handleDeleteItem }
+                          type="button"
+                        >
                               X
-                            </button>
-                          </div>
-                          <label className="iip-map-admin-label" htmlFor="field">
+                        </button>
+                      </div>
+                      <label className="iip-map-admin-label" htmlFor="field">
                             Choose field:
-                            <select
-                              className="iip-map-admin-project-input"
-                              data-group="added"
-                              data-index={ index }
-                              name="field"
-                              value=""
-                            >
-                              <option value="">Please select a field</option>
-                              { additionalSection.fields.map( item => (
-                                <option value={item.name}>{ item.name }</option>
-                               ) ) }
-                            </select>
-                          </label>
-                          <label className="iip-map-admin-label" htmlFor="heading">
+                        <select
+                          className="iip-map-admin-project-input"
+                          data-group="added"
+                          data-index={ index }
+                          name="field"
+                          value=""
+                        >
+                          <option value="">Please select a field</option>
+                          { additionalSection.fields.map( item => (
+                            <option value={ item.name }>{ item.name }</option>
+                          ) ) }
+                        </select>
+                      </label>
+                      <label className="iip-map-admin-label" htmlFor="heading">
                             Section header (optional):
-                            <input
-                              className="iip-map-admin-project-input"
-                              data-group="added"
-                              data-index={ index }
-                              onChange={ this.handleArrayInput }
-                              name="heading"
-                              type="text"
-                            />
-                          </label>
-                          <label className="iip-map-admin-label stacked" htmlFor="inlinePre">
+                        <input
+                          className="iip-map-admin-project-input"
+                          data-group="added"
+                          data-index={ index }
+                          onChange={ this.handleArrayInput }
+                          name="heading"
+                          type="text"
+                        />
+                      </label>
+                      <label className="iip-map-admin-label stacked" htmlFor="inlinePre">
                             Inline text before item (optional):
-                            <textarea
-                              className="iip-map-admin-project-textarea"
-                              data-group="added"
-                              data-index={ index }
-                              onChange={ this.handleArrayInput }
-                              name="inlinePre"
-                            />
-                          </label>
-                          <label className="iip-map-admin-label stacked" htmlFor="inlinePost">
+                        <textarea
+                          className="iip-map-admin-project-textarea"
+                          data-group="added"
+                          data-index={ index }
+                          onChange={ this.handleArrayInput }
+                          name="inlinePre"
+                        />
+                      </label>
+                      <label className="iip-map-admin-label stacked" htmlFor="inlinePost">
                             Inline text after item (optional):
-                            <textarea
-                              className="iip-map-admin-project-textarea"
-                              data-group="added"
-                              data-index={ index }
-                              onChange={ this.handleArrayInput }
-                              name="inlinePost"
-                            />
-                          </label>
-                        </div>
-                      );
-                    } ) }
-                  </div>
-                )
+                        <textarea
+                          className="iip-map-admin-project-textarea"
+                          data-group="added"
+                          data-index={ index }
+                          onChange={ this.handleArrayInput }
+                          name="inlinePost"
+                        />
+                      </label>
+                    </div>
+                  );
+                } ) }
+              </div>
+              )
               }
             </div>
           </div>
