@@ -1,42 +1,43 @@
 import React, { Component, Fragment } from 'react';
-import { array, string } from 'prop-types';
+import * as PropTypes from 'prop-types';
+import equal from 'fast-deep-equal';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import Column from '../../Components/Column/Column';
 import ItemGroup from '../../Components/Column/ItemGroup';
 
-import { getMapMeta, getScreendoorFields } from '../../utils/globals';
-import { saveScreendoorFields } from '../../utils/screendoor';
-
 class ScreendoorFieldMapper extends Component {
   constructor( props ) {
     super( props );
-    this.state = {
-      additionalFields: getScreendoorFields.otherArr,
-      availableFields: getScreendoorFields.availableArr,
-      dateField: getScreendoorFields.dateArr,
-      fields: getScreendoorFields.fields,
-      locationFields: getScreendoorFields.locationArr,
-      nameField: getScreendoorFields.nameArr,
-      timeField: getScreendoorFields.timeArr
-    };
+    const { getMapping } = props;
+    this.state = getMapping();
   }
 
-  componentDidUpdate( prevProps ) {
-    const { data } = this.props;
-
-    const fields = this.getDraggableFields();
-    const availableFields = Array.from( data );
-
-    if ( data !== prevProps.data ) {
-      this.setState( {
-        fields,
-        availableFields
-      } );
+  componentWillReceiveProps( nextProps, nextContext ) {
+    const { form } = this.props;
+    // You don't have to do this check first, but it can help prevent an unneeded render
+    if ( !equal( form, nextProps.form ) ) {
+      this.setStateData( nextProps.form );
     }
   }
 
+  setStateData( data, callback = () => null ) {
+    const fields = this.getDraggableFields( data );
+    const availableFields = Array.from( data );
+
+    this.setState( {
+      fields,
+      availableFields,
+      additionalFields: [],
+      dateFields: [],
+      locationFields: [],
+      nameFields: [],
+      timeFields: []
+    }, callback );
+  }
+
   onDragEnd = ( result ) => {
+    const { setDirty } = this.props;
     const { destination, draggableId, source } = result;
     const { fields } = this.state;
 
@@ -63,7 +64,7 @@ class ScreendoorFieldMapper extends Component {
 
       this.setState( {
         [startGroup]: newOrder
-      } );
+      }, () => this.updateFields() );
     }
 
     if ( startGroup !== endGroup ) {
@@ -79,13 +80,12 @@ class ScreendoorFieldMapper extends Component {
       this.setState( {
         [startGroup]: removeFromColumn,
         [endGroup]: addToColumn
-      } );
+      }, () => this.updateFields() );
     }
-  }
+    setDirty( true );
+  };
 
-  getDraggableFields() {
-    const { data } = this.props;
-
+  getDraggableFields = ( data ) => {
     const fields = {};
 
     data.forEach( ( item ) => {
@@ -96,51 +96,25 @@ class ScreendoorFieldMapper extends Component {
     } );
 
     return fields;
+  };
+
+  resetMap = () => {
+    const { form, reset } = this.props;
+    this.setStateData( form, () => {
+      reset( this.state );
+    } );
+  };
+
+  updateFields() {
+    const { setMapping } = this.props;
+    setMapping( { ...this.state } );
   }
 
   render() {
-    const { id } = this.props;
+    const { errors } = this.props;
     const {
-      additionalFields, availableFields, dateField, fields, locationFields, nameField, timeField
+      additionalFields, availableFields, dateFields, locationFields, nameFields, timeFields
     } = this.state;
-
-    // function cleanData( arr ) {
-    //   const newObj = {};
-
-    //   arr.forEach( ( item ) => {
-    //     const { name } = item;
-    //     const { field } = item;
-    //     const nameStr = name.split( ' ' ).join( '_' );
-
-    //     newObj[nameStr] = field;
-    //   } );
-
-    //   return newObj;
-    // }
-
-    const dataObj = {
-      available: availableFields,
-      date: dateField,
-      fields,
-      location: locationFields,
-      name: nameField,
-      other: additionalFields,
-      postId: getMapMeta.id,
-      projectId: id,
-      time: timeField
-    };
-
-    const clearDataObj = {
-      available: [],
-      date: [],
-      fields: {},
-      location: [],
-      name: [],
-      other: [],
-      postId: getMapMeta.id,
-      projectId: '',
-      time: []
-    };
 
     return (
       <Fragment>
@@ -150,19 +124,28 @@ class ScreendoorFieldMapper extends Component {
               <ItemGroup data={ availableFields } id="availableFields" />
             </Column>
             <Column title="Map To:">
-              <ItemGroup data={ nameField } id="nameField" required title="Item Name:" />
-              <ItemGroup data={ locationFields } id="locationFields" required title="Location:" />
-              <ItemGroup data={ dateField } id="dateField" title="Date:" />
-              <ItemGroup data={ timeField } id="timeField" title="Time:" />
+              <ItemGroup
+                required
+                data={ nameFields }
+                id="nameFields"
+                title="Item Name:"
+                hasError={ errors.includes( 'name' ) }
+              />
+              <ItemGroup
+                required
+                data={ locationFields }
+                id="locationFields"
+                title="Location:"
+                hasError={ errors.includes( 'location' ) }
+              />
+              <ItemGroup data={ dateFields } id="dateFields" title="Date:" />
+              <ItemGroup data={ timeFields } id="timeFields" title="Time:" />
               <ItemGroup data={ additionalFields } id="additionalFields" title="Additional Data:" />
             </Column>
           </DragDropContext>
         </div>
-        <button type="button" onClick={ () => { saveScreendoorFields( dataObj ); } }>
-          Save Form Data
-        </button>
-        <button type="button" onClick={ () => { saveScreendoorFields( clearDataObj ); } }>
-          Clear Form Data
+        <button type="button" onClick={ this.resetMap }>
+          Clear Mapping
         </button>
       </Fragment>
     );
@@ -170,8 +153,12 @@ class ScreendoorFieldMapper extends Component {
 }
 
 ScreendoorFieldMapper.propTypes = {
-  data: array,
-  id: string
+  form: PropTypes.array,
+  reset: PropTypes.func,
+  errors: PropTypes.arrayOf( PropTypes.string ),
+  setDirty: PropTypes.func,
+  setMapping: PropTypes.func,
+  getMapping: PropTypes.func
 };
 
 export default ScreendoorFieldMapper;

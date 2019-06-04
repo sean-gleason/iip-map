@@ -11,38 +11,67 @@ class IIP_Map_Activator {
     function iip_map_create_db() {
       global $wpdb;
       global $iip_map_db_version;
+      require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
       $table_name = $wpdb->prefix . 'iip_map_data';
 
       $charset_collate = $wpdb->get_charset_collate();
 
+      $sql = "DROP TABLE IF EXISTS $table_name;";
+      $wpdb->query( $sql );
+
       $sql = "CREATE TABLE IF NOT EXISTS $table_name (
               id int(11) NOT NULL AUTO_INCREMENT,
+              ext_id int(32) NOT NULL,
               map_id mediumint(9),
-              venue_name varchar(255),
-              venue_address varchar(255),
-              venue_city varchar(255),
-              venue_region varchar(255),
-              venue_country varchar(255),
+              title varchar(255),
               lat float,
               lng float,
-              host_name varchar(255),
-              event_name varchar(255),
-              event_desc text,
-              event_date date,
-              event_time time,
-              event_duration varchar(255),
-              event_topic text,
-              contact varchar(255),
-              PRIMARY KEY  (id),
-              KEY map_id (map_id)
+              fields text,
+              PRIMARY KEY (id),
+              KEY map_id (map_id),
+              KEY ext_id (ext_id)
       ) $charset_collate;";
-
-      require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
       dbDelta( $sql );
 
       add_option( 'iip_map_db_version', $iip_map_db_version );
     }
+
+//    function iip_map_create_db_old() {
+//      global $wpdb;
+//      global $iip_map_db_version;
+//
+//      $table_name = $wpdb->prefix . 'iip_map_data';
+//
+//      $charset_collate = $wpdb->get_charset_collate();
+//
+//      $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+//              id int(11) NOT NULL AUTO_INCREMENT,
+//              map_id mediumint(9),
+//              venue_name varchar(255),
+//              venue_address varchar(255),
+//              venue_city varchar(255),
+//              venue_region varchar(255),
+//              venue_country varchar(255),
+//              lat float,
+//              lng float,
+//              host_name varchar(255),
+//              event_name varchar(255),
+//              event_desc text,
+//              event_date date,
+//              event_time time,
+//              event_duration varchar(255),
+//              event_topic text,
+//              contact varchar(255),
+//              PRIMARY KEY  (id),
+//              KEY map_id (map_id)
+//      ) $charset_collate;";
+//
+//      require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+//      dbDelta( $sql );
+//
+//      add_option( 'iip_map_db_version', $iip_map_db_version );
+//    }
 
   }
 

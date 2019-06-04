@@ -1,15 +1,22 @@
+import axios from 'axios';
 import { getMapGlobalMeta } from './globals';
 
-// Set Screendoor API endpoint
-export const setEndpoints = ( projectId, apiKey ) => {
-  const screendoorEndpoint = `https://screendoor.dobt.co/api/projects/${projectId}`;
-  const screendoorKey = `&v=0&api_key=${apiKey}`;
+const SCREENDOOR_URL = 'https://screendoor.dobt.co/api/projects/';
 
-  return {
-    formEndpoint: `${screendoorEndpoint}/form?${screendoorKey}`,
-    statusEndpoint: `${screendoorEndpoint}/statuses?${screendoorKey}`
-  };
+// Set Screendoor API endpoint
+export const getEndpoint = ( projectId, apiKey, type ) => {
+  // type can be: form, statuses, responses
+  const screendoorEndpoint = `${SCREENDOOR_URL}${projectId}`;
+  const screendoorKey = `&v=0&api_key=${apiKey}`;
+  return `${screendoorEndpoint}/${type}?${screendoorKey}`;
 };
+
+const request = ( projectId, apiKey, type, params = {} ) => axios.get( `${SCREENDOOR_URL}${projectId}/${type}`, {
+  params: { v: 0, api_key: apiKey, ...params },
+  timeout: 5000
+} ).then( resp => resp.data );
+
+export const getEvents = ( projectId, apiKey ) => request( projectId, apiKey, 'responses', { per_page: 1 } );
 
 // Add Screendoor objects to an array
 export const getData = ( response ) => {
@@ -27,6 +34,8 @@ export const getData = ( response ) => {
   return fields;
 };
 
+export const getFields = ( projectId, apiKey ) => request( projectId, apiKey, 'form' ).then( getData );
+
 // Identify button to get Screendoor data
 // const getFieldsBtn = document.getElementById('iip-map-get-fields');
 // getFieldsBtn.addEventListener('click', getScreendoorMeta);
@@ -38,7 +47,7 @@ export const getData = ( response ) => {
 
 // Get Screendoor field ids and labels
 export const getScreendoorFields = ( projectId, apiKey ) => {
-  const { formEndpoint } = setEndpoints( projectId, apiKey );
+  const formEndpoint = getEndpoint( projectId, apiKey, 'form' );
 
   // Make request to Screendoor API
   const formXHR = new XMLHttpRequest();
@@ -48,7 +57,7 @@ export const getScreendoorFields = ( projectId, apiKey ) => {
 
   formXHR.onload = function setResponses() {
     const formData = formXHR.response.field_data;
-    const formStatus = formXHR.statusText;
+    // const formStatus = formXHR.statusText;
 
     const fields = [];
 
@@ -94,7 +103,7 @@ export const saveScreendoorFields = ( dataObj ) => {
   formData.append( 'security', getMapGlobalMeta.screendoorNonce );
 
   // AJAX POST request to save screendoor project data
-  fetch( url, {
+  return fetch( url, {
     method: 'post',
     body: formData
   } )

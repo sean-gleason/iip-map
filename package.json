@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/IIP-Design/iip-map#readme",
   "scripts": {
+    "dev:admin": "npm run dev --prefix ./admin/js",
     "build": "npm run build:admin && npm run build:front",
     "build:admin": "npm run build --prefix ./admin/js && npm run cssAdmin",
     "build:front": "npm run build --prefix ./public/js",

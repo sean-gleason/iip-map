@@ -28,7 +28,7 @@ class IIP_Map_Admin {
       }
     }
   }
-  
+
   // Add to API keys sub-menu to Maps post type admin
   public function iip_map_admin_menu() {
     add_submenu_page(
@@ -145,7 +145,7 @@ class IIP_Map_Admin {
     //   'export_nonce' => wp_create_nonce('iip-map-export-nonce')
     // ));
 
-    $globals;
+    $globals = isset($globals) ? $globals : [];
     $globals[ 'screendoorApi' ] = get_option( 'iip_map_screendoor_api_key' );
     $globals[ 'googleApi' ] = get_option( 'iip_map_google_maps_api_key' );
     $globals[ 'ajaxUrl' ] = admin_url( 'admin-ajax.php' );

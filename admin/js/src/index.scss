@@ -21,7 +21,7 @@ h2.iip-map-admin-metabox-header {
   .iip-map-admin-metabox-holder {
     flex-direction: column;
   }
-  
+
   .iip-map-admin-column-side {
     display: flex;
     justify-content: space-between;
@@ -94,7 +94,8 @@ h2.iip-map-admin-metabox-header {
 #iip-map-formidable-mappings,
 #iip-map-formidable-card-config,
 #iip-map-screendoor-mappings,
-#iip-map-screendoor-card-config {
+#iip-map-screendoor-card-config,
+#iip-map-screendoor-save {
   margin: 2em 1em 1em;
 }
 

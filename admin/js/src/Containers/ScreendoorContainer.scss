@@ -1,0 +1,39 @@
+$red: #9C3017;
+.iip-map-admin-modal-button[data-dirty="true"] {
+  border-color: #e0982f;
+}
+
+.iip-map-admin-card-preview-container {
+  .iip-map-admin-card-preview-sample {
+    text-align: right;
+
+    .iip-map-admin-card-preview-option {
+      display: inline-block;
+
+      .iip-map-admin-card-preview-option-top {
+        align-items: start;
+      }
+    }
+
+    .iip-map-admin-card-preview-toggle-label {
+      margin-top: 0;
+
+      &.has-error {
+        color: $red;
+      }
+    }
+  }
+}
+
+.iip-map-admin-column-item-group.invalid {
+  box-shadow: 0 0 5px $red;
+}
+
+.iip-map-admin-has-errors {
+  margin: 2em 1em 1em;
+  display: inline-block;
+  height: 30px;
+  vertical-align: bottom;
+  line-height: 28px;
+  color: $red;
+}

@@ -1,77 +1,153 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import FormSelector from '../Components/Metaboxes/FormSelector';
 import ScreendoorFieldMapper from './Modals/ScreendoorFieldMapper';
 import ScreendoorConfigureCard from './Modals/ScreendoorConfigureCard';
 
-import { getData } from '../utils/screendoor';
-import { getMapGlobalMeta, getScreendoorFields } from '../utils/globals';
+import { getFields, saveScreendoorFields } from '../utils/screendoor';
+import {
+  getMapGlobalMeta,
+  getScreendoorFields,
+  getScreendoorCard,
+  getMapMeta
+} from '../utils/globals';
 
-class ScreendoorContainer extends Component {
-  constructor( props ) {
-    super( props );
-    this.state = {
-      apiKey: getMapGlobalMeta.screendoorKey,
-      data: getScreendoorFields.availableArr,
-      display: 'mapper',
-      projectId: getScreendoorFields.projectId
-    };
-  }
+import './ScreendoorContainer.scss';
 
-  setProjectId = ( event ) => {
-    this.setState( { projectId: event.target.value } );
-  }
+const ScreendoorContainer = ( props ) => {
+  const apiKey = getMapGlobalMeta.screendoorKey;
+  const [display, setDisplay] = useState( 'mapper' );
+  const [projectId, setProjectId] = useState( getScreendoorFields.projectId );
+  const [errors, setErrors] = useState( [] );
+  const [dirty, setDirty] = useState( false );
+  const [form, setForm] = useState( getScreendoorFields.formArr );
+  const [mapping, setMapping] = useState( {
+    additionalFields: getScreendoorFields.otherArr,
+    availableFields: getScreendoorFields.availableArr,
+    dateFields: getScreendoorFields.dateArr,
+    fields: getScreendoorFields.fields,
+    locationFields: getScreendoorFields.locationArr,
+    nameFields: getScreendoorFields.nameArr,
+    timeFields: getScreendoorFields.timeArr
+  } );
+  const [card, setCard] = useState( getScreendoorCard ? {
+    titleSection: getScreendoorCard.title,
+    dateSection: getScreendoorCard.date,
+    timeSection: getScreendoorCard.time,
+    locationSection: getScreendoorCard.location,
+    additionalSection: getScreendoorCard.additional,
+    added: getScreendoorCard.addedArr
+  } : null );
 
-  selectView = ( event ) => {
-    this.setState( { display: event } );
-  }
+  const handleProjectId = ( event ) => {
+    setProjectId( event.target.value );
+  };
 
-  handleScreendoor = () => {
-    const { apiKey, projectId } = this.state;
+  const handleScreendoor = () => {
+    getFields( projectId, apiKey )
+      .then( data => setForm( data ) )
+      .catch( ( err ) => {
+        console.error( err );
+        setForm( [] );
+        setCard( null );
+      } );
+  };
 
-    this._loadData( projectId, apiKey );
-  }
+  const getMapping = () => mapping;
 
-  _loadData( projectId, apiKey ) {
-    function handleErrors( response ) {
-      if ( !response.ok ) {
-        throw Error( response.statusText );
-      }
-      return response.json();
+  const checkErrors = () => {
+    const { nameFields, locationFields } = mapping;
+    const errs = [];
+    if ( !nameFields.length ) {
+      errs.push( 'name' );
     }
+    if ( !locationFields.length ) {
+      errs.push( 'location' );
+    }
+    setErrors( errs );
+    return errs.length !== 0;
+  };
 
-    fetch( `https://screendoor.dobt.co/api/projects/${projectId}/form?&v=0&api_key=${apiKey}` )
-      .then( handleErrors )
-      .then( response => this.setState( { data: getData( response ) } ) )
-      .catch( error => console.log( error ) );
-  }
-
-  render() {
+  const saveData = () => {
     const {
-      apiKey, data, display, projectId
-    } = this.state;
+      fields, additionalFields, availableFields, dateFields, locationFields, nameFields, timeFields
+    } = mapping;
 
-    return (
-      <div className="iip-map-admin-screendoor">
-        <FormSelector
-          apiKey={ apiKey }
-          formType="screendoor"
-          getFields={ this.handleScreendoor }
-          projectId={ projectId }
-          selectView={ this.selectView }
-          setId={ this.setProjectId }
-        />
-        <div className="iip-map-admin-screendoor-modal">
-          { ( display === 'mapper' ) && (
-            <ScreendoorFieldMapper data={ data } id={ projectId } />
-          ) }
-          { ( display === 'card' ) && (
-            <ScreendoorConfigureCard data={ data } />
-          ) }
-        </div>
+    if ( checkErrors() ) return;
+
+    const dataObj = {
+      projectId,
+      form,
+      card,
+      postId: getMapMeta.id,
+      mapping: {
+        fields,
+        available: availableFields,
+        date: dateFields,
+        location: locationFields,
+        name: nameFields,
+        other: additionalFields,
+        time: timeFields
+      }
+    };
+    saveScreendoorFields( dataObj )
+      .then( ( result ) => {
+        if ( result.success ) {
+          setDirty( false );
+        } else {
+          console.error( result );
+        }
+      } )
+      .catch( err => console.error( err ) );
+  };
+
+  const resetMapping = ( defaultMapping ) => {
+    setMapping( defaultMapping );
+    setCard( ScreendoorConfigureCard.getStateFromMapping( defaultMapping, card ) );
+    setDirty( true );
+  };
+
+  useEffect( () => {
+    checkErrors();
+  }, [mapping] );
+
+  return (
+    <div className="iip-map-admin-screendoor">
+      <FormSelector
+        apiKey={ apiKey }
+        formType="screendoor"
+        getFields={ handleScreendoor }
+        projectId={ projectId }
+        selectView={ setDisplay }
+        setId={ handleProjectId }
+        dirty={ dirty }
+        errors={ errors.length > 0 }
+        saveData={ saveData }
+      />
+      <div className="iip-map-admin-screendoor-modal">
+        { ( display === 'mapper' ) && (
+          <ScreendoorFieldMapper
+            form={ form }
+            id={ projectId }
+            errors={ errors }
+            reset={ resetMapping }
+            setDirty={ setDirty }
+            setMapping={ setMapping }
+            getMapping={ getMapping }
+          />
+        ) }
+        { ( display === 'card' ) && (
+          <ScreendoorConfigureCard
+            id={ projectId }
+            mapping={ mapping }
+            card={ card }
+            setDirty={ setDirty }
+            setCard={ setCard }
+          />
+        ) }
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default ScreendoorContainer;

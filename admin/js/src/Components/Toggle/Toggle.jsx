@@ -4,7 +4,7 @@ import { bool, func } from 'prop-types';
 import './Toggle.css';
 
 const Toggle = ( { callback, toggled } ) => {
-  const [toggleState, setToggleState] = useState( null );
+  const [toggleState, setToggleState] = useState( toggled ? 'toggled' : 'untoggled' );
 
   useEffect( () => {
     const initialVal = toggled ? 'toggled' : 'untoggled';
@@ -13,7 +13,7 @@ const Toggle = ( { callback, toggled } ) => {
 
   const toggle = () => {
     setToggleState( toggleState === 'untoggled' ? 'toggled' : 'untoggled' );
-    callback();
+    callback( toggleState !== 'toggled' );
   };
 
   return (

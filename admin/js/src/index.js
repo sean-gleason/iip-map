@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import MapAdminMain from './Components/AdminSections/MapAdminMain';
 import MapAdminSidebar from './Components/AdminSections/MapAdminSidebar';
 
-import './index.css';
+import './index.scss';
 
 ReactDOM.render(
   <MapAdminMain />,

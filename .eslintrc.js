@@ -23,6 +23,7 @@ module.exports = {
         aspects: ['noHref', 'invalidHref', 'preferButton']
       }
     ],
+    'jsx-a11y/label-has-for': false,
     'max-len': [1, 120, 2, { ignoreComments: true }],
     'no-console': 0,
     'no-param-reassign': 0,

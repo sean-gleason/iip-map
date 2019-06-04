@@ -1,52 +1,46 @@
-import React, { Component } from 'react';
-import { bool, element, string } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import * as PropTypes from 'prop-types';
 
 import Toggle from '../Toggle/Toggle';
 
-class ConfigsToggle extends Component {
-  state = {};
+const ConfigsToggle = ( {
+  toggled, children, label, callback
+} ) => {
+  const [toggle, setToggle] = useState( toggled );
 
-  componentDidMount() {
-    const { toggled } = this.props;
+  const handleChange = ( toggleState ) => {
+    setToggle( toggleState );
+    callback( toggleState );
+  };
 
-    this.setState( {
-      toggled
-    } );
-  }
+  useEffect( () => {
+    setToggle( toggled );
+  }, [toggled] );
 
-  handleChange = () => {
-    const { toggled } = this.state;
-    const flipped = !toggled;
-
-    this.setState( {
-      toggled: flipped
-    } );
-  }
-
-  render() {
-    const { children, label } = this.props;
-    const { toggled } = this.state;
-
-    return (
-      <div className="iip-map-admin-card-preview-option">
-        <div className="iip-map-admin-card-preview-option-top">
-          <p className="iip-map-admin-card-preview-toggle-label">{ label }</p>
-          <Toggle toggled={ toggled } callback={ this.handleChange } />
-        </div>
-        { toggled && (
-          <div className="iip-map-admin-card-preview-meta">
-            { children }
-          </div>
-        ) }
+  return (
+    <div className="iip-map-admin-card-preview-option">
+      <div className="iip-map-admin-card-preview-option-top">
+        <p className="iip-map-admin-card-preview-toggle-label">{ label }</p>
+        <Toggle toggled={ toggle } callback={ handleChange } />
       </div>
-    );
-  }
-}
+      { toggle && children && (
+        <div className="iip-map-admin-card-preview-meta">
+          { children }
+        </div>
+      ) }
+    </div>
+  );
+};
 
 ConfigsToggle.propTypes = {
-  children: element,
-  label: string,
-  toggled: bool
+  children: PropTypes.element,
+  label: PropTypes.string,
+  toggled: PropTypes.bool,
+  callback: PropTypes.func
+};
+
+ConfigsToggle.defaultProps = {
+  callback: () => {}
 };
 
 export default ConfigsToggle;

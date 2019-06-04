@@ -17,8 +17,10 @@ module.exports = {
         use: ['babel-loader', 'eslint-loader']
       },
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        test: /\.s?css$/,
+        use: [
+          'style-loader', 'css-loader', 'sass-loader'
+        ]
       }
     ]
   },
@@ -32,8 +34,16 @@ module.exports = {
     publicPath: '/',
     filename: 'admin-app.js'
   },
+  stats: {
+    all: false,
+    modules: true,
+    maxModules: 15,
+    errors: true,
+    errorDetails: true,
+    warnings: true
+  },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new BundleAnalyzerPlugin( {
       analyzerMode: 'disabled',
       generateStatsFile: true,

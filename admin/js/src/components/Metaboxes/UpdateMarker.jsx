@@ -29,7 +29,7 @@ const UpdateMarker = ( ) => (
                   type="text"
                   className="iip-map-admin-marker-input"
                   name="_iip_map_event_name"
-                  value=""
+                  defaultValue=""
                 />
               </label>
             </div>
@@ -42,7 +42,7 @@ const UpdateMarker = ( ) => (
                   type="text"
                   className="iip-map-admin-marker-input"
                   name="_iip_map_event_lat"
-                  value=""
+                  defaultValue=""
                 />
               </label>
             </div>
@@ -55,7 +55,7 @@ const UpdateMarker = ( ) => (
                   type="text"
                   className="iip-map-admin-marker-input"
                   name="_iip_map_event_lng"
-                  value=""
+                  defaultValue=""
                 />
               </label>
             </div>

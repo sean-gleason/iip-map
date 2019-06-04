@@ -5,9 +5,9 @@ import { Droppable } from 'react-beautiful-dnd';
 import InnerList from './InnerList';
 
 const ItemGroup = ( {
-  data, id, required, title
+  data, id, required, hasError, title
 } ) => (
-  <div className="iip-map-admin-column-item-group">
+  <div className={ `iip-map-admin-column-item-group${hasError ? ' invalid' : ''}` }>
     <div className="iip-map-admin-column-item-group-container">
       { title && (
         <strong data-required={ required }>{ title }</strong>
@@ -32,6 +32,7 @@ ItemGroup.propTypes = {
   data: array,
   id: string,
   required: bool,
+  hasError: bool,
   title: string
 };
 

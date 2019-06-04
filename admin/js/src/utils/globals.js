@@ -138,7 +138,9 @@ export const inputFields = ( function getFields() {
 // Creates getters for input field mappings
 class MapFieldsMeta {
   constructor( meta ) {
-    this._meta = meta;
+    this._meta = meta.mapping;
+    this._meta.project_id = meta.project_id;
+    this._meta.form_arr = meta.form_arr;
   }
 
   get meta() {
@@ -155,6 +157,13 @@ class MapFieldsMeta {
   get dateArr() {
     if ( this._meta.date_arr ) {
       return this._meta.date_arr;
+    }
+    return [];
+  }
+
+  get formArr() {
+    if ( this._meta.form_arr ) {
+      return this._meta.form_arr;
     }
     return [];
   }
@@ -202,5 +211,60 @@ class MapFieldsMeta {
   }
 }
 
-const screedoor = inputFields.screendoor || {};
-export const getScreendoorFields = new MapFieldsMeta( screedoor );
+const screendoor = inputFields.screendoor || {};
+export const getScreendoorFields = new MapFieldsMeta( screendoor );
+
+// Creates getters for card config
+class CardConfigMeta {
+  constructor( meta ) {
+    this._meta = meta;
+  }
+
+  get meta() {
+    return this._meta;
+  }
+
+  get title() {
+    if ( this._meta.titleSection ) {
+      return this._meta.titleSection;
+    }
+    return {};
+  }
+
+  get date() {
+    if ( this._meta.dateSection ) {
+      return this._meta.dateSection;
+    }
+    return {};
+  }
+
+  get time() {
+    if ( this._meta.timeSection ) {
+      return this._meta.timeSection;
+    }
+    return {};
+  }
+
+  get location() {
+    if ( this._meta.locationSection ) {
+      return this._meta.locationSection;
+    }
+    return {};
+  }
+
+  get additional() {
+    if ( this._meta.additionalSection ) {
+      return this._meta.additionalSection;
+    }
+    return {};
+  }
+
+  get addedArr() {
+    if ( this._meta.added_arr ) {
+      return this._meta.added_arr;
+    }
+    return [];
+  }
+}
+
+export const getScreendoorCard = screendoor.card ? new CardConfigMeta( screendoor.card ) : null;
