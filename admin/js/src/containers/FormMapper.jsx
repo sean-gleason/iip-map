@@ -9,7 +9,8 @@ class FormMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      formType: getMapMeta.formType
+      formType: getMapMeta.formType,
+      projectId: ''
     };
 
     this.chooseFormType = this.chooseFormType.bind( this );

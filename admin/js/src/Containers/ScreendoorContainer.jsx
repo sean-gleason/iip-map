@@ -16,6 +16,7 @@ import './ScreendoorContainer.scss';
 
 const ScreendoorContainer = ( props ) => {
   const apiKey = getMapGlobalMeta.screendoorKey;
+  const [loaded, setLoaded] = useState( null );
   const [display, setDisplay] = useState( 'mapper' );
   const [projectId, setProjectId] = useState( getScreendoorFields.projectId );
   const [errors, setErrors] = useState( [] );
@@ -108,7 +109,11 @@ const ScreendoorContainer = ( props ) => {
   };
 
   useEffect( () => {
-    checkErrors();
+    if ( !loaded ) {
+      setLoaded( true );
+    } else {
+      checkErrors();
+    }
   }, [mapping] );
 
   return (

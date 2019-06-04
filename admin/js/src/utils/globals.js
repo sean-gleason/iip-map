@@ -76,7 +76,7 @@ class MapMeta {
     if ( this._meta.formType ) {
       return this._meta.formType;
     }
-    return '';
+    return 'screendoor';
   }
 
   get height() {
@@ -138,9 +138,9 @@ export const inputFields = ( function getFields() {
 // Creates getters for input field mappings
 class MapFieldsMeta {
   constructor( meta ) {
-    this._meta = meta.mapping;
-    this._meta.project_id = meta.project_id;
-    this._meta.form_arr = meta.form_arr;
+    this._meta = meta.mapping || {};
+    this._meta.project_id = meta.project_id || null;
+    this._meta.form_arr = meta.form_arr || [];
   }
 
   get meta() {
@@ -266,5 +266,6 @@ class CardConfigMeta {
     return [];
   }
 }
+console.log( screendoor );
 
 export const getScreendoorCard = screendoor.card ? new CardConfigMeta( screendoor.card ) : null;

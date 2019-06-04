@@ -12,7 +12,7 @@ if ( $is_revision || !$is_valid_nonce ){
 }
 
 // Get serialized array of post meta values
-$map_meta = unserialize( get_post_meta( $post_id, '_iip_map_meta' ) );
+$map_meta = get_post_meta( $post_id, '_iip_map_meta' );
 
 $map_meta[ 'id' ] = $post_id;
 

@@ -17,7 +17,7 @@ const FormSelector = ( {
           name={ `${formType}-project-id` }
           onChange={ setId }
           type="text"
-          value={ projectId }
+          value={ projectId || '' }
         />
       </label>
 
