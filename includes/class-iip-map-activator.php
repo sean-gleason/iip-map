@@ -17,9 +17,6 @@ class IIP_Map_Activator {
 
       $charset_collate = $wpdb->get_charset_collate();
 
-      $sql = "DROP TABLE IF EXISTS $table_name;";
-      $wpdb->query( $sql );
-
       $sql = "CREATE TABLE IF NOT EXISTS $table_name (
               id int(11) NOT NULL AUTO_INCREMENT,
               ext_id int(32) NOT NULL,
