@@ -65,6 +65,16 @@ class IIP_Map_Admin {
       array( 'label_for' => 'iip_map_google_maps_api_key' )
     );
 
+    // Google Maps API Key
+    add_settings_field(
+      'iip_map_mapbox_api_key',
+      __( 'Mapbox API Key', 'iip-map' ),
+      array( $this, 'mapbox_api_key_markup' ),
+      'iip-map-keys',
+      'iip_map_api_keys',
+      array( 'label_for' => 'iip_map_mapbox_api_key' )
+    );
+
     // Screendoor API Key
     add_settings_field(
       'iip_map_screendoor_api_key',
@@ -76,6 +86,7 @@ class IIP_Map_Admin {
     );
 
     register_setting( 'iip-map-keys', 'iip_map_google_maps_api_key', 'sanitize_text_field' );
+    register_setting( 'iip-map-keys', 'iip_map_mapbox_api_key', 'sanitize_text_field' );
     register_setting( 'iip-map-keys', 'iip_map_screendoor_api_key', 'sanitize_text_field' );
   }
 
@@ -88,6 +99,21 @@ class IIP_Map_Admin {
         $html .= 'type="text" ';
         $html .= 'name="iip_map_google_maps_api_key" ';
         $html .= 'id="iip_map_google_maps_api_key" ';
+        $html .= 'class="iip-map-textfield" ';
+        $html .= 'value="' . $key . '">';
+    $html .= '</fieldset>';
+
+    echo $html;
+  }
+
+  public function mapbox_api_key_markup() {
+    $key = get_option( 'iip_map_mapbox_api_key' );
+
+    $html = '<fieldset>';
+      $html .= '<input ';
+        $html .= 'type="text" ';
+        $html .= 'name="iip_map_mapbox_api_key" ';
+        $html .= 'id="iip_map_mapbox_api_key" ';
         $html .= 'class="iip-map-textfield" ';
         $html .= 'value="' . $key . '">';
     $html .= '</fieldset>';
@@ -148,6 +174,7 @@ class IIP_Map_Admin {
     $globals = isset($globals) ? $globals : [];
     $globals[ 'screendoorApi' ] = get_option( 'iip_map_screendoor_api_key' );
     $globals[ 'googleApi' ] = get_option( 'iip_map_google_maps_api_key' );
+    $globals[ 'mapboxApi' ] = get_option( 'iip_map_mapbox_api_key' );
     $globals[ 'ajaxUrl' ] = admin_url( 'admin-ajax.php' );
     $globals[ 'screendoorNonce' ] = wp_create_nonce('iip-map-screendoor-nonce');
 
