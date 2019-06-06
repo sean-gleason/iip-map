@@ -18,4 +18,4 @@ const map = new mapboxgl.Map( {
 // Disable zoom on scroll
 map.scrollZoom.disable();
 // Add zoom and rotation controls to the map.
-map.addControl(new mapboxgl.NavigationControl( { showCompass: false } ));
+map.addControl( new mapboxgl.NavigationControl( { showCompass: false } ) );

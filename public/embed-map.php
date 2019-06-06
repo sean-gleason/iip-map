@@ -10,13 +10,15 @@ class IIP_Map_Embed {
 
   // Register script that embeds the map
   public function iip_map_register_embed() {
-    wp_register_script( 'draw-map', plugin_dir_url( __FILE__ ) . 'js/dist/draw-map.js', array(), null, true );
+    wp_register_script( 'draw-map', plugin_dir_url( __FILE__ ) . 'js/dist/map.js', array(), null, true );
+
+    wp_register_script( 'table', plugin_dir_url( __FILE__ ) . 'js/dist/table.js', array(), null, true );
+
+    wp_register_script( 'table-toggle', plugin_dir_url( __FILE__ ) . 'js/dist/tableToggle.js', array(), null, false );
 
     wp_enqueue_style( 'iip-mapbox-frontend', 'https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css', array(), null, 'all' );
 
-    wp_enqueue_style( 'iip-map-frontend', plugin_dir_url( __FILE__ ) . 'css/iip-map-frontend.css', array(), $this->version, 'all' );
-
-    wp_enqueue_style( 'ol-frontend', plugin_dir_url( __FILE__ ) . 'css/ol.css', array(), $this->version, 'all' );
+    wp_enqueue_style( 'table-frontend', plugin_dir_url( __FILE__ ) . 'css/table.css', array(), $this->version, 'all' );
   }
 
   // The output of the map shortcode
@@ -50,9 +52,11 @@ class IIP_Map_Embed {
     if ($type == 'mapbox' || $type == '') {
       wp_enqueue_script( 'mapbox' );
       wp_enqueue_script( 'draw-map' );
+      wp_enqueue_script( 'table-toggle' );
+      wp_enqueue_script( 'table' );
     }
 
-    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div>';
+    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div><button id="toggle-table">View this map as a table</button><div id="event-list" class="hidden"></div>';
     return $html;
 
   }

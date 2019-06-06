@@ -2,6 +2,14 @@
   "name": "iip-map-front",
   "version": "v1.1.4",
   "private": true,
+  "dependencies": {
+    "mapbox-gl": "^1.0.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-beautiful-dnd": "^10.1.1",
+    "react-dom": "^16.8.6",
+    "lodash.range": "^3.2.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
@@ -17,6 +25,7 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
+    "react-hot-loader": "^4.8.3",
     "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
     "webpack-bundle-analyzer": "^3.2.0",
@@ -36,8 +45,5 @@
     "plugins": [
       "@babel/plugin-proposal-class-properties"
     ]
-  },
-  "dependencies": {
-    "mapbox-gl": "^1.0.0"
   }
 }
