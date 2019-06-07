@@ -12,66 +12,32 @@ import { getEvents } from '../../utils/screendoor';
 class ScreendoorConfigureCard extends Component {
   constructor( props ) {
     super( props );
-    const { card, mapping } = props;
+    const { card, mapping, getCardFromMapping } = props;
     if ( card ) {
       this.state = card;
     } else {
-      this.state = ScreendoorConfigureCard.getStateFromMapping( mapping );
+      this.state = getCardFromMapping( mapping );
+      this.update();
     }
     this.state.preview = false;
     this.state.sample = null;
   }
 
   componentWillReceiveProps( nextProps, nextContext ) {
-    const { id, mapping } = this.props;
+    const { id, mapping, getCardFromMapping } = this.props;
     if ( !nextProps.card || id !== nextProps.id ) {
       this.setState( prevState => ( {
-        ...ScreendoorConfigureCard.getStateFromMapping( nextProps.mapping ),
+        ...getCardFromMapping( nextProps.mapping ),
         preview: prevState.preview
       } ), () => this.update() );
     } else if ( !equal( mapping, nextProps.mapping ) ) {
       this.setState(
         prevState => ( {
-          ...ScreendoorConfigureCard.getStateFromMapping( nextProps.mapping, prevState ),
+          ...getCardFromMapping( nextProps.mapping, prevState ),
           preview: prevState.preview
         } ), () => this.update()
       );
     }
-  }
-
-  static getStateFromMapping( data, state = null ) {
-    const result = {
-      titleSection: {
-        postTitle: '',
-        preTitle: '',
-        toggled: !!( ( data.nameFields && data.nameFields.length > 0 ) )
-      },
-      dateSection: {
-        heading: 'When:',
-        toggled: !!( ( data.dateFields && data.dateFields.length > 0 ) )
-      },
-      timeSection: {
-        timeFormat: '12hour',
-        toggled: !!( ( data.timeFields && data.timeFields.length > 0 ) )
-      },
-      locationSection: {
-        heading: 'Where:',
-        toggled: !!( ( data.locationFields && data.locationFields.length > 0 ) )
-      },
-      additionalSection: {
-        toggled: !!( ( data.additionalFields && data.additionalFields.length > 0 ) )
-      },
-      added: []
-    };
-    if ( state ) {
-      result.titleSection.postTitle = state.titleSection.postTitle;
-      result.titleSection.preTitle = state.titleSection.preTitle;
-      state.added.forEach( ( item ) => {
-        const exists = data.additionalFields.find( f => f.field === item.field );
-        if ( exists ) result.added.push( item );
-      } );
-    }
-    return result;
   }
 
   handleAddArrayInput = ( group, ...args ) => {
@@ -236,8 +202,8 @@ class ScreendoorConfigureCard extends Component {
   };
 
   clearData = () => {
-    const { mapping } = this.props;
-    this.setState( ScreendoorConfigureCard.getStateFromMapping( mapping ), () => this.update() );
+    const { mapping, getCardFromMapping } = this.props;
+    this.setState( getCardFromMapping( mapping ), () => this.update() );
   };
 
   displayField( name, field = null ) {
@@ -546,6 +512,7 @@ class ScreendoorConfigureCard extends Component {
 ScreendoorConfigureCard.propTypes = {
   id: PropTypes.string,
   mapping: PropTypes.object,
+  getCardFromMapping: PropTypes.func,
   setDirty: PropTypes.func,
   setCard: PropTypes.func,
   card: PropTypes.shape( {

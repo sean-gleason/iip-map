@@ -6,28 +6,30 @@ class IIP_Map_Activator {
   public static function activate() {
 
     global $iip_map_db_version;
-    $iip_map_db_version = '1.0';
+    $iip_map_db_version = '2.0';
 
     function iip_map_create_db() {
       global $wpdb;
-      global $iip_map_db_version;
+      global $iip_map_db_version, $iip_map_db_table;
       require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-      $table_name = $wpdb->prefix . 'iip_map_data';
+      $iip_map_db_table = $wpdb->prefix . 'iip_map_data';
 
       $charset_collate = $wpdb->get_charset_collate();
 
-      $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+      $sql = "CREATE TABLE IF NOT EXISTS $iip_map_db_table (
               id int(11) NOT NULL AUTO_INCREMENT,
+              post_id int(11),
+              project_id mediumint(9),
               ext_id int(32) NOT NULL,
-              map_id mediumint(9),
               title varchar(255),
-              lat float,
-              lng float,
+              location varchar(255),
+              location_geo varchar(255) DEFAULT NULL,
+              lat float DEFAULT NULL,
+              lng float DEFAULT NULL,
               fields text,
               PRIMARY KEY (id),
-              KEY map_id (map_id),
-              KEY ext_id (ext_id)
+              UNIQUE KEY (ext_id, post_id)
       ) $charset_collate;";
       dbDelta( $sql );
 
