@@ -46,7 +46,7 @@ module.exports = {
     // new webpack.HotModuleReplacementPlugin(),
     new BundleAnalyzerPlugin( {
       analyzerMode: 'disabled',
-      generateStatsFile: true,
+      generateStatsFile: false,
       statsFilename: './stats.json'
     } )
   ],

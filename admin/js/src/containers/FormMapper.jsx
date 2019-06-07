@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import { MapContext } from '../Components/AdminSections/MapAdminMain';
 import FormidableContainer from './FormidableContainer';
 import ScreendoorContainer from './ScreendoorContainer';
 
@@ -9,8 +10,7 @@ class FormMapper extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      formType: getMapMeta.formType,
-      projectId: ''
+      formType: getMapMeta.formType
     };
 
     this.chooseFormType = this.chooseFormType.bind( this );
@@ -21,7 +21,7 @@ class FormMapper extends Component {
   }
 
   render() {
-    const { formType, projectId } = this.state;
+    const { formType } = this.state;
 
     return (
       <div className="postbox">
@@ -44,14 +44,22 @@ class FormMapper extends Component {
           </label>
 
           { ( formType === 'screendoor' ) && (
-            <ScreendoorContainer
-              projectId={ projectId }
-            />
+            <MapContext.Consumer>
+              { ( {
+                project, setProject, setUpdated
+              } ) => (
+                <ScreendoorContainer
+                  project={ project }
+                  setProject={ setProject }
+                  conSetUpdated={ setUpdated }
+                />
+              ) }
+            </MapContext.Consumer>
           ) }
 
           { ( formType === 'formidable' ) && (
             <FormidableContainer
-              projectId={ projectId }
+              projectId=""
             />
           ) }
 

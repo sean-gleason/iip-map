@@ -40,5 +40,13 @@ if( !empty( $_POST[ 'mapType' ] ) ) {
 if( !empty( $_POST[ 'formType' ] ) ) {
   $map_meta[ 'formType' ] = ( sanitize_text_field( $_POST[ 'formType' ] ) );
 }
+
+//if ( !empty( $_POST[ 'fieldsMeta' ] ) ) {
+//  $fields_meta = IIP_Map_Save_Fields::get_screendoor_meta_object( $_POST[ 'fieldsMeta' ] );
+//
+//  // Send updated array of post meta values
+//  update_post_meta( $id, '_iip_map_fields_meta', $fields_meta );
+//  update_post_meta( $id, '_iip_map_fields_updated', 1 );
+//}
 // Send updated array of post meta values
 update_post_meta( $post_id, '_iip_map_meta', $map_meta );

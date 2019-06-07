@@ -1,0 +1,24 @@
+.iip-map-admin-log {
+  pre {
+    border: 1px solid rgba(161, 161, 161, 0.58);
+    padding: 5px;
+    margin: 5px;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: scroll;
+    background-color: #fff;
+  }
+
+  .iip-map-admin-events-toggle {
+    align-items: center;
+    display: flex;
+    margin: 0.75em 0 0.25em 5px;
+
+    &-label {
+      font-weight: 600;
+      font-size: 1.2em;
+      padding-right: 0.5em;
+      margin: 0;
+    }
+  }
+}
