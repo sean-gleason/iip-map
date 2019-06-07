@@ -25,6 +25,8 @@ class IIP_Map_API_Route extends WP_REST_Controller {
       'post_status' => 'publish',
     );
 
+    $data = [];
+
     $maps = get_posts( $args );
 
     if ( empty( $maps ) ) {
@@ -35,17 +37,16 @@ class IIP_Map_API_Route extends WP_REST_Controller {
       $data[] = $this->prepare_response_for_collection( $map );
     }
 
-    return rest_ensure_response($data);
+    return rest_ensure_response( $data );
   }
 
   public function get_map_data( $request ) {
     $id = (int) $request['id'];
-    $response = array();
 
     $map = get_post( $id );
 
     if ( empty( $map ) ) {
-      return rest_ensure_response( array ());
+      return rest_ensure_response( [] );
     }
 
     $response = $this->prepare_item_for_response( $map, $request );
@@ -60,9 +61,22 @@ class IIP_Map_API_Route extends WP_REST_Controller {
 
     $table_name = $wpdb->prefix . 'iip_map_data';
 
-    $query = "SELECT id, map_id, venue_name, venue_address, venue_city, venue_region, venue_country, lat, lng, host_name, event_name, event_desc, event_date, event_time, event_duration, event_topic, contact FROM $table_name WHERE map_id = $id";
+    $query = "SELECT * FROM $table_name WHERE post_id = $id";
     $list = $wpdb->get_results($query);
-    return $list;
+    $events = [];
+    foreach ( $list as $row ) {
+      $events[] = [
+        'id' => $row->id,
+        'project_id' => $row->project_id,
+        'ext_id' => $row->ext_id,
+        'title' => $row->title,
+        'location' => $row->location,
+        'lat' => $row->lat,
+        'lng' => $row->lng,
+        'fields' => unserialize( $row->fields )
+      ];
+    }
+    return $events;
   }
 
   public function prepare_response_for_collection( $response ) {
@@ -70,7 +84,7 @@ class IIP_Map_API_Route extends WP_REST_Controller {
       return $response;
     }
 
-    $data   = (array) $response->get_data();
+    $data = (array) $response->get_data();
 
     return $data;
   }
