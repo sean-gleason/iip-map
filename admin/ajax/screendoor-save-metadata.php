@@ -46,7 +46,6 @@ class IIP_Map_Save_Fields {
 
   function save_screendoor_ajax() {
     check_ajax_referer( 'iip-map-screendoor-nonce', 'security' );
-    file_put_contents( ABSPATH . 'meta.txt', print_r( $_POST, 1 ) . "\r\n" );
 
     $id = $_POST[ 'postId' ];
 
@@ -57,7 +56,6 @@ class IIP_Map_Save_Fields {
     update_post_meta( $id, '_iip_map_fields_meta', $fields_meta );
     update_post_meta( $id, '_iip_map_fields_updated', 1 );
 
-    file_put_contents( ABSPATH . 'meta.txt', print_r( get_post_meta( $id, '_iip_map_fields_meta', true ), 1 ) . "\r\n", FILE_APPEND );
     wp_send_json_success();
   }
 
@@ -69,18 +67,20 @@ class IIP_Map_Save_Fields {
     $project_id = $_POST['projectId'];
     $events = json_decode( stripslashes( $_POST['events'] ) );
 
-    file_put_contents( ABSPATH . 'event.txt', print_r( $events, 1 ) . "\r\n", FILE_APPEND );
     $values = [];
     foreach ( $events as $event ) {
-      $fields = serialize( $event->fields );
+      $fields = $wpdb->_real_escape( serialize( $event->fields ) );
       $title = $wpdb->_real_escape( $event->title );
       $loc = $wpdb->_real_escape( $event->location );
       $values[] = "($id, $event->ext_id, $project_id, '$title', '$loc','$fields')";
     }
     $values = implode( ',', $values );
     $query = "INSERT INTO {$wpdb->prefix}iip_map_data (post_id, ext_id, project_id, title, location, fields) VALUES $values ON DUPLICATE KEY UPDATE title=VALUES(title), fields=VALUES(fields), location=VALUES(location)";
-    $result = $wpdb->query( $query );
-    wp_send_json_success( $result );
+    $created = $wpdb->query( $query );
+    $updated = count( $events ) - $created;
+
+    $event_counts = $wpdb->get_row( "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM {$wpdb->prefix}iip_map_data WHERE post_id = $id" );
+    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $updated, 'events' => $event_counts ] );
   }
 
 }

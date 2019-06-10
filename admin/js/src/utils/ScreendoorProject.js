@@ -3,7 +3,7 @@ import {
   getMapGlobalMeta,
   getScreendoorFields,
   getScreendoorCard,
-  getMapMeta
+  getMapMeta, getMapEvents
 } from './globals';
 import { getFormData } from './screendoor';
 
@@ -32,6 +32,8 @@ export class ScreendoorProject {
       additionalSection: getScreendoorCard.additional,
       added: getScreendoorCard.addedArr
     } : null;
+
+    this.events = getMapEvents;
   }
 
   update = ( {
@@ -121,6 +123,13 @@ export class ScreendoorProject {
       }
     };
   };
+
+  getGeocoder = () => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
+    security: getMapGlobalMeta.screendoorNonce,
+    action: 'geocode_events_ajax',
+    postId: this.postId,
+    projectId: this.projectId
+  } ) ).then( resp => resp.data );
 
   /**
    * Retreive fields from the Screendoor API
@@ -221,13 +230,6 @@ export class ScreendoorProject {
     events,
     security: getMapGlobalMeta.screendoorNonce,
     action: 'save_screendoor_events_ajax',
-    postId: this.postId,
-    projectId: this.projectId
-  } ) ).then( resp => resp.data );
-
-  geocode = () => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
-    security: getMapGlobalMeta.screendoorNonce,
-    action: 'geocode_events_ajax',
     postId: this.postId,
     projectId: this.projectId
   } ) ).then( resp => resp.data );

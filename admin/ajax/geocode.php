@@ -17,12 +17,14 @@ class IIP_Map_Geocode {
     $count = 0;
     $geocoded = 0;
     $attempted = 0;
+    $incomplete = [];
     $geos = [];
     foreach ( $events as $event ) {
       $count++;
       if ( $event->location === $event->location_geo ) continue;
       $attempted++;
       $response = wp_remote_get( "{$api_url}{$event->location}.json?access_token=$api_key" );
+      $loc = $wpdb->_real_escape( $event->location );
       $body = json_decode( $response['body'] );
       if ( count( $body->features ) > 0 ) {
         $feature = $body->features[0];
@@ -34,20 +36,27 @@ class IIP_Map_Geocode {
           'lng' => $lng,
           'place_name' => $feature->place_name
         ];
-        $query = "UPDATE $table_name SET location_geo = '$event->location', lat = $lat, lng = $lng WHERE id = $event->id";
+        $query = "UPDATE $table_name SET location_geo = '$loc', lat = $lat, lng = $lng WHERE id = $event->id";
         $wpdb->query( $query );
         $geocoded++;
+      } else {
+        $query = "UPDATE $table_name SET location_geo = '$loc', lat = NULL, lng = NULL WHERE id = $event->id";
+        $wpdb->query( $query );
+        $event->reason = isset( $body->message ) ? $body->message : 'Not found';
+        $incomplete[] = $event;
       }
-      file_put_contents( ABSPATH . 'geo.txt', print_r( $body, 1 ) . "\r\n" );
       if ( $attempted >= 20 ) break;
     }
-    file_put_contents( ABSPATH . 'geo.txt', print_r( $geos, 1 ), FILE_APPEND );
+
+    $events = $wpdb->get_row( "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM {$wpdb->prefix}iip_map_data WHERE post_id = $post_id" );
     wp_send_json( [
       'success' => true,
       'count' => $count,
-      'gecoded' => $geocoded,
+      'geocoded' => $geocoded,
       'attempted' => $attempted,
-      'geos' => $geos
+      'geos' => $geos,
+      'incomplete' => $incomplete,
+      'events' => $events
     ] );
     exit;
   }

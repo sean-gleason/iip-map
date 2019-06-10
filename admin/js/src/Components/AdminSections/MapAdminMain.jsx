@@ -4,14 +4,14 @@ import ConfigureMap from '../../Containers/ConfigureMap';
 import FormMapper from '../../Containers/FormMapper';
 import Events from '../Metaboxes/Events';
 
-import { getMapEvents } from '../../utils/globals';
 import screendoorProject from '../../utils/ScreendoorProject';
 
 export const MapContext = React.createContext( {} );
 
 const MapAdminMain = () => {
-  const [updated, setUpdated] = useState( getMapEvents.updated );
+  const [updated, setUpdated] = useState( screendoorProject.events.updated );
   const [project, setProject] = useState( screendoorProject );
+  const [eventCounts, setEventCounts] = useState( screendoorProject.events );
 
   const handleSetProject = ( update ) => {
     setProject( update );
@@ -25,7 +25,9 @@ const MapAdminMain = () => {
         project,
         setProject: handleSetProject,
         updated,
-        setUpdated
+        setUpdated,
+        eventCounts,
+        setEventCounts
       } }
       >
         <FormMapper />

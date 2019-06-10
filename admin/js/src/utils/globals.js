@@ -266,7 +266,6 @@ class CardConfigMeta {
     return [];
   }
 }
-console.log( inputFields );
 
 export const getScreendoorCard = screendoor.card ? new CardConfigMeta( screendoor.card ) : null;
 
@@ -275,11 +274,11 @@ class EventsStatus {
     this._meta = meta;
   }
 
-  get events() {
+  get total() {
     return this._meta.counts.event_count || 0;
   }
 
-  get geoEvents() {
+  get geocoded() {
     return this._meta.counts.geocoded_count || 0;
   }
 

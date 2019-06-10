@@ -1,38 +1,47 @@
-.iip-map-admin-events-container {
-  background-color: #F9F9F9;
-  border: 1px solid #E5E5E5;
-  margin: 10px 5px 5px;
-  padding: 5px;
+.iip-map-admin-events {
+  .iip-map-admin-events-container {
+    background-color: #F9F9F9;
+    border: 1px solid #E5E5E5;
+    margin: 10px 5px 5px;
+    padding: 5px;
 
-  h2 {
-    font-size: 1.5em;
-  }
+    h2 {
+      font-size: 1.5em;
+    }
 
-  .iip-map-admin-events-header {
-  }
-}
-
-.iip-map-admin-events-downloader {
-  &__info {
-    display: flex;
-    justify-content: left;
-    margin-bottom: 1em;
-
-    span {
-      margin-right: 1em;
+    .iip-map-admin-events-header {
     }
   }
 
-  &__status {
+  .iip-map-admin-events-downloader {
+    &__info {
+      display: flex;
+      justify-content: left;
+      margin-bottom: 1em;
 
+      span {
+        margin-right: 1em;
+      }
+    }
+
+    &__status {
+
+    }
+
+    &__download {
+      display: flex;
+      align-items: baseline;
+
+      &--status {
+        margin-left: 1em;
+      }
+    }
   }
 
-  &__download {
+  &-columns {
     display: flex;
-    align-items: baseline;
-
-    &--status {
-      margin-left: 1em;
+    &--side {
+      width: 100%;
     }
   }
 }
