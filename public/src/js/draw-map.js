@@ -1,4 +1,4 @@
-import mapboxgl from '../node_modules/mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 
 const apiKey = iip_map_params.mapbox_api_key; // eslint-disable-line no-undef, camelcase
 const mapZoom = iip_map_params.map_zoom; // eslint-disable-line no-undef, camelcase
@@ -18,4 +18,4 @@ const map = new mapboxgl.Map( {
 // Disable zoom on scroll
 map.scrollZoom.disable();
 // Add zoom and rotation controls to the map.
-map.addControl(new mapboxgl.NavigationControl( { showCompass: false } ));
+map.addControl( new mapboxgl.NavigationControl( { showCompass: false } ) );
