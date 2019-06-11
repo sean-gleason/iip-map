@@ -40,13 +40,17 @@ class IIP_Map_Embed {
     $lng = $attr['lng'];
     $type = $attr['type'];
 
+    $mapping = get_post_meta( $map, '_iip_map_fields_meta', true );
+
     // Pass variables to map drawing file (for Google Maps)
     wp_localize_script( 'draw-map', 'iip_map_params', array(
       'mapbox_api_key' => get_option( 'iip_map_mapbox_api_key' ),
       'map_id' => $map,
       'map_zoom' => $zoom,
       'map_center_lat' => $lat,
-      'map_center_lng' => $lng
+      'map_center_lng' => $lng,
+      'mapping' => $mapping['screendoor']['mapping'],
+      'card' => $mapping['screendoor']['card'],
     ));
 
     if ($type == 'mapbox' || $type == '') {
