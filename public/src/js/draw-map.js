@@ -7,6 +7,10 @@ const mapZoom = iip_map_params.map_zoom; // eslint-disable-line no-undef, camelc
 const lat = iip_map_params.map_center_lat; // eslint-disable-line no-undef, camelcase
 const lng = iip_map_params.map_center_lng; // eslint-disable-line no-undef, camelcase
 
+// get topic select
+const topicSelect = document.getElementById( 'topic-select' );
+const fragment = document.createDocumentFragment();
+
 mapboxgl.accessToken = apiKey;
 
 const map = new mapboxgl.Map( {
@@ -16,7 +20,7 @@ const map = new mapboxgl.Map( {
   zoom: mapZoom
 } );
 
-// Mapbox controls
+// Configure Map controls
 // Disable zoom on scroll
 map.scrollZoom.disable();
 // Add zoom and rotation controls to the map.
@@ -31,6 +35,7 @@ mapDataXHR.send();
 
 map.on( 'load', () => {
   function plotMarkers( m ) {
+    const layerIDArray = [];
     m.features.forEach( ( marker ) => {
       const eventID = marker.properties.ext_id;
       const layerID = 'poi-' + eventID; // eslint-disable-line prefer-template
@@ -52,7 +57,33 @@ map.on( 'load', () => {
           ]
         } );
       }
+
+      layerIDArray.push( layerID );
+      const option = document.createElement( 'option' );
+      option.innerHTML = layerID;
+      option.value = layerID;
+      fragment.appendChild( option );
     } );
+
+    topicSelect.addEventListener( 'change', () => {
+      const layerIDArrayLength = layerIDArray.length;
+      for ( let i = 0; i < layerIDArrayLength; i++ ) { // eslint-disable-line no-plusplus
+        map.setLayoutProperty( layerIDArray[i], 'visibility', 'visible' );
+      }
+
+      const index = layerIDArray.indexOf( topicSelect.value );
+      // loop through layerIDArray and checked box value (set as layerID)
+      if ( index !== -1 ) {
+        layerIDArray.splice( index, 1 );
+        const splicedArrayLength = layerIDArray.length;
+        for ( let count = 0; count < splicedArrayLength; count++ ) { // eslint-disable-line no-plusplus
+          map.setLayoutProperty( layerIDArray[count], 'visibility', 'none' );
+        }
+      }
+      layerIDArray.push( topicSelect.value );
+    } );
+
+    topicSelect.appendChild( fragment );
   }
 
   mapDataXHR.onload = function loadData() {
