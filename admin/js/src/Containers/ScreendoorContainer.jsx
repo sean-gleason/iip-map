@@ -1,51 +1,29 @@
 import React, { useEffect, useState } from 'react';
+import * as PropTypes from 'prop-types';
 
 import FormSelector from '../Components/Metaboxes/FormSelector';
 import ScreendoorFieldMapper from './Modals/ScreendoorFieldMapper';
-import ScreendoorConfigureCard from './Modals/ScreendoorConfigureCard';
 
-import { getFields, saveScreendoorFields } from '../utils/screendoor';
-import {
-  getMapGlobalMeta,
-  getScreendoorFields,
-  getScreendoorCard,
-  getMapMeta
-} from '../utils/globals';
+import ScreendoorConfigureCard from './Modals/ScreendoorConfigureCard';
 
 import './ScreendoorContainer.scss';
 
-const ScreendoorContainer = ( props ) => {
-  const apiKey = getMapGlobalMeta.screendoorKey;
+const ScreendoorContainer = ( { project, setProject } ) => {
   const [loaded, setLoaded] = useState( null );
   const [display, setDisplay] = useState( 'mapper' );
-  const [projectId, setProjectId] = useState( getScreendoorFields.projectId );
   const [errors, setErrors] = useState( [] );
   const [dirty, setDirty] = useState( false );
-  const [form, setForm] = useState( getScreendoorFields.formArr );
-  const [mapping, setMapping] = useState( {
-    additionalFields: getScreendoorFields.otherArr,
-    availableFields: getScreendoorFields.availableArr,
-    dateFields: getScreendoorFields.dateArr,
-    fields: getScreendoorFields.fields,
-    locationFields: getScreendoorFields.locationArr,
-    nameFields: getScreendoorFields.nameArr,
-    timeFields: getScreendoorFields.timeArr
-  } );
-  const [card, setCard] = useState( getScreendoorCard ? {
-    titleSection: getScreendoorCard.title,
-    dateSection: getScreendoorCard.date,
-    timeSection: getScreendoorCard.time,
-    locationSection: getScreendoorCard.location,
-    additionalSection: getScreendoorCard.additional,
-    added: getScreendoorCard.addedArr
-  } : null );
+  const [projectId, setProjectId] = useState( project.projectId );
+  const [form, setForm] = useState( project.form );
+  const [mapping, setMapping] = useState( project.mapping );
+  const [card, setCard] = useState( project.card );
 
   const handleProjectId = ( event ) => {
     setProjectId( event.target.value );
   };
 
   const handleScreendoor = () => {
-    getFields( projectId, apiKey )
+    project.getFields()
       .then( data => setForm( data ) )
       .catch( ( err ) => {
         console.error( err );
@@ -70,31 +48,14 @@ const ScreendoorContainer = ( props ) => {
   };
 
   const saveData = () => {
-    const {
-      fields, additionalFields, availableFields, dateFields, locationFields, nameFields, timeFields
-    } = mapping;
-
     if ( checkErrors() ) return;
-
-    const dataObj = {
-      projectId,
-      form,
-      card,
-      postId: getMapMeta.id,
-      mapping: {
-        fields,
-        available: availableFields,
-        date: dateFields,
-        location: locationFields,
-        name: nameFields,
-        other: additionalFields,
-        time: timeFields
-      }
-    };
-    saveScreendoorFields( dataObj )
+    project.save( {
+      form, card, mapping, projectId
+    } )
       .then( ( result ) => {
         if ( result.success ) {
           setDirty( false );
+          setProject( project );
         } else {
           console.error( result );
         }
@@ -104,9 +65,17 @@ const ScreendoorContainer = ( props ) => {
 
   const resetMapping = ( defaultMapping ) => {
     setMapping( defaultMapping );
-    setCard( ScreendoorConfigureCard.getStateFromMapping( defaultMapping, card ) );
+    setCard( project.getCardFromMapping( defaultMapping, card ) );
     setDirty( true );
   };
+
+  useEffect( () => {
+    project.update( {
+      mapping, card, projectId, form
+    } );
+  }, [
+    mapping, card, projectId, form
+  ] );
 
   useEffect( () => {
     if ( !loaded ) {
@@ -119,7 +88,6 @@ const ScreendoorContainer = ( props ) => {
   return (
     <div className="iip-map-admin-screendoor">
       <FormSelector
-        apiKey={ apiKey }
         formType="screendoor"
         getFields={ handleScreendoor }
         projectId={ projectId }
@@ -148,11 +116,27 @@ const ScreendoorContainer = ( props ) => {
             card={ card }
             setDirty={ setDirty }
             setCard={ setCard }
+            getCardFromMapping={ project.getCardFromMapping }
           />
         ) }
       </div>
     </div>
   );
+};
+
+ScreendoorContainer.propTypes = {
+  project: PropTypes.shape( {
+    mapping: PropTypes.object,
+    card: PropTypes.object,
+    postId: PropTypes.number,
+    projectId: PropTypes.string,
+    form: PropTypes.array,
+    save: PropTypes.func,
+    update: PropTypes.func,
+    getEvents: PropTypes.func,
+    getFields: PropTypes.func
+  } ),
+  setProject: PropTypes.func
 };
 
 export default ScreendoorContainer;

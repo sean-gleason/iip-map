@@ -67,6 +67,7 @@ class IIP_Map {
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/export-map-data.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/save-map-data.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/screendoor-save-metadata.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/geocode.php';
 
     // The class responsible for defining all actions that occur in the public-facing side of the site.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/embed-map.php';
@@ -82,6 +83,7 @@ class IIP_Map {
     $plugin_import_ajax = new IIP_Map_Import();
     $plugin_update_ajax = new IIP_Map_Marker_Update();
     $plugin_fields_ajax = new IIP_Map_Save_Fields();
+    $plugin_geocode_ajax = new IIP_Map_Geocode();
     $plugin_post_type = new IIP_Map_Post_Type();
 
     // Admin hooks
@@ -94,6 +96,8 @@ class IIP_Map {
     $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_import_ajax, 'map_ajax' );
     $this->loader->add_action( 'wp_ajax_export_data_ajax', $plugin_export_ajax, 'export_data_ajax' );
     $this->loader->add_action( 'wp_ajax_save_screendoor_ajax', $plugin_fields_ajax, 'save_screendoor_ajax' );
+    $this->loader->add_action( 'wp_ajax_save_screendoor_events_ajax', $plugin_fields_ajax, 'save_screendoor_events_ajax' );
+    $this->loader->add_action( 'wp_ajax_geocode_events_ajax', $plugin_geocode_ajax, 'geocode_events_ajax' );
     $this->loader->add_action( 'wp_ajax_get_marker_ajax', $plugin_update_ajax, 'get_marker_ajax' );
     $this->loader->add_action( 'wp_ajax_update_marker_ajax', $plugin_update_ajax, 'update_marker_ajax' );
     $this->loader->add_action( 'wp_ajax_delete_marker_ajax', $plugin_update_ajax, 'delete_marker_ajax' );
@@ -105,7 +109,7 @@ class IIP_Map {
   // Register all of the hooks related to the public-facing functionality
   private function define_public_hooks() {
     $plugin_map = new IIP_Map_Embed( $this->get_plugin_name(), $this->get_version() );
-    $plugin_api = new IIP_Map_API_Route( $this->get_plugin_name(), $this->get_version() );
+    $plugin_api = new IIP_Map_API_Route();
 
     $this->loader->add_action( 'init', $plugin_map, 'iip_map_register_embed' );
     $this->loader->add_action( 'init', $plugin_map, 'iip_map_add_shortcode' );

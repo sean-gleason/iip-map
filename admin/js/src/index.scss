@@ -132,6 +132,15 @@ h2.iip-map-admin-metabox-header {
   padding: 1em .5em;
 }
 
+.iip-map-admin-column-list {
+  min-height: 30px;
+  &:hover {
+    -webkit-box-shadow: inset 13px 13px 138px -23px rgba(241,241,241,0.81);
+    -moz-box-shadow: inset 13px 13px 138px -23px rgba(241,241,241,0.81);
+    box-shadow: inset 13px 13px 138px -23px rgba(241,241,241,0.81);
+  }
+}
+
 .iip-map-admin-column-item-group-container {
   border-top: 1px solid lightgrey;
 }

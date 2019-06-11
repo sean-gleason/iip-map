@@ -225,36 +225,36 @@ class CardConfigMeta {
   }
 
   get title() {
-    if ( this._meta.titleSection ) {
-      return this._meta.titleSection;
+    if ( this._meta.title ) {
+      return this._meta.title;
     }
     return {};
   }
 
   get date() {
-    if ( this._meta.dateSection ) {
-      return this._meta.dateSection;
+    if ( this._meta.date ) {
+      return this._meta.date;
     }
     return {};
   }
 
   get time() {
-    if ( this._meta.timeSection ) {
-      return this._meta.timeSection;
+    if ( this._meta.time ) {
+      return this._meta.time;
     }
     return {};
   }
 
   get location() {
-    if ( this._meta.locationSection ) {
-      return this._meta.locationSection;
+    if ( this._meta.location ) {
+      return this._meta.location;
     }
     return {};
   }
 
   get additional() {
-    if ( this._meta.additionalSection ) {
-      return this._meta.additionalSection;
+    if ( this._meta.additional ) {
+      return this._meta.additional;
     }
     return {};
   }
@@ -266,6 +266,28 @@ class CardConfigMeta {
     return [];
   }
 }
-console.log( screendoor );
 
 export const getScreendoorCard = screendoor.card ? new CardConfigMeta( screendoor.card ) : null;
+
+class EventsStatus {
+  constructor( meta ) {
+    this._meta = meta;
+  }
+
+  get total() {
+    return this._meta.counts.event_count || 0;
+  }
+
+  get geocoded() {
+    return this._meta.counts.geocoded_count || 0;
+  }
+
+  get updated() {
+    return this._meta.updated;
+  }
+}
+export const mapEvents = ( function getFields() {
+  const params = window.iipMapParams || {};
+  return params.events || {};
+}() );
+export const getMapEvents = new EventsStatus( mapEvents );
