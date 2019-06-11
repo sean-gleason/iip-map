@@ -27,6 +27,11 @@ const EventsDownloader = ( {
 
   const startDownload = () => {
     pager.active = true;
+    const logError = typeStr => ( err ) => {
+      console.log( err );
+      log( `------------- ${typeStr} -------------` );
+      log( err.toString() );
+    };
     const process = () => {
       if ( !pager.active ) {
         doStatus( 'Download canceled', false );
@@ -40,9 +45,9 @@ const EventsDownloader = ( {
             doStatus( 'Event processing complete', false );
             pager.active = false;
             setPager( null );
-          } else {
-            return resp;
+            return [];
           }
+          return resp;
         } )
         .then( ( resp ) => {
           const events = [];
@@ -53,6 +58,7 @@ const EventsDownloader = ( {
           return events;
         } )
         .then( ( events ) => {
+          if ( !events || events.length < 1 ) return;
           project.saveEvents( events )
             .then( ( result ) => {
               if ( result.success ) {
@@ -65,18 +71,10 @@ const EventsDownloader = ( {
                 setEventCounts( result.events );
               }
             } )
-            .catch( ( saveEventsErr ) => {
-              console.log( saveEventsErr );
-              log( '------------- EVENT SAVE ERROR -------------' );
-              log( saveEventsErr.toString() );
-            } )
+            .catch( logError( 'EVENT SAVE ERROR' ) )
             .finally( process );
         } )
-        .catch( ( downloadErr ) => {
-          console.log( downloadErr );
-          log( '------------- DOWNLOAD ERROR -------------' );
-          log( downloadErr.toString() );
-        } );
+        .catch( logError( 'DOWNLOAD ERROR' ) );
     };
     process();
   };
