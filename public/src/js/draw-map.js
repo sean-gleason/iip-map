@@ -67,13 +67,23 @@ const buildSection = ( field, sectionName = '' ) => {
     case 'title':
       return card.title.toggled ? '<h3 class="info-window__title">' + card.title.preTitle + ' ' + field + ' ' + card.title.postTitle + '</h3>' : ''; // eslint-disable-line prefer-template
     case 'location':
-      return card.location.toggled ? '<p class="info-window__location"><strong>' + card.location.heading + '</strong> ' + field + '</p>' : ''; // eslint-disable-line prefer-template
+      return card.location.toggled ? '<div class="info-window__location"><h4>' + card.location.heading + '</h4> ' + field + '</div>' : ''; // eslint-disable-line prefer-template
     case 'date':
-      return card.date.toggled ? '<p class="info-window__date"><strong>' + card.date.heading + '</strong> ' + field[0].month + '/' + field[0].day + '/' + field[0].year + '</p>' : ''; // eslint-disable-line prefer-template
+      return card.date.toggled ? '<div class="info-window__date"><h4>' + card.date.heading + '</h4> ' + field[0].month + '/' + field[0].day + '/' + field[0].year + '</div>' : ''; // eslint-disable-line prefer-template
     case 'time':
-      return card.time.toggled ? '<p class="info-window__time">' + field[0].hours + ':' + field[0].minutes + ' ' + field[0].am_pm + '</p>' : ''; // eslint-disable-line prefer-template
+      return card.time.toggled ? '<div class="info-window__time">' + field[0].hours + ':' + field[0].minutes + ' ' + field[0].am_pm + '</div>' : ''; // eslint-disable-line prefer-template
     default: return '';
   }
+};
+
+const buildAdditional = ( field ) => {
+  const added = card.added_arr;
+  const fieldArr = field.split( ',' );
+  const markup = [];
+  added.forEach( ( o, i ) => {
+    markup.push( '<div class="info-window__additional"><h4>' + o.heading + '</h4>' + o.inlinePre + ' ' + fieldArr[i] + ' ' + o.inlinePost + '</div>' ); // eslint-disable-line prefer-template
+  } );
+  return markup;
 };
 
 function plotMarkers( m ) {
@@ -111,11 +121,12 @@ function plotMarkers( m ) {
       const fieldsString = e.features[0].properties.fields; // eslint-disable-line prefer-destructuring
       const fieldsObj = JSON.parse( fieldsString );
 
+      // map selected field data to available field object
       const titleField = parseSection( mapping.name_arr, fieldsObj );
       const locationField = parseSection( mapping.location_arr, fieldsObj );
       const dateField = parseSection( mapping.date_arr, fieldsObj, 'date' );
       const timeField = parseSection( mapping.time_arr, fieldsObj, 'time' );
-
+      const additionalData = parseSection( mapping.other_arr, fieldsObj );
       // Ensure that if the map is zoomed out such that multiple
       // copies of the feature are visible, the popup appears
       // over the copy being pointed to.
@@ -125,7 +136,7 @@ function plotMarkers( m ) {
 
       new mapboxgl.Popup( { offset: 25 } )
         .setLngLat( coordinates )
-        .setHTML( '<div class="info-window ' + titleField + '">' + buildSection( titleField, 'title' ) + buildSection( locationField, 'location' ) + buildSection( dateField, 'date' ) + buildSection( timeField, 'time' ) + '</div>' ) // eslint-disable-line prefer-template
+        .setHTML( '<div class="info-window ' + titleField + '">' + buildSection( titleField, 'title' ) + buildSection( locationField, 'location' ) + buildSection( dateField, 'date' ) + buildSection( timeField, 'time' ) + buildAdditional( additionalData ) + '</div>' ) // eslint-disable-line prefer-template
         .addTo( map );
     } );
 
