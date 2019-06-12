@@ -18,6 +18,8 @@ class IIP_Map_Embed {
 
     wp_enqueue_style( 'iip-mapbox-frontend', 'https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css', array(), null, 'all' );
 
+    wp_enqueue_style( 'map-frontend', plugin_dir_url( __FILE__ ) . 'dist/css/map.css', array(), $this->version, 'all' );
+
     wp_enqueue_style( 'table-frontend', plugin_dir_url( __FILE__ ) . 'dist/css/table.css', array(), $this->version, 'all' );
   }
 
