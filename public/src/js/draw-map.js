@@ -35,6 +35,20 @@ mapDataXHR.open( 'GET', mapDataEndpoint );
 mapDataXHR.responseType = 'json';
 mapDataXHR.send();
 
+// convert 12 to 24 hour format if user chooses to
+const convertTime12to24 = ( time12h ) => {
+  const [time, modifier] = time12h.split( ' ' );
+  let [hours, minutes] = time.split( ':' ); // eslint-disable-line prefer-const
+  if ( hours === '12' ) {
+    hours = '00';
+  }
+  if ( modifier === 'PM' ) {
+    hours = parseInt(hours, 10) + 12;
+  }
+  return `${hours}:${minutes}`;
+};
+
+// map mapped fields to available fields based on screendoor ID
 const parseSection = ( sectionMap, fields, type = null ) => {
   const vals = [];
   switch ( type ) {
@@ -62,6 +76,7 @@ const parseSection = ( sectionMap, fields, type = null ) => {
   }
 };
 
+// build our sections for pop ups
 const buildSection = ( field, sectionName = '' ) => {
   switch ( sectionName ) {
     case 'title':
@@ -71,11 +86,22 @@ const buildSection = ( field, sectionName = '' ) => {
     case 'date':
       return card.date.toggled ? '<div class="info-window__date"><h4>' + card.date.heading + '</h4> ' + field[0].month + '/' + field[0].day + '/' + field[0].year + '</div>' : ''; // eslint-disable-line prefer-template
     case 'time':
-      return card.time.toggled ? '<div class="info-window__time">' + field[0].hours + ':' + field[0].minutes + ' ' + field[0].am_pm + '</div>' : ''; // eslint-disable-line prefer-template
+      if ( card.time.toggled ) {
+        if ( card.time.timeFormat === '24hour' ) {
+          const time = convertTime12to24(field[0].hours + ':' + field[0].minutes + ' ' + field[0].am_pm); // eslint-disable-line prefer-template
+          return '<div class="info-window__time">' + time + '</div>'; // eslint-disable-line prefer-template
+        }
+        if ( card.time.timeFormat === '12hour' ) {
+          return '<div class="info-window__time">' + field[0].hours + ':' + field[0].minutes + ' ' + field[0].am_pm + '</div>'; // eslint-disable-line prefer-template
+        }
+      }
+      break;
     default: return '';
   }
 };
 
+// build additional data section for pop ups
+// broken into it's own function due to the need to lop through mapped fields
 const buildAdditional = ( field ) => {
   const added = card.added_arr;
   const fieldArr = field.split( ',' );
@@ -86,7 +112,8 @@ const buildAdditional = ( field ) => {
   return markup;
 };
 
-function plotMarkers( m ) {
+// add layers (markers) to the map
+function drawLayers( m ) {
   const layerIDArray = [];
   m.features.forEach( ( marker ) => {
     const eventID = marker.properties.ext_id;
@@ -111,11 +138,13 @@ function plotMarkers( m ) {
     }
 
     layerIDArray.push( layerID );
+    // build out filter <select> by adding each layerID as <option>
     const option = document.createElement( 'option' );
     option.innerHTML = layerID;
     option.value = layerID;
     fragment.appendChild( option );
 
+    // display pop up when a marker is clicked
     map.on( 'click', layerID, ( e ) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
       const fieldsString = e.features[0].properties.fields; // eslint-disable-line prefer-destructuring
@@ -140,17 +169,18 @@ function plotMarkers( m ) {
         .addTo( map );
     } );
 
-    // Change the cursor to a pointer when the mouse is over the places layer.
+    // Change the cursor to a pointer when the mouse is over the layer
     map.on( 'mouseenter', layerID, () => {
       map.getCanvas().style.cursor = 'pointer';
     } );
 
-    // Change it back to a pointer when it leaves.
+    // Change it back to a pointer when it leaves
     map.on( 'mouseleave', layerID, () => {
       map.getCanvas().style.cursor = '';
     } );
   } );
 
+  // filtering logic - show/hide layers
   topicSelect.addEventListener( 'change', () => {
     const layerIDArrayLength = layerIDArray.length;
     for ( let i = 0; i < layerIDArrayLength; i++ ) { // eslint-disable-line no-plusplus
@@ -183,5 +213,5 @@ mapDataXHR.onload = function loadData() {
     clusterRadius: 50
   } );
 
-  plotMarkers( mapDataData );
+  drawLayers( mapDataData );
 };
