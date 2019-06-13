@@ -306,12 +306,15 @@ mapDataXHR.onload = function loadData() {
       'circle-stroke-color': '#fff'
     }
   } );
+};
 
-  map.on( 'click', 'clusters', (e) => {
-    const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+// on map load add clustering functionality
+map.on( 'load', () => {
+  map.on( 'click', 'clusters', ( e ) => {
+    const features = map.queryRenderedFeatures( e.point, { layers: ['clusters'] } );
     const clusterId = features[0].properties.cluster_id;
-    map.getSource('earthquakes').getClusterExpansionZoom(clusterId, (err, zoom) => {
-      if (err) {
+    map.getSource( 'events' ).getClusterExpansionZoom( clusterId, ( err, zoom ) => {
+      if ( err ) {
         return;
       }
 
@@ -321,4 +324,12 @@ mapDataXHR.onload = function loadData() {
       } );
     } );
   } );
-};
+
+  map.on( 'mouseenter', 'clusters', () => {
+    map.getCanvas().style.cursor = 'pointer';
+  } );
+
+  map.on( 'mouseleave', 'clusters', () => {
+    map.getCanvas().style.cursor = '';
+  } );
+} );
