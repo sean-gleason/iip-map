@@ -1,3 +1,24 @@
+.map-wrapper {
+  position: relative; }
+  .map-wrapper .filter-group {
+    background-color: #fff;
+    padding: 30px 45px;
+    position: absolute;
+    z-index: 9; }
+    .map-wrapper .filter-group select {
+      background: #fff;
+      background-position: 97% center;
+      background-repeat: no-repeat;
+      border: 2px solid #000;
+      border-radius: 0;
+      cursor: pointer;
+      display: block;
+      font-size: 20px;
+      padding: 5px 35px 5px 20px;
+      width: 100%;
+      z-index: 2;
+      -webkit-appearance: none; }
+
 #event-list,
 #event-list input {
   display: block;

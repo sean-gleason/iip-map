@@ -56,7 +56,7 @@ class IIP_Map_Embed {
       wp_enqueue_script( 'table' );
     }
 
-    $html = '<div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div><button id="toggle-table">View this map as a table</button><div id="event-list" class="hidden"></div>';
+    $html = '<div class="map-wrapper"><div id="filter-group" class="filter-group"><select style="background-image: url(/wp-content/plugins/iip-map/public/svg/arrow-down.svg);" id="topic-select"><option value="">- Select a topic -</option></select></div><div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div></div><div class="table-wrapper"><button id="toggle-table">View this map as a table</button><div id="event-list" class="hidden"></div></div>';
     return $html;
 
   }
