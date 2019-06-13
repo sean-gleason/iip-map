@@ -6,7 +6,7 @@ const apiKey = iip_map_params.mapbox_api_key; // eslint-disable-line no-undef, c
 const mapZoom = iip_map_params.map_zoom; // eslint-disable-line no-undef, camelcase
 const lat = iip_map_params.map_center_lat; // eslint-disable-line no-undef, camelcase
 const lng = iip_map_params.map_center_lng; // eslint-disable-line no-undef, camelcase
-const mapping = iip_map_params.mapping; // eslint-disable-line no-undef, camelcase, prefer-destructuring
+const { mapping } = iip_map_params; // eslint-disable-line no-undef, camelcase
 const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 
 // get topic select
@@ -29,7 +29,7 @@ map.scrollZoom.disable();
 map.addControl( new mapboxgl.NavigationControl( { showCompass: false } ) );
 
 // Pull map data from iip-maps API
-const mapDataEndpoint = '/wp-json/iip-map/v1/maps/' + mapId; // eslint-disable-line prefer-template
+const mapDataEndpoint = `/wp-json/iip-map/v1/maps/${mapId}`;
 const mapDataXHR = new XMLHttpRequest();
 mapDataXHR.open( 'GET', mapDataEndpoint );
 mapDataXHR.responseType = 'json';
@@ -43,7 +43,7 @@ const convertTime12to24 = ( time12h ) => {
     hours = '00';
   }
   if ( modifier === 'PM' ) {
-    hours = parseInt(hours, 10) + 12;
+    hours = parseInt( hours, 10 ) + 12;
   }
   return `${hours}:${minutes}`;
 };
@@ -66,6 +66,13 @@ const parseSection = ( sectionMap, fields, type = null ) => {
         }
       } );
       return vals;
+    case 'additional':
+      sectionMap.forEach( ( { field } ) => {
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field] );
+        }
+      } );
+      return vals;
     default:
       sectionMap.forEach( ( { field } ) => {
         if ( field in fields && fields[field] ) {
@@ -80,19 +87,22 @@ const parseSection = ( sectionMap, fields, type = null ) => {
 const buildSection = ( field, sectionName = '' ) => {
   switch ( sectionName ) {
     case 'title':
-      return card.title.toggled ? '<h3 class="info-window__title">' + card.title.preTitle + ' ' + field + ' ' + card.title.postTitle + '</h3>' : ''; // eslint-disable-line prefer-template
+      return card.title.toggled ? `<h3 class="info-window__title">
+        ${card.title.preTitle} ${field} ${card.title.postTitle}</h3>` : '';
     case 'location':
-      return card.location.toggled ? '<div class="info-window__location"><h4>' + card.location.heading + '</h4> ' + field + '</div>' : ''; // eslint-disable-line prefer-template
+      return card.location.toggled ? `<div class="info-window__location">
+        <h4>${card.location.heading}</h4>${field}</div>` : '';
     case 'date':
-      return card.date.toggled ? '<div class="info-window__date"><h4>' + card.date.heading + '</h4> ' + field[0].month + '/' + field[0].day + '/' + field[0].year + '</div>' : ''; // eslint-disable-line prefer-template
+      return card.date.toggled ? `<div class="info-window__date">
+        <h4>${card.date.heading}</h4>${field[0].month}/${field[0].day}/${field[0].year}</div>` : '';
     case 'time':
       if ( card.time.toggled ) {
         if ( card.time.timeFormat === '24hour' ) {
-          const time = convertTime12to24(field[0].hours + ':' + field[0].minutes + ' ' + field[0].am_pm); // eslint-disable-line prefer-template
-          return '<div class="info-window__time">' + time + '</div>'; // eslint-disable-line prefer-template
+          const time = convertTime12to24( `${field[0].hours}:${field[0].minutes} ${field[0].am_pm}` );
+          return `<div class="info-window__time">${time}</div>`;
         }
         if ( card.time.timeFormat === '12hour' ) {
-          return '<div class="info-window__time">' + field[0].hours + ':' + field[0].minutes + ' ' + field[0].am_pm + '</div>'; // eslint-disable-line prefer-template
+          return `<div class="info-window__time">${field[0].hours}:${field[0].minutes} ${field[0].am_pm}</div>`;
         }
       }
       break;
@@ -104,10 +114,12 @@ const buildSection = ( field, sectionName = '' ) => {
 // broken into it's own function due to the need to lop through mapped fields
 const buildAdditional = ( field ) => {
   const added = card.added_arr;
+  // @todo: check if field is array before splitting
   const fieldArr = field.split( ',' );
   const markup = [];
   added.forEach( ( o, i ) => {
-    markup.push( '<div class="info-window__additional"><h4>' + o.heading + '</h4>' + o.inlinePre + ' ' + fieldArr[i] + ' ' + o.inlinePost + '</div>' ); // eslint-disable-line prefer-template
+    markup.push( `<div class="info-window__additional">
+        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>` );
   } );
   return markup;
 };
@@ -117,7 +129,7 @@ function drawLayers( m ) {
   const layerIDArray = [];
   m.features.forEach( ( marker ) => {
     const eventID = marker.properties.ext_id;
-    const layerID = 'poi-' + eventID; // eslint-disable-line prefer-template
+    const layerID = `poi-${eventID}`;
 
     // Add a layer for this symbol type if it hasn't been added already.
     if ( !map.getLayer( layerID ) ) {
@@ -147,8 +159,8 @@ function drawLayers( m ) {
     // display pop up when a marker is clicked
     map.on( 'click', layerID, ( e ) => {
       const coordinates = e.features[0].geometry.coordinates.slice();
-      const fieldsString = e.features[0].properties.fields; // eslint-disable-line prefer-destructuring
-      const fieldsObj = JSON.parse( fieldsString );
+      const { fields } = e.features[0].properties;
+      const fieldsObj = JSON.parse( fields );
 
       // map selected field data to available field object
       const titleField = parseSection( mapping.name_arr, fieldsObj );
@@ -165,7 +177,10 @@ function drawLayers( m ) {
 
       new mapboxgl.Popup( { offset: 25 } )
         .setLngLat( coordinates )
-        .setHTML( '<div class="info-window ' + titleField + '">' + buildSection( titleField, 'title' ) + buildSection( locationField, 'location' ) + buildSection( dateField, 'date' ) + buildSection( timeField, 'time' ) + buildAdditional( additionalData ) + '</div>' ) // eslint-disable-line prefer-template
+        .setHTML( `<div class="info-window">
+            ${buildSection( titleField, 'title' )}${buildSection( locationField, 'location' )}
+            ${buildSection( dateField, 'date' )}${buildSection( timeField, 'time' )}
+            ${buildAdditional( additionalData )}</div>` )
         .addTo( map );
     } );
 
@@ -183,7 +198,7 @@ function drawLayers( m ) {
   // filtering logic - show/hide layers
   topicSelect.addEventListener( 'change', () => {
     const layerIDArrayLength = layerIDArray.length;
-    for ( let i = 0; i < layerIDArrayLength; i++ ) { // eslint-disable-line no-plusplus
+    for ( let i = 0; i < layerIDArrayLength; i += 1 ) {
       map.setLayoutProperty( layerIDArray[i], 'visibility', 'visible' );
     }
 
@@ -192,7 +207,7 @@ function drawLayers( m ) {
     if ( index !== -1 ) {
       layerIDArray.splice( index, 1 );
       const splicedArrayLength = layerIDArray.length;
-      for ( let count = 0; count < splicedArrayLength; count++ ) { // eslint-disable-line no-plusplus
+      for ( let count = 0; count < splicedArrayLength; count += 1 ) {
         map.setLayoutProperty( layerIDArray[count], 'visibility', 'none' );
       }
     }
