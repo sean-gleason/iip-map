@@ -33,71 +33,69 @@ mapDataXHR.open( 'GET', mapDataEndpoint );
 mapDataXHR.responseType = 'json';
 mapDataXHR.send();
 
-map.on( 'load', () => {
-  function plotMarkers( m ) {
-    const layerIDArray = [];
-    m.features.forEach( ( marker ) => {
-      const eventID = marker.properties.ext_id;
-      const layerID = 'poi-' + eventID; // eslint-disable-line prefer-template
+function plotMarkers( m ) {
+  const layerIDArray = [];
+  m.features.forEach( ( marker ) => {
+    const eventID = marker.properties.ext_id;
+    const layerID = 'poi-' + eventID; // eslint-disable-line prefer-template
 
-      // Add a layer for this symbol type if it hasn't been added already.
-      if ( !map.getLayer( layerID ) ) {
-        map.addLayer( {
-          id: layerID,
-          type: 'circle',
-          source: 'events',
-          paint: {
-            'circle-color': '#003B55',
-            'circle-radius': 5,
-            'circle-stroke-width': 1,
-            'circle-stroke-color': '#fff'
-          },
-          filter: [
-            '==', 'ext_id', eventID
-          ]
-        } );
+    // Add a layer for this symbol type if it hasn't been added already.
+    if ( !map.getLayer( layerID ) ) {
+      map.addLayer( {
+        id: layerID,
+        type: 'circle',
+        source: 'events',
+        paint: {
+          'circle-color': '#003B55',
+          'circle-radius': 5,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#fff'
+        },
+        filter: [
+          '==', 'ext_id', eventID
+        ]
+      } );
+    }
+
+    layerIDArray.push( layerID );
+    const option = document.createElement( 'option' );
+    option.innerHTML = layerID;
+    option.value = layerID;
+    fragment.appendChild( option );
+  } );
+
+  topicSelect.addEventListener( 'change', () => {
+    const layerIDArrayLength = layerIDArray.length;
+    for ( let i = 0; i < layerIDArrayLength; i++ ) { // eslint-disable-line no-plusplus
+      map.setLayoutProperty( layerIDArray[i], 'visibility', 'visible' );
+    }
+
+    const index = layerIDArray.indexOf( topicSelect.value );
+    // loop through layerIDArray and checked box value (set as layerID)
+    if ( index !== -1 ) {
+      layerIDArray.splice( index, 1 );
+      const splicedArrayLength = layerIDArray.length;
+      for ( let count = 0; count < splicedArrayLength; count++ ) { // eslint-disable-line no-plusplus
+        map.setLayoutProperty( layerIDArray[count], 'visibility', 'none' );
       }
+    }
+    layerIDArray.push( topicSelect.value );
+  } );
 
-      layerIDArray.push( layerID );
-      const option = document.createElement( 'option' );
-      option.innerHTML = layerID;
-      option.value = layerID;
-      fragment.appendChild( option );
-    } );
+  topicSelect.appendChild( fragment );
+}
 
-    topicSelect.addEventListener( 'change', () => {
-      const layerIDArrayLength = layerIDArray.length;
-      for ( let i = 0; i < layerIDArrayLength; i++ ) { // eslint-disable-line no-plusplus
-        map.setLayoutProperty( layerIDArray[i], 'visibility', 'visible' );
-      }
+mapDataXHR.onload = function loadData() {
+  const mapDataData = mapDataXHR.response;
 
-      const index = layerIDArray.indexOf( topicSelect.value );
-      // loop through layerIDArray and checked box value (set as layerID)
-      if ( index !== -1 ) {
-        layerIDArray.splice( index, 1 );
-        const splicedArrayLength = layerIDArray.length;
-        for ( let count = 0; count < splicedArrayLength; count++ ) { // eslint-disable-line no-plusplus
-          map.setLayoutProperty( layerIDArray[count], 'visibility', 'none' );
-        }
-      }
-      layerIDArray.push( topicSelect.value );
-    } );
-
-    topicSelect.appendChild( fragment );
-  }
-
-  mapDataXHR.onload = function loadData() {
-    const mapDataData = mapDataXHR.response;
-
-    map.addSource( 'events', {
-      type: 'geojson',
-      data: mapDataData,
-      cluster: true,
-      clusterMaxZoom: 14,
-      clusterRadius: 50
-    } );
+  map.addSource( 'events', {
+    type: 'geojson',
+    data: mapDataData,
+    cluster: true,
+    clusterMaxZoom: 14,
+    clusterRadius: 50
+  } );
 
 
-    plotMarkers( mapDataData );
-  };
-} );
+  plotMarkers( mapDataData );
+};
