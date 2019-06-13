@@ -49,38 +49,44 @@ const convertTime12to24 = ( time12h ) => {
 };
 
 // map mapped fields to available fields based on screendoor ID
-const parseSection = ( sectionMap, fields, type = null ) => {
+const parseSection = ( sectionMap, fields ) => {
   const vals = [];
-  switch ( type ) {
-    case 'date':
-      sectionMap.forEach( ( { field } ) => {
-        if ( field in fields && fields[field] ) {
-          vals.push( fields[field] );
-        }
-      } );
-      return vals;
-    case 'time':
-      sectionMap.forEach( ( { field } ) => {
-        if ( field in fields && fields[field] ) {
-          vals.push( fields[field] );
-        }
-      } );
-      return vals;
-    case 'additional':
-      sectionMap.forEach( ( { field } ) => {
-        if ( field in fields && fields[field] ) {
-          vals.push( fields[field] );
-        }
-      } );
-      return vals;
-    default:
-      sectionMap.forEach( ( { field } ) => {
+
+  sectionMap.forEach( ( { fieldType, field } ) => {
+    // http://dobtco.github.io/screendoor-api-docs/#spec-for-the-response-hash
+    switch ( fieldType ) {
+      case 'text':
+      case 'paragraph':
+      case 'dropdown':
+      case 'email':
+      case 'phone':
+      case 'numeric':
+      case 'website':
         if ( field in fields && fields[field] ) {
           vals.push( fields[field].replace( /^[ \t\r\n]+|[ \t\r\n]+$/g, '' ) );
         }
-      } );
-      return vals.join( ', ' );
-  }
+        break;
+      case 'date':
+      case 'time':
+      case 'address':
+      case 'price':
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field] );
+        }
+        break;
+      case 'radio':
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field] );
+        }
+        break;
+      default:
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field] );
+        }
+        return '';
+    }
+  } );
+  return vals;
 };
 
 // build our sections for pop ups
@@ -96,7 +102,7 @@ const buildSection = ( field, sectionName = '' ) => {
       return card.date.toggled ? `<div class="info-window__date">
         <h4>${card.date.heading}</h4>${field[0].month}/${field[0].day}/${field[0].year}</div>` : '';
     case 'time':
-      if ( card.time.toggled ) {
+      if ( card.time.toggled === true ) {
         if ( card.time.timeFormat === '24hour' ) {
           const time = convertTime12to24( `${field[0].hours}:${field[0].minutes} ${field[0].am_pm}` );
           return `<div class="info-window__time">${time}</div>`;
@@ -104,6 +110,8 @@ const buildSection = ( field, sectionName = '' ) => {
         if ( card.time.timeFormat === '12hour' ) {
           return `<div class="info-window__time">${field[0].hours}:${field[0].minutes} ${field[0].am_pm}</div>`;
         }
+      } else {
+        return '';
       }
       break;
     default: return '';
@@ -113,14 +121,28 @@ const buildSection = ( field, sectionName = '' ) => {
 // build additional data section for pop ups
 // broken into it's own function due to the need to lop through mapped fields
 const buildAdditional = ( field ) => {
+  let fieldArr;
+  let markup = '';
   const added = card.added_arr;
-  // @todo: check if field is array before splitting
-  const fieldArr = field.split( ',' );
-  const markup = [];
-  added.forEach( ( o, i ) => {
-    markup.push( `<div class="info-window__additional">
-        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>` );
-  } );
+  if ( field.constructor === Array ) {
+    fieldArr = field;
+    // pull out field id
+    added.forEach( ( o, i ) => {
+      if ( fieldArr[i].checked ) {
+        markup += `<div class="info-window__additional">
+        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i].checked} ${o.inlinePost}</div>`;
+      } else {
+        markup += `<div class="info-window__additional">
+        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>`;
+      }
+    } );
+  } else {
+    fieldArr = field.split( ',' );
+    added.forEach( ( o, i ) => {
+      markup += `<div class="info-window__additional">
+        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>`;
+    } );
+  }
   return markup;
 };
 
@@ -165,8 +187,8 @@ function drawLayers( m ) {
       // map selected field data to available field object
       const titleField = parseSection( mapping.name_arr, fieldsObj );
       const locationField = parseSection( mapping.location_arr, fieldsObj );
-      const dateField = parseSection( mapping.date_arr, fieldsObj, 'date' );
-      const timeField = parseSection( mapping.time_arr, fieldsObj, 'time' );
+      const dateField = parseSection( mapping.date_arr, fieldsObj );
+      const timeField = parseSection( mapping.time_arr, fieldsObj );
       const additionalData = parseSection( mapping.other_arr, fieldsObj );
       // Ensure that if the map is zoomed out such that multiple
       // copies of the feature are visible, the popup appears
@@ -178,9 +200,7 @@ function drawLayers( m ) {
       new mapboxgl.Popup( { offset: 25 } )
         .setLngLat( coordinates )
         .setHTML( `<div class="info-window">
-            ${buildSection( titleField, 'title' )}${buildSection( locationField, 'location' )}
-            ${buildSection( dateField, 'date' )}${buildSection( timeField, 'time' )}
-            ${buildAdditional( additionalData )}</div>` )
+            ${buildSection( titleField, 'title' )}${buildSection( locationField, 'location' )}${buildSection( dateField, 'date' )}${buildSection( timeField, 'time' )}${buildAdditional( additionalData )}</div>` )
         .addTo( map );
     } );
 
