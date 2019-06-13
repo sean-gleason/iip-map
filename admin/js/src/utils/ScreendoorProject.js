@@ -139,7 +139,10 @@ export class ScreendoorProject {
     const fields = [];
     if ( 'field_data' in response ) {
       const fieldData = response.field_data;
-      fieldData.forEach( ( { label, id } ) => fields.push( { field: id, name: label } ) );
+      // eslint-disable-next-line camelcase
+      fieldData.forEach( ( { label, id, field_type } ) => fields.push( {
+        field: id, fieldType: field_type, name: label
+      } ) );
     }
     return fields;
   } );

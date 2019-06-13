@@ -89,10 +89,7 @@ class ScreendoorFieldMapper extends Component {
     const fields = {};
 
     data.forEach( ( item ) => {
-      fields[item.field] = {
-        field: item.field,
-        name: item.name
-      };
+      fields[item.field] = { ...item };
     } );
 
     return fields;

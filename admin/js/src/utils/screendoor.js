@@ -26,7 +26,9 @@ export const getData = ( response ) => {
   formData.forEach( ( element ) => {
     const { label } = element;
     const { id } = element;
-    const fieldObj = { field: id, name: label };
+    // eslint-disable-next-line camelcase
+    const { field_type } = element;
+    const fieldObj = { field: id, name: label, fieldType: field_type };
 
     fields.push( fieldObj );
   } );
