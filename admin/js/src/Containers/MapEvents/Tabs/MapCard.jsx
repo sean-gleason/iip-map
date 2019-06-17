@@ -1,82 +1,53 @@
-import React, { Component, Fragment } from 'react';
-import equal from 'fast-deep-equal';
+import React, {
+  Fragment, useEffect, useReducer, useState
+} from 'react';
 import * as PropTypes from 'prop-types';
 
-import Column from '../../Components/Column/Column';
-import ConfigsToggle from '../../Components/ConfigsToggle/ConfigsToggle';
+import Column from '../../../Components/Column/Column';
+import ConfigsToggle from '../../../Components/ConfigsToggle/ConfigsToggle';
+import { collapseArr } from '../../../utils/helpers';
+import TabControls from './TabControls';
 
-import { collapseArr } from '../../utils/helpers';
-import { getMapGlobalMeta } from '../../utils/globals';
-import { getEvents } from '../../utils/screendoor';
+const MapCard = ( {
+  mapping, card, getCardFromMapping, getSample, doSave, doNext, setDirty, isDirty, needsUpdate, setUpdated
+} ) => {
+  const [cardState, setState] = useReducer(
+    ( prevState, update ) => ( { ...prevState, ...update } ),
+    card,
+    initial => ( getCardFromMapping( mapping, initial ) )
+  );
+  const [sample, setSample] = useState( null );
+  const [preview, setPreview] = useState( false );
+  const [errors, setErrors] = useState( [] );
 
-class ScreendoorConfigureCard extends Component {
-  constructor( props ) {
-    super( props );
-    const { card, mapping, getCardFromMapping } = props;
-    if ( card ) {
-      this.state = card;
-    } else {
-      this.state = getCardFromMapping( mapping );
-      this.update();
-    }
-    this.state.preview = false;
-    this.state.sample = null;
-  }
+  const setCardState = val => setState( { ...cardState, ...val } );
 
-  componentWillReceiveProps( nextProps, nextContext ) {
-    const { id, mapping, getCardFromMapping } = this.props;
-    if ( !nextProps.card || id !== nextProps.id ) {
-      this.setState( prevState => ( {
-        ...getCardFromMapping( nextProps.mapping ),
-        preview: prevState.preview
-      } ), () => this.update() );
-    } else if ( !equal( mapping, nextProps.mapping ) ) {
-      this.setState(
-        prevState => ( {
-          ...getCardFromMapping( nextProps.mapping, prevState ),
-          preview: prevState.preview
-        } ), () => this.update()
-      );
-    }
-  }
-
-  handleAddArrayInput = ( group, ...args ) => {
+  const handleAddArrayInput = ( group, ...args ) => {
     const obj = {};
     args.forEach( ( arg ) => {
       obj[arg] = '';
       return obj;
     } );
 
-    this.setState( prevState => ( {
-      [group]: [...prevState[group], obj]
-    } ), () => this.update() );
+    setCardState( {
+      [group]: [...cardState[group], obj]
+    } );
   };
 
-  handleArrayInput = ( e ) => {
+  const handleDeleteItem = ( e ) => {
     const { group, index } = e.target.dataset;
-    const { [group]: stateGroup } = this.state;
-    // const obj = Object.assign( [], stateGroup );
-    const property = e.target.name;
-
-    stateGroup[index][property] = e.target.value;
-
-    this.setState( { [group]: stateGroup }, () => this.update() );
-  };
-
-  handleDeleteItem = ( e ) => {
-    const { group, index } = e.target.dataset;
-    const { [group]: stateGroup } = this.state;
+    const { [group]: stateGroup } = cardState;
     const obj = Object.assign( [], stateGroup );
     obj.splice( index, 1 );
 
-    this.setState( {
+    setCardState( {
       [group]: obj
-    }, () => this.update() );
+    } );
   };
 
-  handleInput = ( e ) => {
+  const handleInput = ( e ) => {
     const { group } = e.target.dataset;
-    const { [group]: stateGroup } = this.state;
+    const { [group]: stateGroup } = cardState;
     if ( group === 'added' ) {
       const { index } = e.target.dataset;
       stateGroup[index][e.target.name] = e.target.value;
@@ -84,21 +55,47 @@ class ScreendoorConfigureCard extends Component {
       stateGroup[e.target.name] = e.target.value;
     }
 
-    this.setState( { [group]: stateGroup }, () => this.update() );
+    setCardState( { [group]: stateGroup } );
   };
 
-  updateToggleState = section => ( e ) => {
-    const { [section]: sectionState } = this.state;
-    this.setState( {
+  const updateToggleState = section => ( e ) => {
+    const { [section]: sectionState } = cardState;
+    setCardState( {
       [section]: {
         ...sectionState,
         toggled: e
       }
-    }, () => this.update() );
+    } );
+    setDirty( true );
   };
 
-  parseField = ( name, field = null ) => {
-    const { sample, timeSection } = this.state;
+  const handleSample = ( toggle ) => {
+    if ( toggle && !sample ) {
+      return getSample( mapping )
+        .then( ( events ) => {
+          setPreview( toggle );
+          setSample( events[0] );
+        } ).catch( () => {
+          setPreview( false );
+          setSample( false );
+        } );
+    }
+    setPreview( toggle );
+  };
+
+  const handleSave = () => {
+    doSave( cardState )
+      .catch( ( err ) => {
+        if ( err.error ) {
+          setErrors( [`API Error: ${err.error}`] );
+        } else {
+          setErrors( [err.toString()] );
+        }
+      } );
+  };
+
+  const parseField = ( name, field = null ) => {
+    const { timeSection } = cardState;
     const group = sample.groups.find( g => g.name === name );
     if ( !group ) return null;
     const { fields } = group;
@@ -122,158 +119,94 @@ class ScreendoorConfigureCard extends Component {
     return fields.map( f => f.value ).join( ', ' );
   };
 
-  setSample = ( toggle ) => {
-    const { sample } = this.state;
-    if ( toggle && !sample ) {
-      return this.getSample().then( ( events ) => {
-        this.setState( {
-          preview: toggle,
-          sample: events[0]
-        } );
-      } ).catch( () => {
-        this.setState( {
-          preview: false,
-          sample: false
-        } );
-      } );
-    }
-    this.setState( {
-      preview: toggle
-    } );
-  };
-
-  getSample = () => new Promise( ( resolve, reject ) => {
-    const { id, mapping } = this.props;
-    const apiKey = getMapGlobalMeta.screendoorKey;
-    getEvents( id, apiKey )
-      .then( ( result ) => {
-        if ( !result || result.length < 1 ) return reject();
-        const {
-          nameFields, locationFields, dateFields, timeFields, additionalFields
-        } = mapping;
-        const mapFields = ( resps, map ) => {
-          const fields = [];
-          map.forEach( ( { field, name } ) => {
-            if ( field in resps ) fields.push( { field, label: name, value: resps[field] } );
-          } );
-          return fields;
-        };
-        const events = [];
-        result.forEach( ( eventData ) => {
-          const { responses } = eventData;
-          events.push( {
-            ext_id: eventData.id,
-            groups: [
-              {
-                name: 'title',
-                fields: mapFields( responses, nameFields )
-              },
-              {
-                name: 'location',
-                fields: mapFields( responses, locationFields )
-              },
-              {
-                name: 'date',
-                fields: mapFields( responses, dateFields )
-              },
-              {
-                name: 'time',
-                fields: mapFields( responses, timeFields )
-              },
-              {
-                name: 'added',
-                fields: mapFields( responses, additionalFields )
-              }
-            ]
-          } );
-        } );
-        resolve( events );
-      } )
-      .catch( ( err ) => {
-        console.error( err );
-        reject( err );
-      } );
-  } );
-
-  update = () => {
-    const { setCard, setDirty } = this.props;
-    setCard( this.state );
-    setDirty( true );
-  };
-
-  clearData = () => {
-    const { mapping, getCardFromMapping } = this.props;
-    this.setState( getCardFromMapping( mapping ), () => this.update() );
-  };
-
-  displayField( name, field = null ) {
-    const { mapping } = this.props;
-    const { preview, sample } = this.state;
+  const displayField = ( name, field = null ) => {
     if ( preview && sample ) {
-      return this.parseField( name, field );
+      return parseField( name, field );
     }
     if ( name === 'added' ) {
-      if ( field ) return `{ ${mapping.fields[field].name} }`;
+      if ( field && field in mapping.fields ) return `{ ${mapping.fields[field].name} }`;
       return '{ }';
     }
     if ( name === 'title' ) {
       return `{ ${collapseArr( mapping.nameFields )} }`;
     }
     return `{ ${collapseArr( mapping[`${name}Fields`] )} }`;
-  }
+  };
 
-  render() {
-    const {
-      added, dateSection, timeSection, additionalSection, locationSection, titleSection, preview, sample
-    } = this.state;
-    const { mapping } = this.props;
+  const handleClear = () => {
+    setCardState( getCardFromMapping( mapping ) );
+  };
 
-    return (
-      <Fragment>
+  const handleRevert = () => {
+    setCardState( card );
+    setDirty( false );
+  };
+
+  useEffect( () => {
+    if ( needsUpdate ) {
+      setState( card || getCardFromMapping( mapping, cardState ) );
+      setUpdated();
+    }
+  }, [
+    needsUpdate, card, mapping, cardState
+  ] );
+
+  useEffect( () => {
+    if ( !card && !isDirty ) {
+      setDirty( true );
+    }
+  }, [] );
+
+  const {
+    added, dateSection, timeSection, additionalSection, locationSection, titleSection
+  } = cardState;
+  return (
+    <Fragment>
+      <div className="react-tabs__tab-panel--inner">
         <div className="iip-map-admin-screendoor-dragdrop">
           <Column title="Card Preview">
             <div className="iip-map-admin-card-preview-container">
               <div className="iip-map-admin-card-preview-sample">
                 { sample !== false && (
-                  <ConfigsToggle
-                    toggled={ preview }
-                    label="Show Sample Data?"
-                    callback={ this.setSample }
-                  />
+                <ConfigsToggle
+                  toggled={ preview }
+                  label="Show Sample Data?"
+                  callback={ handleSample }
+                />
                 ) }
                 { sample === false && (
-                  <p className="iip-map-admin-card-preview-toggle-label has-error">
-                    Error retrieving sample data.
-                  </p>
+                <p className="iip-map-admin-card-preview-toggle-label has-error">
+                  Error retrieving sample data.
+                </p>
                 ) }
               </div>
               <div className="iip-map-ol-popup-preview" id="infowindow-1">
                 { titleSection.toggled && (
-                  <h1 id="firstHeading" className="iip-map-ol-popup-preview-header">
-                    { `${titleSection.preTitle} ${this.displayField( 'title' )} ${titleSection.postTitle}` }
-                  </h1>
+                <h1 id="firstHeading" className="iip-map-ol-popup-preview-header">
+                  { `${titleSection.preTitle} ${displayField( 'title' )} ${titleSection.postTitle}` }
+                </h1>
                 ) }
                 <div id="bodyContent-1" className="iip-map-ol-popup-preview-body">
                   { dateSection.toggled && (
-                    <Fragment>
-                      <h3 className="iip-map-ol-popup-preview-header">{ dateSection.heading || '' }</h3>
-                      <p>{ this.displayField( 'date' ) }</p>
-                      { timeSection.toggled && (
-                        <p>{ this.displayField( 'time' ) }</p>
-                      ) }
-                    </Fragment>
+                  <Fragment>
+                    <h3 className="iip-map-ol-popup-preview-header">{ dateSection.heading || '' }</h3>
+                    <p>{ displayField( 'date' ) }</p>
+                    { timeSection.toggled && (
+                      <p>{ displayField( 'time' ) }</p>
+                    ) }
+                  </Fragment>
                   ) }
                   { locationSection.toggled && (
-                    <Fragment>
-                      <h3 className="iip-map-ol-popup-preview-header">{ locationSection.heading || '' }</h3>
-                      <p>{ this.displayField( 'location' ) }</p>
-                    </Fragment>
+                  <Fragment>
+                    <h3 className="iip-map-ol-popup-preview-header">{ locationSection.heading || '' }</h3>
+                    <p>{ displayField( 'location' ) }</p>
+                  </Fragment>
                   ) }
                   { added.length > 0 && added.map( ( item, idx ) => (
                     <Fragment key={ `addedDisplay${idx + 1}` }>
                       <h3 className="iip-map-ol-popup-preview-header">{ item.heading }</h3>
                       <p>
-                        { `${item.inlinePre} ${this.displayField( 'added', item.field )} ${item.inlinePost}` }
+                        { `${item.inlinePre} ${displayField( 'added', item.field )} ${item.inlinePost}` }
                       </p>
                     </Fragment>
                   ) ) }
@@ -287,27 +220,27 @@ class ScreendoorConfigureCard extends Component {
                 <ConfigsToggle
                   toggled={ titleSection.toggled }
                   label="Show Title?"
-                  callback={ this.updateToggleState( 'titleSection' ) }
+                  callback={ updateToggleState( 'titleSection' ) }
                 >
                   <Fragment>
                     <label className="iip-map-admin-label" htmlFor="preTitle">
-                      Add text before title?
+                    Add text before title?
                       <input
                         className="iip-map-admin-project-input"
                         data-group="titleSection"
                         name="preTitle"
-                        onChange={ this.handleInput }
+                        onChange={ handleInput }
                         type="text"
                         value={ titleSection.preTitle }
                       />
                     </label>
                     <label className="iip-map-admin-label" htmlFor="postTitle">
-                      Add text after title?
+                    Add text after title?
                       <input
                         className="iip-map-admin-project-input"
                         data-group="titleSection"
                         name="postTitle"
-                        onChange={ this.handleInput }
+                        onChange={ handleInput }
                         type="text"
                         value={ titleSection.postTitle }
                       />
@@ -317,16 +250,16 @@ class ScreendoorConfigureCard extends Component {
                 <ConfigsToggle
                   toggled={ dateSection.toggled }
                   label="Add Date?"
-                  callback={ this.updateToggleState( 'dateSection' ) }
+                  callback={ updateToggleState( 'dateSection' ) }
                 >
                   <Fragment>
                     <label className="iip-map-admin-label" htmlFor="heading">
-                      Section header (optional):
+                    Section header (optional):
                       <input
                         className="iip-map-admin-project-input"
                         data-group="dateSection"
                         name="heading"
-                        onChange={ this.handleInput }
+                        onChange={ handleInput }
                         type="text"
                         value={ dateSection.heading }
                       />
@@ -334,7 +267,7 @@ class ScreendoorConfigureCard extends Component {
                     <ConfigsToggle
                       toggled={ timeSection.toggled }
                       label="Add Time?"
-                      callback={ this.updateToggleState( 'timeSection' ) }
+                      callback={ updateToggleState( 'timeSection' ) }
                     >
                       <Fragment>
                         <p className="iip-map-admin-card-preview-toggle-label" style={ { marginTop: '0' } }>Format:</p>
@@ -348,7 +281,7 @@ class ScreendoorConfigureCard extends Component {
                             type="radio"
                             checked={ timeSection.timeFormat === '12hour' }
                             value="12hour"
-                            onChange={ this.handleInput }
+                            onChange={ handleInput }
                           />
                         </label>
                         <label htmlFor="timeFormat-24">
@@ -361,7 +294,7 @@ class ScreendoorConfigureCard extends Component {
                             type="radio"
                             checked={ timeSection.timeFormat === '24hour' }
                             value="24hour"
-                            onChange={ this.handleInput }
+                            onChange={ handleInput }
                           />
                         </label>
                       </Fragment>
@@ -371,15 +304,15 @@ class ScreendoorConfigureCard extends Component {
                 <ConfigsToggle
                   toggled={ locationSection.toggled }
                   label="Add Location?"
-                  callback={ this.updateToggleState( 'locationSection' ) }
+                  callback={ updateToggleState( 'locationSection' ) }
                 >
                   <label className="iip-map-admin-label" htmlFor="heading">
-                    Section header (optional):
+                  Section header (optional):
                     <input
                       className="iip-map-admin-project-input"
                       data-group="locationSection"
                       name="heading"
-                      onChange={ this.handleInput }
+                      onChange={ handleInput }
                       type="text"
                       value={ locationSection.heading }
                     />
@@ -391,11 +324,11 @@ class ScreendoorConfigureCard extends Component {
                     <p className="iip-map-admin-card-preview-toggle-label">Add section?</p>
                     <button
                       onClick={ () => {
-                        this.handleAddArrayInput( 'added', 'field', 'heading', 'inlinePre', 'inlinePost' );
+                        handleAddArrayInput( 'added', 'field', 'heading', 'inlinePre', 'inlinePost' );
                       } }
                       type="button"
                     >
-                          +
+                      +
                     </button>
                   </div>
                   { added.map( ( value, index ) => {
@@ -411,10 +344,10 @@ class ScreendoorConfigureCard extends Component {
                             className="iip-event-close-btn"
                             data-group="added"
                             data-index={ index }
-                            onClick={ this.handleDeleteItem }
+                            onClick={ handleDeleteItem }
                             type="button"
                           >
-                                X
+                            X
                           </button>
                         </div>
                         <label
@@ -422,7 +355,7 @@ class ScreendoorConfigureCard extends Component {
                           htmlFor="field"
                           key={ kgen( 'field' ) }
                         >
-                              Choose field:
+                          Choose field:
                           <select
                             className="iip-map-admin-project-input"
                             key={ kgen( 'fieldselect' ) }
@@ -430,7 +363,7 @@ class ScreendoorConfigureCard extends Component {
                             data-index={ index }
                             name="field"
                             value={ value.field }
-                            onChange={ this.handleInput }
+                            onChange={ handleInput }
                           >
                             <option value="">Please select a field</option>
                             { mapping.additionalFields.map( ( item, i ) => (
@@ -448,7 +381,7 @@ class ScreendoorConfigureCard extends Component {
                           htmlFor="heading"
                           key={ kgen( 'heading' ) }
                         >
-                              Section header (optional):
+                          Section header (optional):
                           <input
                             className="iip-map-admin-project-input"
                             key={ kgen( 'heading', 'input' ) }
@@ -457,7 +390,7 @@ class ScreendoorConfigureCard extends Component {
                             name="heading"
                             type="text"
                             value={ value.heading }
-                            onChange={ this.handleInput }
+                            onChange={ handleInput }
                           />
                         </label>
                         <label
@@ -465,7 +398,7 @@ class ScreendoorConfigureCard extends Component {
                           htmlFor="inlinePre"
                           key={ kgen( 'inlinePre', '' ) }
                         >
-                              Inline text before item (optional):
+                          Inline text before item (optional):
                           <textarea
                             className="iip-map-admin-project-textarea"
                             key={ kgen( 'inlinePre', 'text' ) }
@@ -473,7 +406,7 @@ class ScreendoorConfigureCard extends Component {
                             data-index={ index }
                             name="inlinePre"
                             value={ value.inlinePre }
-                            onChange={ this.handleInput }
+                            onChange={ handleInput }
                           />
                         </label>
                         <label
@@ -481,7 +414,7 @@ class ScreendoorConfigureCard extends Component {
                           key={ kgen( 'inlinePost', '' ) }
                           htmlFor="inlinePost"
                         >
-                              Inline text after item (optional):
+                          Inline text after item (optional):
                           <textarea
                             className="iip-map-admin-project-textarea"
                             key={ kgen( 'inlinePost', 'text' ) }
@@ -489,7 +422,7 @@ class ScreendoorConfigureCard extends Component {
                             data-index={ index }
                             name="inlinePost"
                             value={ value.inlinePost }
-                            onChange={ this.handleInput }
+                            onChange={ handleInput }
                           />
                         </label>
                       </div>
@@ -501,20 +434,47 @@ class ScreendoorConfigureCard extends Component {
             </div>
           </Column>
         </div>
-        <button type="button" onClick={ this.clearData }>
-          Reset to Default Card
+      </div>
+      <TabControls handleSave={ handleSave } errors={ errors }>
+        <button
+          key="map-card-clear"
+          className="button button-large"
+          type="button"
+          onClick={ handleClear }
+        >
+          Clear Card
         </button>
-      </Fragment>
-    );
-  }
-}
+        <button
+          key="map-card-revert"
+          className="button button-large"
+          type="button"
+          disabled={ !isDirty || !card }
+          onClick={ handleRevert }
+        >
+          Revert Changes
+        </button>
+        <button
+          key="map-card-skip"
+          className="button button-large"
+          type="button"
+          disabled={ isDirty || !card }
+          onClick={ doNext }
+        >
+          Skip
+        </button>
+      </TabControls>
+    </Fragment>
+  );
+};
 
-ScreendoorConfigureCard.propTypes = {
-  id: PropTypes.string,
+MapCard.propTypes = {
+  isDirty: PropTypes.bool,
+  needsUpdate: PropTypes.bool,
   mapping: PropTypes.object,
-  getCardFromMapping: PropTypes.func,
   setDirty: PropTypes.func,
-  setCard: PropTypes.func,
+  setUpdated: PropTypes.func,
+  getSample: PropTypes.func,
+  getCardFromMapping: PropTypes.func,
   card: PropTypes.shape( {
     titleSection: PropTypes.shape( {
       preTitle: PropTypes.string,
@@ -542,7 +502,9 @@ ScreendoorConfigureCard.propTypes = {
       inlinePre: PropTypes.string,
       inlinePost: PropTypes.string
     } ) )
-  } )
+  } ),
+  doNext: PropTypes.func,
+  doSave: PropTypes.func
 };
 
-export default ScreendoorConfigureCard;
+export default MapCard;

@@ -5,7 +5,7 @@ import {
   getScreendoorCard,
   getMapMeta, getMapEvents
 } from './globals';
-import { getFormData } from './screendoor';
+import { getEvents, getFormData } from './screendoor';
 
 const SCREENDOOR_URL = 'https://screendoor.dobt.co/api/projects/';
 
@@ -20,6 +20,7 @@ export class ScreendoorProject {
       availableFields: getScreendoorFields.availableArr,
       dateFields: getScreendoorFields.dateArr,
       fields: getScreendoorFields.fields,
+      form: this.form,
       locationFields: getScreendoorFields.locationArr,
       nameFields: getScreendoorFields.nameArr,
       timeFields: getScreendoorFields.timeArr
@@ -36,44 +37,58 @@ export class ScreendoorProject {
     this.events = getMapEvents;
   }
 
-  update = ( {
-    form, mapping, card, projectId
-  } ) => {
-    this.form = form;
-    this.mapping = mapping;
-    this.card = card;
-    this.projectId = projectId;
+  update = ( updates ) => {
+    Object.keys( updates ).forEach( ( key ) => {
+      this[key] = updates[key];
+    } );
   };
 
   /**
    * Save field mapping and card configuration in WordPress via AJAX call.
-   * @param form
-   * @param card
-   * @param mapping
-   * @param projectId
+   * @param saveData { projectId, form, card, mapping }
    * @returns {Promise<AxiosResponse<T>>}
    */
-  save = ( {
-    form, card, mapping, projectId
-  } ) => {
-    const {
-      fields, additionalFields, availableFields, dateFields, locationFields, nameFields, timeFields
-    } = mapping;
-    this.projectId = projectId;
-    this.form = form;
-    this.card = card;
-    this.mapping = mapping;
-
-    if ( !this.card ) {
-      this.card = this.getCardFromMapping( this.mapping );
+  save = ( saveData ) => {
+    if ( !this.postId ) {
+      return Promise.reject( new Error( 'No post id' ) );
     }
 
     const dataObj = {
-      projectId: this.projectId,
-      form: this.form,
-      card: this.card,
-      postId: this.postId,
-      mapping: {
+      postId: this.postId
+    };
+    if ( 'form' in saveData ) {
+      this.form = saveData.form;
+      dataObj.form = this.form;
+    }
+    if ( 'card' in saveData ) {
+      this.card = saveData.card;
+      dataObj.card = this.card;
+    }
+
+    if ( 'projectId' in saveData ) {
+      const newProject = this.projectId !== saveData.projectId;
+      this.projectId = saveData.projectId;
+      dataObj.projectId = this.projectId;
+      if ( newProject ) {
+        dataObj.deleteEvents = 1;
+
+        // maybe merge stuff instead?
+        saveData.mapping = this.getDefaultMapping( saveData.form );
+
+        this.card = this.getCardFromMapping( this.mapping );
+        dataObj.card = 0;
+      } else {
+        this.card = null;
+      }
+    }
+
+    if ( 'mapping' in saveData ) {
+      dataObj.deleteEvents = 1;
+      this.mapping = saveData.mapping;
+      const {
+        fields, additionalFields, availableFields, dateFields, locationFields, nameFields, timeFields
+      } = this.mapping;
+      dataObj.mapping = {
         fields,
         available: availableFields,
         date: dateFields,
@@ -81,12 +96,16 @@ export class ScreendoorProject {
         name: nameFields,
         other: additionalFields,
         time: timeFields
+      };
+      if ( !( 'card' in dataObj ) ) {
+        // if a card previously existed, save a default card based on existing and new mapping
+        // otherwise, save null
+        dataObj.card = this.card ? this.getCardFromMapping( this.mapping, this.card ) : 0;
+        this.card = null;
       }
-    };
-
-    if ( !this.postId ) {
-      return Promise.reject( new Error( 'No post id' ) );
     }
+
+    console.log( 'saving', dataObj );
 
     // Get WP admin AJAX URL and data
     const url = getMapGlobalMeta.ajaxUrl;
@@ -100,7 +119,7 @@ export class ScreendoorProject {
     return axios.post( url, formData ).then( resp => resp.data );
   };
 
-  request = ( type, params = {} ) => axios.get( `${SCREENDOOR_URL}${this.projectId}/${type}`, {
+  request = ( type, params = {}, projectId = this.projectId ) => axios.get( `${SCREENDOOR_URL}${projectId}/${type}`, {
     params: { v: 0, api_key: this.apiKey, ...params },
     timeout: 5000
   } ).then( resp => resp.data );
@@ -113,6 +132,8 @@ export class ScreendoorProject {
    */
   getEvents = ( perPage = 1, page = 1 ) => this.request( 'responses', { page, per_page: perPage } );
 
+  getEventsRequester = ( perPage = 1 ) => page => this.request( 'responses', { page, per_page: perPage } );
+
   getEventsPager = ( perPage = 1 ) => {
     const doRequest = page => this.request( 'responses', { page, per_page: perPage } );
     return {
@@ -124,6 +145,57 @@ export class ScreendoorProject {
     };
   };
 
+  getSample = mapping => new Promise( ( resolve, reject ) => {
+    getEvents( this.projectId, this.apiKey )
+      .then( ( result ) => {
+        if ( !result || result.length < 1 ) return reject();
+        const {
+          nameFields, locationFields, dateFields, timeFields, additionalFields
+        } = mapping;
+        const mapFields = ( resps, map ) => {
+          const fields = [];
+          map.forEach( ( { field, name } ) => {
+            if ( field in resps ) fields.push( { field, label: name, value: resps[field] } );
+          } );
+          return fields;
+        };
+        const events = [];
+        result.forEach( ( eventData ) => {
+          const { responses } = eventData;
+          events.push( {
+            ext_id: eventData.id,
+            groups: [
+              {
+                name: 'title',
+                fields: mapFields( responses, nameFields )
+              },
+              {
+                name: 'location',
+                fields: mapFields( responses, locationFields )
+              },
+              {
+                name: 'date',
+                fields: mapFields( responses, dateFields )
+              },
+              {
+                name: 'time',
+                fields: mapFields( responses, timeFields )
+              },
+              {
+                name: 'added',
+                fields: mapFields( responses, additionalFields )
+              }
+            ]
+          } );
+        } );
+        resolve( events );
+      } )
+      .catch( ( err ) => {
+        console.error( err );
+        reject( err );
+      } );
+  } );
+
   getGeocoder = () => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
     security: getMapGlobalMeta.screendoorNonce,
     action: 'geocode_events_ajax',
@@ -131,17 +203,50 @@ export class ScreendoorProject {
     projectId: this.projectId
   } ) ).then( resp => resp.data );
 
+  geocode = () => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
+    security: getMapGlobalMeta.screendoorNonce,
+    action: 'geocode_events_ajax',
+    postId: this.postId,
+    projectId: this.projectId
+  } ) ).then( resp => resp.data );
+
+
+  getDraggableFields = ( data ) => {
+    const fields = {};
+
+    data.forEach( ( item ) => {
+      fields[item.field] = { ...item };
+    } );
+
+    return fields;
+  };
+
+  getDefaultMapping = ( form ) => {
+    const fields = this.getDraggableFields( form );
+    const available = Array.from( form );
+    return {
+      form,
+      fields,
+      availableFields: available,
+      additionalFields: [],
+      dateFields: [],
+      locationFields: [],
+      nameFields: [],
+      timeFields: []
+    };
+  };
+
   /**
    * Retreive fields from the Screendoor API
    * @returns {Promise<Array | never>}
    */
-  getFields = () => this.request( 'form' ).then( ( response ) => {
+  getFields = projectId => this.request( 'form', null, projectId ).then( ( response ) => {
     const fields = [];
     if ( 'field_data' in response ) {
       const fieldData = response.field_data;
       // eslint-disable-next-line camelcase
       fieldData.forEach( ( { label, id, field_type } ) => fields.push( {
-        field: id, fieldType: field_type, name: label
+        field: id, name: label, fieldType: field_type
       } ) );
     }
     return fields;
@@ -154,38 +259,63 @@ export class ScreendoorProject {
    * @returns object
    */
   getCardFromMapping = ( data, state = null ) => {
-    const result = {
+    const titleHasFields = !!( ( data.nameFields && data.nameFields.length > 0 ) );
+    const dateHasFields = !!( ( data.dateFields && data.dateFields.length > 0 ) );
+    const timeHasFields = !!( ( data.timeFields && data.timeFields.length > 0 ) );
+    const locationHasFields = !!( ( data.locationFields && data.locationFields.length > 0 ) );
+    const addHasFields = !!( ( data.additionalFields && data.additionalFields.length > 0 ) );
+    const card = {
       titleSection: {
         postTitle: '',
         preTitle: '',
-        toggled: !!( ( data.nameFields && data.nameFields.length > 0 ) )
+        hasFields: titleHasFields,
+        toggled: titleHasFields
       },
       dateSection: {
         heading: 'When:',
-        toggled: !!( ( data.dateFields && data.dateFields.length > 0 ) )
+        hasFields: dateHasFields,
+        toggled: dateHasFields
       },
       timeSection: {
         timeFormat: '12hour',
-        toggled: !!( ( data.timeFields && data.timeFields.length > 0 ) )
+        hasFields: timeHasFields,
+        toggled: timeHasFields
       },
       locationSection: {
         heading: 'Where:',
-        toggled: !!( ( data.locationFields && data.locationFields.length > 0 ) )
+        hasFields: locationHasFields,
+        toggled: locationHasFields
       },
       additionalSection: {
-        toggled: !!( ( data.additionalFields && data.additionalFields.length > 0 ) )
+        hasFields: addHasFields,
+        toggled: addHasFields
       },
       added: []
     };
     if ( state ) {
-      result.titleSection.postTitle = state.titleSection.postTitle;
-      result.titleSection.preTitle = state.titleSection.preTitle;
-      state.added.forEach( ( item ) => {
-        const exists = data.additionalFields.find( f => f.field === item.field );
-        if ( exists ) result.added.push( item );
+      Object.keys( card ).forEach( ( key ) => {
+        if ( key === 'added' ) return;
+        // the toggle is always dependent on whether or not the section has mapped fields
+        let toggle = card[key].hasFields;
+        if ( card[key].hasFields === state[key].hasFields ) {
+          // if both had fields at the time of toggling, we can trust the previous toggle state
+          toggle = state[key].toggled;
+        }
+        card[key] = {
+          ...card[key],
+          ...state[key],
+          hasFields: card[key].hasFields,
+          toggled: toggle
+        };
       } );
+      if ( addHasFields ) {
+        state.added.forEach( ( item ) => {
+          const exists = data.additionalFields.find( f => f.field === item.field );
+          if ( exists ) card.added.push( item );
+        } );
+      }
     }
-    return result;
+    return card;
   };
 
   parseSection = ( map, fields, type = null ) => {

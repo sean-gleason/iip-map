@@ -275,11 +275,11 @@ class EventsStatus {
   }
 
   get total() {
-    return this._meta.counts.event_count || 0;
+    return this._meta.counts.event_count || '0';
   }
 
   get geocoded() {
-    return this._meta.counts.geocoded_count || 0;
+    return this._meta.counts.geocoded_count || '0';
   }
 
   get updated() {

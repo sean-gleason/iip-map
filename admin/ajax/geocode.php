@@ -1,12 +1,12 @@
 <?php
-
+define( 'IIP_GEOCODER_PER_BATCH', 20 );
 class IIP_Map_Geocode {
   function geocode_events_ajax() {
     global $wpdb;
     check_ajax_referer( 'iip-map-screendoor-nonce', 'security' );
     $api_key = get_option( 'iip_map_mapbox_api_key' );
     if ( !$api_key ) {
-      wp_send_json_error( [ 'success' => false, 'error' => 'Missing MapBox API key.' ] );
+      wp_send_json( [ 'success' => false, 'error' => 'Missing MapBox API key.' ] );
     }
     $table_name = "{$wpdb->prefix}iip_map_data";
 
@@ -17,11 +17,16 @@ class IIP_Map_Geocode {
     $count = 0;
     $geocoded = 0;
     $attempted = 0;
+    $skipped = 0;
     $incomplete = [];
     $geos = [];
+    $more = false;
     foreach ( $events as $event ) {
       $count++;
-      if ( $event->location === $event->location_geo ) continue;
+      if ( $event->location === $event->location_geo ) {
+        $skipped++;
+        continue;
+      }
       $attempted++;
       $response = wp_remote_get( "{$api_url}{$event->location}.json?access_token=$api_key" );
       $loc = $wpdb->_real_escape( $event->location );
@@ -45,7 +50,10 @@ class IIP_Map_Geocode {
         $event->reason = isset( $body->message ) ? $body->message : 'Not found';
         $incomplete[] = $event;
       }
-      if ( $attempted >= 20 ) break;
+      if ( $attempted >= IIP_GEOCODER_PER_BATCH ) {
+        $more = true;
+        break;
+      }
     }
 
     $events = $wpdb->get_row( "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM {$wpdb->prefix}iip_map_data WHERE post_id = $post_id" );
@@ -56,7 +64,9 @@ class IIP_Map_Geocode {
       'attempted' => $attempted,
       'geos' => $geos,
       'incomplete' => $incomplete,
-      'events' => $events
+      'skipped' => $skipped,
+      'events' => $events,
+      'more' => $more
     ] );
     exit;
   }
