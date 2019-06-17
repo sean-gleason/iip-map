@@ -1,0 +1,8 @@
+.info-window h4 {
+  margin: 0 0 0 0; }
+
+.info-window > div {
+  margin-top: 10px; }
+  .info-window > div.info-window__date + .info-window__time {
+    margin-top: 0; }
+
