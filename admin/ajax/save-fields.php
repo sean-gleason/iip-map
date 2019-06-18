@@ -26,6 +26,7 @@ class IIP_Map_Save_Fields {
 
         // Add map items to map params array
         $fields_meta['mapping']['available_arr'] = $mapping->availableFields;
+        $fields_meta['mapping']['topic_arr'] = $mapping->topicFields;
         $fields_meta['mapping']['date_arr'] = $mapping->dateFields;
         $fields_meta['mapping']['time_arr'] = $mapping->timeFields;
         $fields_meta['mapping']['location_arr'] = $mapping->locationFields;
