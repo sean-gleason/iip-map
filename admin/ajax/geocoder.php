@@ -1,6 +1,12 @@
 <?php
-define( 'IIP_GEOCODER_PER_BATCH', 20 );
-class IIP_Map_Geocode {
+
+class IIP_Map_Geocoder {
+  private $table_name;
+
+  public function __construct() {
+    $this->table_name = IIP_MAP_EVENTS_TABLE;
+  }
+
   function geocode_events_ajax() {
     global $wpdb;
     check_ajax_referer( 'iip-map-screendoor-nonce', 'security' );
@@ -8,11 +14,10 @@ class IIP_Map_Geocode {
     if ( !$api_key ) {
       wp_send_json( [ 'success' => false, 'error' => 'Missing MapBox API key.' ] );
     }
-    $table_name = "{$wpdb->prefix}iip_map_data";
 
     $api_url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
     $post_id = $_POST[ 'postId' ];
-    $query = "SELECT * FROM $table_name WHERE post_id = $post_id";
+    $query = "SELECT * FROM $this->table_name WHERE post_id = $post_id";
     $events = $wpdb->get_results( $query );
     $count = 0;
     $geocoded = 0;
@@ -41,22 +46,22 @@ class IIP_Map_Geocode {
           'lng' => $lng,
           'place_name' => $feature->place_name
         ];
-        $query = "UPDATE $table_name SET location_geo = '$loc', lat = $lat, lng = $lng WHERE id = $event->id";
+        $query = "UPDATE $this->table_name SET location_geo = '$loc', lat = $lat, lng = $lng WHERE id = $event->id";
         $wpdb->query( $query );
         $geocoded++;
       } else {
-        $query = "UPDATE $table_name SET location_geo = '$loc', lat = NULL, lng = NULL WHERE id = $event->id";
+        $query = "UPDATE $this->table_name SET location_geo = '$loc', lat = NULL, lng = NULL WHERE id = $event->id";
         $wpdb->query( $query );
         $event->reason = isset( $body->message ) ? $body->message : 'Not found';
         $incomplete[] = $event;
       }
-      if ( $attempted >= IIP_GEOCODER_PER_BATCH ) {
+      if ( $attempted >= IIP_MAP_GEOCODER_BATCH_SIZE ) {
         $more = true;
         break;
       }
     }
 
-    $events = $wpdb->get_row( "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM {$wpdb->prefix}iip_map_data WHERE post_id = $post_id" );
+    $events = $wpdb->get_row( "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM $this->table_name WHERE post_id = $post_id" );
     wp_send_json( [
       'success' => true,
       'count' => $count,

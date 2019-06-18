@@ -65,27 +65,12 @@ const ShortcodeGenerator = ( { callback, data } ) => (
             />
           </label>
         </div>
-
-        <div className="iip-map-admin-shortcode-row">
-          { /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/label-has-for */ }
-          <label className="iip-map-admin-shortcode-label" htmlFor="mapType">
-            Map Type:
-            <select id="iip-map-type" name="mapType" className="iip-map-admin-shortcode-select">
-              { data.mapType === 'gmap'
-                ? <option value="gmap">Google Maps</option>
-                : <option value="ol">OpenLayers</option>
-              }
-              <option value="ol">OpenLayers</option>
-              <option value="gmap">Google Maps</option>
-            </select>
-          </label>
-        </div>
       </div>
 
       <div className="iip-map-admin-shortcode-output-container" style={ { textAlign: 'center' } }>
         <strong>Paste this shortcode into your post/page:</strong>
         <pre className="iip-map-admin-shortcode-output">
-          { `[map id=${data.mapId} height=${data.mapHeight} zoom=${data.mapZoom} lat=${data.mapLat} lng=${data.mapLng} type=${data.mapType}]` }
+          { `[map id=${data.mapId} height=${data.mapHeight} zoom=${data.mapZoom} lat=${data.mapLat} lng=${data.mapLng}]` }
         </pre>
       </div>
     </div>

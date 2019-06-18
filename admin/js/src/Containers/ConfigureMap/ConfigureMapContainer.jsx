@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import MapBox from '../Components/Metaboxes/MapBox';
-import ShortcodeGenerator from '../Components/Metaboxes/ShortcodeGenerator';
+import MapBox from './MapBox';
+import ShortcodeGenerator from './ShortcodeGenerator';
 
-import { adminMap } from '../utils/map';
-import { getMapMeta } from '../utils/globals';
+import { adminMap } from '../../utils/map';
+import { getMapMeta } from '../../utils/globals';
 
-class ConfigureMap extends Component {
+class ConfigureMapContainer extends Component {
   constructor( props ) {
     super( props );
     this.state = {
@@ -15,7 +15,6 @@ class ConfigureMap extends Component {
         mapId: getMapMeta.id,
         mapLat: getMapMeta.lat,
         mapLng: getMapMeta.lng,
-        mapType: getMapMeta.type,
         mapZoom: getMapMeta.zoom
       }
     };
@@ -78,17 +77,12 @@ class ConfigureMap extends Component {
     const { mapProps } = this.state;
 
     return (
-      <div className="postbox">
-        <h2 className="iip-map-admin-metabox-header">Set Your Map View</h2>
-        <div className="inside">
-          <div className="iip-map-admin-configure-box">
-            <MapBox />
-            <ShortcodeGenerator callback={ this.handleInputChange } data={ mapProps } />
-          </div>
-        </div>
+      <div className="iip-map-admin-configure-box">
+        <MapBox />
+        <ShortcodeGenerator callback={ this.handleInputChange } data={ mapProps } />
       </div>
     );
   }
 }
 
-export default ConfigureMap;
+export default ConfigureMapContainer;

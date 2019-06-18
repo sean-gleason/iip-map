@@ -17,6 +17,10 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'IIP_MAP_DIR', plugin_dir_path( dirname( __FILE__ ) ) . 'iip-map/' );
 define( 'IIP_MAP_URL', plugin_dir_url( dirname( __FILE__ ) ) . 'iip-map/' );
 
+global $wpdb;
+define( 'IIP_MAP_EVENTS_TABLE', "{$wpdb->prefix}iip_map_data" );
+define( 'IIP_MAP_GEOCODER_BATCH_SIZE', 20 );
+
 function iip_map_activate() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-iip-map-activator.php';
 	IIP_Map_Activator::activate();
