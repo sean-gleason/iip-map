@@ -1,36 +1,33 @@
 <?php
 
 class IIP_Map_Export {
+  private $table_name;
+
+  public function __construct() {
+    $this->table_name = IIP_MAP_EVENTS_TABLE;
+  }
+
   function export_data_ajax() {
     check_ajax_referer( 'iip-map-export-nonce', 'security' );
 
     global $wpdb;
 
     $map_id = $_POST['map_id'];
-    $table = $wpdb->prefix.'iip_map_data';
 
-    $query = $wpdb->prepare("SELECT * FROM `$table` WHERE map_id = %s", $map_id);
+//    $query = $wpdb->prepare("SELECT * FROM `$this->table_name` WHERE map_id = %s", $map_id);
+    $query = $wpdb->prepare("SELECT id,map_id,ext_id,title,location,topic,lat,lng FROM `$this->table_name` WHERE map_id = %s", $map_id);
     $export_data = $wpdb->get_results($query, ARRAY_A);
 
     // Set header row values
     $csv_fields = array();
     $csv_fields[] = 'id';
     $csv_fields[] = 'map_id';
-    $csv_fields[] = 'venue_name';
-    $csv_fields[] = 'venue_address';
-    $csv_fields[] = 'venue_city';
-    $csv_fields[] = 'venue_region';
-    $csv_fields[] = 'venue_country';
+    $csv_fields[] = 'ext_id';
+    $csv_fields[] = 'title';
+    $csv_fields[] = 'location';
+    $csv_fields[] = 'topic';
     $csv_fields[] = 'lat';
     $csv_fields[] = 'lng';
-    $csv_fields[] = 'host_name';
-    $csv_fields[] = 'event_name';
-    $csv_fields[] = 'event_desc';
-    $csv_fields[] = 'event_date';
-    $csv_fields[] = 'event_time';
-    $csv_fields[] = 'event_duration';
-    $csv_fields[] = 'event_topic';
-    $csv_fields[] = 'contact';
     $output_filename = 'Data_for_Map_' . $map_id . '.csv';
 
     // Set CSV header info

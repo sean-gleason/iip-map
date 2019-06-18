@@ -1,11 +1,18 @@
 <?php
 
 class IIP_Map_Import {
+  private $table_name;
+
+  public function __construct() {
+    $this->table_name = IIP_MAP_EVENTS_TABLE;
+  }
+
   function map_ajax() {
   	check_ajax_referer( 'iip-map-geocode-nonce', 'security' );
+  	wp_send_json_error();
+  	wp_die();
 
     global $wpdb;
-    $table = $wpdb->prefix.'iip_map_data';
 
     $data = $_POST['data'];
 
@@ -35,7 +42,7 @@ class IIP_Map_Import {
       }
 
       $wpdb->insert(
-      	$table,
+      	$this->table_name,
       	array(
       		'map_id' => $entry['map_id'],
       		'venue_name' => $entry['venue_name'],

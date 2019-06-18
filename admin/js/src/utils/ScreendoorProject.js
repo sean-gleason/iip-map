@@ -5,7 +5,7 @@ import {
   getScreendoorCard,
   getMapMeta, getMapEvents
 } from './globals';
-import { getEvents, getFormData } from './screendoor';
+import { getFormData, getObjectFromArray } from './helpers';
 
 const SCREENDOOR_URL = 'https://screendoor.dobt.co/api/projects/';
 
@@ -90,12 +90,12 @@ export class ScreendoorProject {
       } = this.mapping;
       dataObj.mapping = {
         fields,
-        available: availableFields,
-        date: dateFields,
-        location: locationFields,
-        name: nameFields,
-        other: additionalFields,
-        time: timeFields
+        availableFields,
+        dateFields,
+        locationFields,
+        nameFields,
+        additionalFields,
+        timeFields
       };
       if ( !( 'card' in dataObj ) ) {
         // if a card previously existed, save a default card based on existing and new mapping
@@ -112,41 +112,30 @@ export class ScreendoorProject {
 
     // Create the form that constitutes the AJAX request body
     const formData = getFormData( dataObj );
-    formData.append( 'action', 'save_screendoor_ajax' );
+    formData.append( 'action', 'iip_map_save_fields_ajax' );
     formData.append( 'security', getMapGlobalMeta.screendoorNonce );
 
     // AJAX POST request to save screendoor project data
     return axios.post( url, formData ).then( resp => resp.data );
   };
 
+  saveEvents = events => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
+    events,
+    security: getMapGlobalMeta.screendoorNonce,
+    action: 'iip_map_save_events_ajax',
+    postId: this.postId,
+    projectId: this.projectId
+  } ) ).then( resp => resp.data );
+
   request = ( type, params = {}, projectId = this.projectId ) => axios.get( `${SCREENDOOR_URL}${projectId}/${type}`, {
     params: { v: 0, api_key: this.apiKey, ...params },
     timeout: 5000
   } ).then( resp => resp.data );
 
-  /**
-   * Retreive a specific number of events from the Screendoor API.
-   * @param perPage
-   * @param page
-   * @returns {Promise<any | never>}
-   */
-  getEvents = ( perPage = 1, page = 1 ) => this.request( 'responses', { page, per_page: perPage } );
-
   getEventsRequester = ( perPage = 1 ) => page => this.request( 'responses', { page, per_page: perPage } );
 
-  getEventsPager = ( perPage = 1 ) => {
-    const doRequest = page => this.request( 'responses', { page, per_page: perPage } );
-    return {
-      page: 0,
-      next() {
-        this.page += 1;
-        return doRequest( this.page );
-      }
-    };
-  };
-
   getSample = mapping => new Promise( ( resolve, reject ) => {
-    getEvents( this.projectId, this.apiKey )
+    this.request( 'responses', { per_page: 1 } )
       .then( ( result ) => {
         if ( !result || result.length < 1 ) return reject();
         const {
@@ -196,33 +185,15 @@ export class ScreendoorProject {
       } );
   } );
 
-  getGeocoder = () => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
-    security: getMapGlobalMeta.screendoorNonce,
-    action: 'geocode_events_ajax',
-    postId: this.postId,
-    projectId: this.projectId
-  } ) ).then( resp => resp.data );
-
   geocode = () => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
     security: getMapGlobalMeta.screendoorNonce,
-    action: 'geocode_events_ajax',
+    action: 'iip_map_geocode_events_ajax',
     postId: this.postId,
     projectId: this.projectId
   } ) ).then( resp => resp.data );
 
-
-  getDraggableFields = ( data ) => {
-    const fields = {};
-
-    data.forEach( ( item ) => {
-      fields[item.field] = { ...item };
-    } );
-
-    return fields;
-  };
-
   getDefaultMapping = ( form ) => {
-    const fields = this.getDraggableFields( form );
+    const fields = getObjectFromArray( form );
     const available = Array.from( form );
     return {
       form,
@@ -241,15 +212,13 @@ export class ScreendoorProject {
    * @returns {Promise<Array | never>}
    */
   getFields = projectId => this.request( 'form', null, projectId ).then( ( response ) => {
-    const fields = [];
     if ( 'field_data' in response ) {
-      const fieldData = response.field_data;
       // eslint-disable-next-line camelcase
-      fieldData.forEach( ( { label, id, field_type } ) => fields.push( {
+      return response.field_data.map( ( { label, id, field_type } ) => ( {
         field: id, name: label, fieldType: field_type
       } ) );
     }
-    return fields;
+    return [];
   } );
 
   /**
@@ -358,14 +327,6 @@ export class ScreendoorProject {
     event.location = this.parseSection( this.mapping.locationFields, event.fields );
     return event;
   };
-
-  saveEvents = events => axios.post( getMapGlobalMeta.ajaxUrl, getFormData( {
-    events,
-    security: getMapGlobalMeta.screendoorNonce,
-    action: 'save_screendoor_events_ajax',
-    postId: this.postId,
-    projectId: this.projectId
-  } ) ).then( resp => resp.data );
 }
 const screendoorProject = new ScreendoorProject();
 

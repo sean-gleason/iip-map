@@ -25,8 +25,6 @@ const EventDownloader = ( {
   const setPage = val => setPager( { page: val } );
   const setActive = val => setPager( { active: val } );
 
-  const requester = project.getEventsRequester( 100 );
-
   const log = ( item ) => {
     setLogs( logMessage( item, logsRef ) );
   };
@@ -85,6 +83,7 @@ const EventDownloader = ( {
 
   const nextPage = () => setPage( pager.page + 1 );
 
+  const requester = project.getEventsRequester( 100 );
   const doRequest = () => {
     requester( pager.page )
       .then( processEvents )

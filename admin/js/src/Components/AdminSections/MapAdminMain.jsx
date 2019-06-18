@@ -1,13 +1,13 @@
 import React from 'react';
 
-import ConfigureMap from '../../Containers/ConfigureMap';
+import ConfigureMapContainer from '../../Containers/ConfigureMap/ConfigureMapContainer';
 
 import screendoorProject from '../../utils/ScreendoorProject';
 import MapEvents from '../Metaboxes/MapEvents';
 
 const MapAdminMain = () => (
   <div className="iip-map-admin-column-wide">
-    <ConfigureMap />
+    <ConfigureMapContainer />
     <MapEvents project={ screendoorProject } />
   </div>
 );

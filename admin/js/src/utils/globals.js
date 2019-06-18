@@ -72,13 +72,6 @@ class MapMeta {
     return this._meta;
   }
 
-  get formType() {
-    if ( this._meta.formType ) {
-      return this._meta.formType;
-    }
-    return 'screendoor';
-  }
-
   get height() {
     if ( this._meta.height ) {
       return this._meta.height;
@@ -107,13 +100,6 @@ class MapMeta {
       return parseFloat( lng );
     }
     return 0;
-  }
-
-  get type() {
-    if ( this._meta.type ) {
-      return this._meta.type;
-    }
-    return 'ol';
   }
 
   get zoom() {
@@ -211,8 +197,8 @@ class MapFieldsMeta {
   }
 }
 
-const screendoor = inputFields.screendoor || {};
-export const getScreendoorFields = new MapFieldsMeta( screendoor );
+const rawFieldMeta = inputFields.screendoor || inputFields || {};
+export const getScreendoorFields = new MapFieldsMeta( rawFieldMeta );
 
 // Creates getters for card config
 class CardConfigMeta {
@@ -267,7 +253,7 @@ class CardConfigMeta {
   }
 }
 
-export const getScreendoorCard = screendoor.card ? new CardConfigMeta( screendoor.card ) : null;
+export const getScreendoorCard = rawFieldMeta.card ? new CardConfigMeta( rawFieldMeta.card ) : null;
 
 class EventsStatus {
   constructor( meta ) {

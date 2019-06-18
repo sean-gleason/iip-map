@@ -63,11 +63,13 @@ class IIP_Map {
     // The class responsible for defining all actions that occur in the admin area.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-iip-map-admin.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/map-data-post-type.php';
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/change-marker-data.php';
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/export-map-data.php';
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/save-map-data.php';
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/screendoor-save-metadata.php';
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/geocode.php';
+
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/geocoder.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/map-export.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/map-import.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/marker-update.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/save-events.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/ajax/save-fields.php';
 
     // The class responsible for defining all actions that occur in the public-facing side of the site.
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/embed-map.php';
@@ -83,7 +85,8 @@ class IIP_Map {
     $plugin_import_ajax = new IIP_Map_Import();
     $plugin_update_ajax = new IIP_Map_Marker_Update();
     $plugin_fields_ajax = new IIP_Map_Save_Fields();
-    $plugin_geocode_ajax = new IIP_Map_Geocode();
+    $plugin_events_ajax = new IIP_Map_Save_Events();
+    $plugin_geocode_ajax = new IIP_Map_Geocoder();
     $plugin_post_type = new IIP_Map_Post_Type();
 
     // Admin hooks
@@ -93,14 +96,14 @@ class IIP_Map {
     $this->loader->add_action( 'admin_notices', $plugin_admin, 'iip_map_localize_variables' );
     $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'iip_map_admin_enqueue' );
     // Ajax hooks
-    $this->loader->add_action( 'wp_ajax_map_ajax', $plugin_import_ajax, 'map_ajax' );
-    $this->loader->add_action( 'wp_ajax_export_data_ajax', $plugin_export_ajax, 'export_data_ajax' );
-    $this->loader->add_action( 'wp_ajax_save_screendoor_ajax', $plugin_fields_ajax, 'save_screendoor_ajax' );
-    $this->loader->add_action( 'wp_ajax_save_screendoor_events_ajax', $plugin_fields_ajax, 'save_screendoor_events_ajax' );
-    $this->loader->add_action( 'wp_ajax_geocode_events_ajax', $plugin_geocode_ajax, 'geocode_events_ajax' );
-    $this->loader->add_action( 'wp_ajax_get_marker_ajax', $plugin_update_ajax, 'get_marker_ajax' );
-    $this->loader->add_action( 'wp_ajax_update_marker_ajax', $plugin_update_ajax, 'update_marker_ajax' );
-    $this->loader->add_action( 'wp_ajax_delete_marker_ajax', $plugin_update_ajax, 'delete_marker_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_ajax', $plugin_import_ajax, 'map_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_export_data_ajax', $plugin_export_ajax, 'export_data_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_save_fields_ajax', $plugin_fields_ajax, 'save_fields_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_save_events_ajax', $plugin_events_ajax, 'save_events_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_geocode_events_ajax', $plugin_geocode_ajax, 'geocode_events_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_get_marker_ajax', $plugin_update_ajax, 'get_marker_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_update_marker_ajax', $plugin_update_ajax, 'update_marker_ajax' );
+    $this->loader->add_action( 'wp_ajax_iip_map_delete_marker_ajax', $plugin_update_ajax, 'delete_marker_ajax' );
     // Post type hooks
     $this->loader->add_action( 'init', $plugin_post_type, 'create_map_post_type' );
     $this->loader->add_action( 'save_post', $plugin_post_type, 'save_map_meta', 10, 2 );
