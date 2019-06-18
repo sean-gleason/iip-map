@@ -24,6 +24,7 @@ module.exports = {
       }
     ],
     'jsx-a11y/label-has-for': false,
+    'lines-between-class-members': ["error", "always", { exceptAfterSingleLine: true }],
     'max-len': [1, 120, 2, { ignoreComments: true }],
     'no-console': 0,
     'no-param-reassign': 0,

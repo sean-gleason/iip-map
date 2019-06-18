@@ -3,12 +3,14 @@
 export const collapseArr = ( arr ) => {
   const nameArr = [];
 
-  arr.forEach( ( el ) => {
-    const n = el.name;
-    nameArr.push( n );
-    return nameArr;
-  } );
+  if ( arr && Array.isArray( arr ) ) {
+    arr.forEach( ( el ) => {
+      const n = el.name;
+      nameArr.push( n );
+    } );
+  } else {
+    console.warn( 'arr is not an array', arr );
+  }
 
-  const collaped = nameArr.join( ', ' );
-  return collaped;
+  return nameArr.join( ', ' );
 };
