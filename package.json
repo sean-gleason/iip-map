@@ -14,12 +14,13 @@
   "homepage": "https://github.com/IIP-Design/iip-map#readme",
   "scripts": {
     "dev:admin": "npm run dev --prefix ./admin/js",
+    "dev:front": "npm run dev --prefix ./public",
     "build": "npm run build:admin && npm run build:front",
     "build:admin": "npm run build --prefix ./admin/js && npm run cssAdmin",
-    "build:front": "npm run build --prefix ./public/js",
+    "build:front": "npm run build --prefix ./public",
     "cssAdmin": "postcss admin/css/iip-map-admin.css -u autoprefixer -r",
     "setup:admin": "npm install --prefix ./admin/js",
-    "setup:front": "npm install --prefix ./public/js",
+    "setup:front": "npm install --prefix ./public",
     "setup": "npm install && npm run setup:admin && npm run setup:front",
     "version": "node -e 'require(\"./version.js\").versionBump()'"
   },
