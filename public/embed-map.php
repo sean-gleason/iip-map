@@ -51,8 +51,8 @@ class IIP_Map_Embed {
       'map_zoom' => $zoom,
       'map_center_lat' => $lat,
       'map_center_lng' => $lng,
-      'mapping' => $mapping['screendoor']['mapping'],
-      'card' => $mapping['screendoor']['card'],
+      'mapping' => $mapping['mapping'],
+      'card' => $mapping['card'],
     ));
 
     if ($type == 'mapbox' || $type == '') {
