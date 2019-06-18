@@ -30,6 +30,7 @@ class IIP_Map_Save_Fields {
         $fields_meta['screendoor']['mapping']['name_arr'] = $mapping->name;
         $fields_meta['screendoor']['mapping']['other_arr'] = $mapping->other;
         $fields_meta['screendoor']['mapping']['fields_obj'] = $mapping->fields;
+        $fields_meta['screendoor']['mapping']['topic_arr'] = $mapping->topic;
       } else {
         $fields_meta['screendoor']['mapping'] = null;
       }
@@ -89,10 +90,11 @@ class IIP_Map_Save_Fields {
       $fields = $wpdb->_real_escape( serialize( $event->fields ) );
       $title = $wpdb->_real_escape( $event->title );
       $loc = $wpdb->_real_escape( $event->location );
-      $values[] = "($id, $event->ext_id, $project_id, '$title', '$loc','$fields')";
+      $topic = $wpdb->_real_escape( $event->topic );
+      $values[] = "($id, $event->ext_id, $project_id, '$title', '$loc','$topic','$fields')";
     }
     $values = implode( ',', $values );
-    $query = "INSERT INTO {$wpdb->prefix}iip_map_data (post_id, ext_id, project_id, title, location, fields) VALUES $values ON DUPLICATE KEY UPDATE title=VALUES(title), fields=VALUES(fields), location=VALUES(location)";
+    $query = "INSERT INTO {$wpdb->prefix}iip_map_data (post_id, ext_id, project_id, title, location, topic, fields) VALUES $values ON DUPLICATE KEY UPDATE title=VALUES(title), fields=VALUES(fields), location=VALUES(location)";
     $created = $wpdb->query( $query );
     $updated = count( $events ) - $created;
 

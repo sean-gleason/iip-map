@@ -3,9 +3,10 @@ import * as PropTypes from 'prop-types';
 
 import { DragDropContext } from 'react-beautiful-dnd';
 import Column from '../../../Components/Column/Column';
-import ItemGroup from '../../../Components/Column/ItemGroup';
+import ItemGroupDroppable from '../../../Components/Column/ItemGroupDroppable';
 import TabControls from './TabControls';
-
+import ItemGroup from '../../../Components/Column/ItemGroup';
+import ItemGroupSelect from '../../../Components/Column/ItemGroupSelect';
 
 const MapFields = ( {
   form, mapping, doSave, doNext, getDefaultMapping, isDirty, setDirty, needsUpdate, setUpdated
@@ -74,13 +75,16 @@ const MapFields = ( {
   };
 
   const checkErrors = () => {
-    const { nameFields, locationFields } = state;
+    const { nameFields, locationFields, topicFields } = state;
     const errs = [];
     if ( !nameFields.length ) {
       errs.push( 'name' );
     }
     if ( !locationFields.length ) {
       errs.push( 'location' );
+    }
+    if ( !topicFields.length ) {
+      errs.push( 'topic' );
     }
     setErrors( errs );
     return errs.length !== 0;
@@ -93,6 +97,11 @@ const MapFields = ( {
   const handleRevert = () => {
     setState( mapping );
     setDirty( false );
+  };
+
+  const handleTopic = ( topicIds ) => {
+    setState( { ...state, topicFields: topicIds.map( id => state.fields[id] ) } );
+    setDirty( true );
   };
 
   const handleSave = () => {
@@ -124,8 +133,14 @@ const MapFields = ( {
     form, mapping, needsUpdate
   ] );
 
+  useEffect( () => {
+    if ( isDirty ) {
+      checkErrors();
+    }
+  }, [state] );
+
   const {
-    availableFields, nameFields, locationFields, dateFields, timeFields, additionalFields
+    availableFields, nameFields, locationFields, dateFields, timeFields, additionalFields, topicFields
   } = state;
 
   return (
@@ -134,27 +149,43 @@ const MapFields = ( {
         <div className="iip-map-admin-screendoor-dragdrop">
           <DragDropContext onDragEnd={ onDragEnd }>
             <Column title="Available Fields">
-              <ItemGroup data={ availableFields } id="availableFields" />
+              <ItemGroupDroppable data={ availableFields } id="availableFields" />
             </Column>
-            <Column title="Map To:">
-              <ItemGroup
-                required
-                data={ nameFields }
-                id="nameFields"
-                title="Item Name:"
-                hasError={ errors.includes( 'name' ) }
-              />
-              <ItemGroup
-                required
-                data={ locationFields }
-                id="locationFields"
-                title="Location:"
-                hasError={ errors.includes( 'location' ) }
-              />
-              <ItemGroup data={ dateFields } id="dateFields" title="Date:" />
-              <ItemGroup data={ timeFields } id="timeFields" title="Time:" />
-              <ItemGroup data={ additionalFields } id="additionalFields" title="Additional Data:" />
-            </Column>
+            <div className="iip-map-admin-column-vertical">
+              <Column title="Map Topic (duplicates allowed):">
+                <Fragment>
+                  <ItemGroupSelect
+                    required
+                    data={ availableFields }
+                    selected={ topicFields }
+                    id="topicField"
+                    title="Topic:"
+                    subtext="Fields mapped here can also be mapped to other sections."
+                    hasError={ errors.includes( 'topic' ) }
+                    handleTopic={ handleTopic }
+                  />
+                </Fragment>
+              </Column>
+              <Column title="Map To:">
+                <ItemGroupDroppable
+                  required
+                  data={ nameFields }
+                  id="nameFields"
+                  title="Item Name:"
+                  hasError={ errors.includes( 'name' ) }
+                />
+                <ItemGroupDroppable
+                  required
+                  data={ locationFields }
+                  id="locationFields"
+                  title="Location:"
+                  hasError={ errors.includes( 'location' ) }
+                />
+                <ItemGroupDroppable data={ dateFields } id="dateFields" title="Date:" />
+                <ItemGroupDroppable data={ timeFields } id="timeFields" title="Time:" />
+                <ItemGroupDroppable data={ additionalFields } id="additionalFields" title="Additional Data:" />
+              </Column>
+            </div>
           </DragDropContext>
         </div>
       </div>

@@ -209,6 +209,13 @@ class MapFieldsMeta {
     }
     return [];
   }
+
+  get topicArr() {
+    if ( this._meta.topic_arr ) {
+      return this._meta.topic_arr;
+    }
+    return [];
+  }
 }
 
 const screendoor = inputFields.screendoor || {};
