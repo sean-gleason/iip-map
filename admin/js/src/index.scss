@@ -184,6 +184,11 @@ h2.iip-map-admin-metabox-header {
   margin-bottom: .5em;
   background-color: #FFFFFF;
 }
+.iip-map-admin-column-item__select {
+  > select {
+    width: 100%;
+  }
+}
 
 .iip-map-admin-card-preview-meta {
   display: flex;
