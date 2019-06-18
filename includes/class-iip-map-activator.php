@@ -24,6 +24,7 @@ class IIP_Map_Activator {
               ext_id int(32) NOT NULL,
               title varchar(255),
               location varchar(255),
+              topic varchar(255),
               location_geo varchar(255) DEFAULT NULL,
               lat float DEFAULT NULL,
               lng float DEFAULT NULL,

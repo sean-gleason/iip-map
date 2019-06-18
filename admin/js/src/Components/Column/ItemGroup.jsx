@@ -1,39 +1,28 @@
 import React from 'react';
-import { array, bool, string } from 'prop-types';
-import { Droppable } from 'react-beautiful-dnd';
-
-import InnerList from './InnerList';
+import * as PropTypes from 'prop-types';
 
 const ItemGroup = ( {
-  data, id, required, hasError, title
+  children, required, hasError, title, subtext
 } ) => (
   <div className={ `iip-map-admin-column-item-group${hasError ? ' invalid' : ''}` }>
     <div className="iip-map-admin-column-item-group-container">
+      { !!subtext && (
+        <div className="iip-map-admin-column-item-group__subtext">{ subtext }</div>
+      ) }
       { title && (
         <strong data-required={ required }>{ title }</strong>
       ) }
-      <Droppable droppableId={ id }>
-        { provided => (
-          <div
-            className="iip-map-admin-column-list"
-            ref={ provided.innerRef }
-            { ...provided.droppableProps }
-          >
-            <InnerList data={ data } />
-            { provided.placeholder }
-          </div>
-        ) }
-      </Droppable>
+      { children }
     </div>
   </div>
 );
 
 ItemGroup.propTypes = {
-  data: array,
-  id: string,
-  required: bool,
-  hasError: bool,
-  title: string
+  children: PropTypes.element,
+  required: PropTypes.bool,
+  hasError: PropTypes.bool,
+  title: PropTypes.string,
+  subtext: PropTypes.string
 };
 
 ItemGroup.defaultProps = {

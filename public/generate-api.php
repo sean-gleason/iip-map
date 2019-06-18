@@ -80,6 +80,7 @@ class IIP_Map_API_Route extends WP_REST_Controller {
 		  'ext_id' => $row->ext_id,
 		  'title' => $row->title,
 		  'location' => $row->location,
+		  'topic' => $row->topic,
 		  'fields' => unserialize( $row->fields ),
 		 ],
 		];

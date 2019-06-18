@@ -23,7 +23,8 @@ export class ScreendoorProject {
       form: this.form,
       locationFields: getScreendoorFields.locationArr,
       nameFields: getScreendoorFields.nameArr,
-      timeFields: getScreendoorFields.timeArr
+      timeFields: getScreendoorFields.timeArr,
+      topicFields: getScreendoorFields.topicArr
     } : {};
     this.card = getScreendoorCard ? {
       titleSection: getScreendoorCard.title,
@@ -86,7 +87,7 @@ export class ScreendoorProject {
       dataObj.deleteEvents = 1;
       this.mapping = saveData.mapping;
       const {
-        fields, additionalFields, availableFields, dateFields, locationFields, nameFields, timeFields
+        fields, additionalFields, availableFields, dateFields, locationFields, nameFields, timeFields, topicFields
       } = this.mapping;
       dataObj.mapping = {
         fields,
@@ -95,8 +96,10 @@ export class ScreendoorProject {
         locationFields,
         nameFields,
         additionalFields,
-        timeFields
+        timeFields,
+        topicFields
       };
+      dataObj.topic = topicFields.map( f => f.field ).join( ', ' );
       if ( !( 'card' in dataObj ) ) {
         // if a card previously existed, save a default card based on existing and new mapping
         // otherwise, save null
@@ -203,7 +206,8 @@ export class ScreendoorProject {
       dateFields: [],
       locationFields: [],
       nameFields: [],
-      timeFields: []
+      timeFields: [],
+      topicFields: []
     };
   };
 
@@ -325,6 +329,7 @@ export class ScreendoorProject {
     } );
     event.title = this.parseSection( this.mapping.nameFields, event.fields );
     event.location = this.parseSection( this.mapping.locationFields, event.fields );
+    event.topic = this.parseSection( this.mapping.topicFields, event.fields );
     return event;
   };
 }

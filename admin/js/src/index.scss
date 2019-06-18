@@ -118,7 +118,19 @@ h2.iip-map-admin-metabox-header {
   border: 1px solid lightgrey;
   border-radius: 2px;
   flex-basis: 50%;
+  flex-grow: 0;
   margin: .5em;
+}
+
+.iip-map-admin-column-vertical {
+  flex-basis: 50%;
+  margin: .5em;
+  flex-grow: 0;
+  width: 50%;
+
+  .iip-map-admin-column-container {
+    margin: 0 0 0.5em;
+  }
 }
 
 .iip-map-admin-column-title {
@@ -153,6 +165,10 @@ h2.iip-map-admin-metabox-header {
 
 .iip-map-admin-column-item-group {
   min-height: 100px;
+
+  &__subtext {
+    margin-bottom: 0.5em;
+  }
 }
 
 [data-required="true"]:after {
@@ -167,6 +183,11 @@ h2.iip-map-admin-metabox-header {
   padding: .5em;
   margin-bottom: .5em;
   background-color: #FFFFFF;
+}
+.iip-map-admin-column-item__select {
+  > select {
+    width: 100%;
+  }
 }
 
 .iip-map-admin-card-preview-meta {
