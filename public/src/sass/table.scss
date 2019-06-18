@@ -1,26 +1,53 @@
 .map-wrapper {
+    font-family: Arial, sans-serif;
     position: relative;
+
+    label {
+        color: #1b2953;
+        display: block;
+        font-size: 10px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
 
     .filter-group {
         background-color: #fff;
-        padding: 30px 45px;
+        padding: 20px 30px;
+        left: 30px;
         position: absolute;
+        top: 30px;
         z-index: 9;
         select {
             background: #fff;
             background-position: 97% center;
             background-repeat: no-repeat;
-            border: 2px solid #000;
+            border: none;
             border-radius: 0;
             cursor: pointer;
             display: block;
-            font-size: 20px;
-            padding: 5px 35px 5px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px 30px 5px 0;
             width: 100%;
             z-index: 2;
             -webkit-appearance: none;
         }
     }
+}
+
+.table-wrapper {
+    padding: 0 40px;
+}
+
+#toggle-table {
+    border: none;
+    background: #18244c;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+    padding: 15px;
 }
 
 #event-list,
@@ -33,27 +60,34 @@
     &.hidden {
         display: none;
     }
-    input {
-        display: block;
-        padding: 10px 15px;
-    }
 }
 
 .event-table {
+    border-bottom: 1px solid #d5d8e5;
+    border-top: 1px solid #d5d8e5;
+    color: #5f636f;
+
     &__filter {
+        background-position: 90% 50%;
+        background-repeat: no-repeat;
+        display: block;
+        font-size: 14px;
+        border: 1px solid #d5d8e5;
         margin-bottom: 20px;
+        padding: 10px 15px;
     }
 
     &__row {
         align-items: center;
         display: block;
-        font-size: 18px;
-        padding: 10px 15px;
+        font-size: 16px;
+        padding: 30px 0;
          + .event-table__row {
-             border-top: 1px solid #cdcdcd;
+             border-top: 1px solid #d5d8e5;
          }
 
         h3 {
+            color: #18244c;
             font-size: 20px;
             line-height: 28px;
             margin: 0;
@@ -61,12 +95,15 @@
     }
 
     .column-labels {
-        border-bottom: 1px solid #cdcdcd;
+        border-bottom: 1px solid #d5d8e5;
+        color: #18244c;
         display: none;
-        padding: 10px 15px;
+        font-size: 12px;
+        padding: 25px 0;
+        text-transform: uppercase;
         width: 100%;
         .label {
-            width: 25%;
+            width: 20%;
         }
     }
 }
@@ -80,11 +117,7 @@
         &__row {
             display: flex;
             > * {
-                width: 25%;
-            }
-
-            h3 {
-                font-size: 16px;
+                width: 20%;
             }
         }
     }
