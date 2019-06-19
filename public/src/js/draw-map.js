@@ -26,7 +26,8 @@ const map = new mapboxgl.Map( {
 // Disable zoom on scroll
 map.scrollZoom.disable();
 // Add zoom and rotation controls to the map.
-map.addControl( new mapboxgl.NavigationControl( { showCompass: false } ) );
+const mapNav = new mapboxgl.NavigationControl( { showCompass: false } );
+map.addControl(mapNav, 'bottom-right');
 
 // Pull map data from iip-maps API
 const mapDataEndpoint = `/wp-json/iip-map/v1/maps/${mapId}`;
@@ -149,8 +150,8 @@ const buildAdditional = ( field ) => {
 function drawLayers( m ) {
   const layerIDArray = [];
   m.features.forEach( ( marker ) => {
-    const eventID = marker.properties.ext_id;
-    const layerID = `poi-${eventID}`;
+    const eventTopic = marker.properties.topic;
+    const layerID = `${eventTopic}`;
 
     // Add a layer for this symbol type if it hasn't been added already.
     if ( !map.getLayer( layerID ) ) {
@@ -165,7 +166,7 @@ function drawLayers( m ) {
           'circle-stroke-color': '#fff'
         },
         filter: [
-          '==', 'ext_id', eventID
+          '==', 'topic', eventTopic
         ]
       } );
     }
@@ -306,19 +307,6 @@ mapDataXHR.onload = function loadData() {
       'text-field': '{point_count_abbreviated}',
       'text-font': ['Arial Unicode MS Bold'],
       'text-size': 12
-    }
-  } );
-
-  map.addLayer( {
-    id: 'unclustered-point',
-    type: 'circle',
-    source: 'events',
-    filter: ['!', ['has', 'point_count']],
-    paint: {
-      'circle-color': '#003B55',
-      'circle-radius': 5,
-      'circle-stroke-width': 1,
-      'circle-stroke-color': '#fff'
     }
   } );
 };
