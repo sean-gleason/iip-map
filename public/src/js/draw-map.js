@@ -97,10 +97,9 @@ const buildSection = ( field, sectionName = '' ) => {
         ${card.title.preTitle} ${field} ${card.title.postTitle}</h3>` : '';
     case 'location':
       return card.location.toggled ? `<div class="info-window__location">
-        <h4>${card.location.heading}</h4>${field}</div>` : '';
+        <h4>${card.location.heading}</h4><div class="info-window__field">${field}</div></div>` : '';
     case 'date':
-      return card.date.toggled ? `<div class="info-window__date">
-        <h4>${card.date.heading}</h4>${field[0].month}/${field[0].day}/${field[0].year}</div>` : '';
+      return card.date.toggled ? `<h4>${card.date.heading}</h4><div class="info-window__date">${field[0].month}/${field[0].day}/${field[0].year}</div>` : '';
     case 'time':
       if ( card.time.toggled === true ) {
         if ( card.time.timeFormat === '24hour' ) {
@@ -114,7 +113,7 @@ const buildSection = ( field, sectionName = '' ) => {
         return '';
       }
       break;
-    default: return '';
+    default: return `<div class="info-window__general">${field}</div>`;
   }
 };
 
@@ -130,17 +129,17 @@ const buildAdditional = ( field ) => {
     added.forEach( ( o, i ) => {
       if ( fieldArr[i].checked ) {
         markup += `<div class="info-window__additional">
-        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i].checked} ${o.inlinePost}</div>`;
+        <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i].checked} ${o.inlinePost}</div></div>`;
       } else {
         markup += `<div class="info-window__additional">
-        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>`;
+        <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div></div>`;
       }
     } );
   } else {
     fieldArr = field.split( ',' );
     added.forEach( ( o, i ) => {
       markup += `<div class="info-window__additional">
-        <h4>${o.heading}</h4>${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>`;
+        <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div></div>`;
     } );
   }
   return markup;
@@ -186,6 +185,7 @@ function drawLayers( m ) {
 
       // map selected field data to available field object
       const titleField = parseSection( mapping.name_arr, fieldsObj );
+      const topicField = parseSection( mapping.topic_arr, fieldsObj );
       const locationField = parseSection( mapping.location_arr, fieldsObj );
       const dateField = parseSection( mapping.date_arr, fieldsObj );
       const timeField = parseSection( mapping.time_arr, fieldsObj );
@@ -199,8 +199,23 @@ function drawLayers( m ) {
 
       new mapboxgl.Popup( { offset: 25 } )
         .setLngLat( coordinates )
-        .setHTML( `<div class="info-window">
-            ${buildSection( titleField, 'title' )}${buildSection( locationField, 'location' )}${buildSection( dateField, 'date' )}${buildSection( timeField, 'time' )}${buildAdditional( additionalData )}</div>` )
+        .setHTML( `
+                 <div class="info-window">
+                   <div class="info-window__header">
+                    ${buildSection( titleField, 'title' )}
+                    ${buildSection( topicField, 'topic' )}
+                   </div>
+                   <div class="info-window__body">
+                    ${buildSection( locationField, 'location' )}
+                    <div class="info-window__date-time">
+                      ${buildSection( dateField, 'date' )}
+                      ${buildSection( timeField, 'time' )}
+                    </div>
+                   </div>
+                   <div class="info-window__footer">
+                    ${buildAdditional( additionalData )}
+                   </div>
+                 </div>` )
         .addTo( map );
     } );
 

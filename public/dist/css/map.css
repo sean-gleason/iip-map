@@ -1,8 +1,61 @@
-.info-window h4 {
-  margin: 0 0 0 0; }
+.mapboxgl-popup {
+  max-width: 300px !important;
+  width: 100%; }
 
-.info-window > div {
-  margin-top: 10px; }
-  .info-window > div.info-window__date + .info-window__time {
-    margin-top: 0; }
+.mapboxgl-popup-content {
+  padding: 10px 30px 25px; }
+
+.info-window {
+  color: #646873;
+  font-size: 14px; }
+  .info-window h3 {
+    font-size: 16px; }
+  .info-window h3,
+  .info-window h4 {
+    color: #1b2953; }
+  .info-window h4 {
+    font-size: 12px;
+    margin: 0 0 0 0;
+    text-transform: uppercase; }
+  .info-window__body {
+    padding: 15px 0; }
+    .info-window__body > div {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between; }
+      .info-window__body > div > h4 {
+        width: 25%; }
+      .info-window__body > div > h4 + * {
+        width: 64%; }
+      @supports (display: grid) {
+        .info-window__body > div.info-window__date-time {
+          display: grid;
+          grid-template-columns: 75px 1fr 1fr; } }
+      .info-window__body > div.info-window__date-time > * {
+        width: auto; }
+      .info-window__body > div.info-window__date-time .info-window__date {
+        justify-self: end; }
+      .info-window__body > div.info-window__date-time .info-window__time:before {
+        content: '|';
+        display: inline-block;
+        margin-left: 5px;
+        padding-right: 5px; }
+      .info-window__body > div + div {
+        margin-top: 10px; }
+      .info-window__body > div.info-window__date + .info-window__time {
+        margin-top: 0; }
+  .info-window__body, .info-window__header {
+    border-bottom: 1px solid #d7dae6; }
+  .info-window__header {
+    color: #1b2953;
+    padding-bottom: 15px; }
+  .info-window__footer {
+    padding: 15px 0; }
+  .info-window__title {
+    margin-bottom: 5px; }
+    .info-window__title + .info-window__general {
+      margin-top: 0; }
 
