@@ -144,7 +144,7 @@ class Table extends Component {
 
     return (
       <React.Fragment>
-        <input style={ { backgroundImage: `url(${SearchIcon})` } } className="event-table__filter" placeholder="Type to search" value={ filter } onChange={ this.handleChange } />
+        <div className="table-controls"><input style={ { backgroundImage: `url(${SearchIcon})` } } className="event-table__filter" placeholder="Type to search" value={ filter } onChange={ this.handleChange } /></div>
         <div className="event-table">
           { error ? <p>{ error.message }</p> : null }
           { !isLoading ? (
@@ -162,13 +162,14 @@ class Table extends Component {
             filteredData.map( ( event ) => {
               const { fields } = event.properties;
               const titleField = parseSection( mapping.name_arr, fields );
+              const topicField = parseSection( mapping.topic_arr, fields );
               const dateField = parseSection( mapping.date_arr, fields );
               const timeField = parseSection( mapping.time_arr, fields );
               const additionalData = parseSection( mapping.other_arr, fields );
               return (
                 <div className="event-table__row event">
                   <h3>{ titleField }</h3>
-                  <div className="topic">{ event.event_date }</div>
+                  <div className="topic">{ event.properties.topic }</div>
                   <div className="date">
                     { buildSection( dateField, 'date' ) }
                     <br />
