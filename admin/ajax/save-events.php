@@ -19,10 +19,11 @@ class IIP_Map_Save_Events {
       $fields = $wpdb->_real_escape( serialize( $event->fields ) );
       $title = $wpdb->_real_escape( $event->title );
       $loc = $wpdb->_real_escape( $event->location );
-      $values[] = "($id, $event->ext_id, $project_id, '$title', '$loc','$fields')";
+      $topic = $wpdb->_real_escape( $event->topic );
+      $values[] = "($id, $event->ext_id, $project_id, '$title', '$topic', '$loc', '$fields')";
     }
     $values = implode( ',', $values );
-    $query = "INSERT INTO $this->table_name (post_id, ext_id, project_id, title, location, fields) VALUES $values ON DUPLICATE KEY UPDATE title=VALUES(title), fields=VALUES(fields), location=VALUES(location)";
+    $query = "INSERT INTO $this->table_name (post_id, ext_id, project_id, title, topic, location, fields) VALUES $values ON DUPLICATE KEY UPDATE title=VALUES(title), topic=VALUES(topic), fields=VALUES(fields), location=VALUES(location)";
     $created = $wpdb->query( $query );
     $updated = count( $events ) - $created;
 
