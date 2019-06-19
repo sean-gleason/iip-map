@@ -138,9 +138,8 @@ class Table extends Component {
       isLoading, events, error, filter
     } = this.state;
     const lowercasedFilter = filter.toLowerCase();
-    const filteredData = events.filter( ( event ) => { // eslint-disable-line arrow-body-style
-      return Object.keys( event ).some( key => JSON.stringify( event[key] ).toLowerCase().includes( lowercasedFilter ) );
-    } );
+    const filteredData = events.filter( event => Object.keys( event )
+      .some( key => JSON.stringify( event[key] ).toLowerCase().includes( lowercasedFilter ) ) );
 
     return (
       <React.Fragment>
