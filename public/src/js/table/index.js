@@ -139,7 +139,7 @@ class Table extends Component {
     } = this.state;
     const lowercasedFilter = filter.toLowerCase();
     const filteredData = events.filter( ( event ) => { // eslint-disable-line arrow-body-style
-      return Object.keys( event ).some( key => event[key].toLowerCase().includes( lowercasedFilter ) );
+      return Object.keys( event ).some( key => JSON.stringify( event[key] ).toLowerCase().includes( lowercasedFilter ) );
     } );
 
     return (
@@ -162,7 +162,6 @@ class Table extends Component {
             filteredData.map( ( event ) => {
               const { fields } = event.properties;
               const titleField = parseSection( mapping.name_arr, fields );
-              const topicField = parseSection( mapping.topic_arr, fields );
               const dateField = parseSection( mapping.date_arr, fields );
               const timeField = parseSection( mapping.time_arr, fields );
               const additionalData = parseSection( mapping.other_arr, fields );
