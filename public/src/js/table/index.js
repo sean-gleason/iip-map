@@ -92,10 +92,13 @@ const buildAdditional = ( field ) => {
     fieldArr = field;
     // pull out field id
     added.forEach( ( o, i ) => {
-      if ( fieldArr[i].checked ) {
-        markup += `${fieldArr[i].checked}`;
-      } else {
-        markup += `${fieldArr[i]}`;
+      // check that field has value before proceeding
+      if ( fieldArr[i] ) {
+        if ( fieldArr[i].checked ) {
+          markup += `${fieldArr[i]}`;
+        } else {
+          markup += `${fieldArr[i]}`;
+        }
       }
     } );
   } else {
@@ -164,6 +167,7 @@ class Table extends Component {
               const dateField = parseSection( mapping.date_arr, fields );
               const timeField = parseSection( mapping.time_arr, fields );
               const additionalData = parseSection( mapping.other_arr, fields );
+              console.log(additionalData);
               return (
                 <div className="event-table__row event">
                   <h3>{ titleField }</h3>
