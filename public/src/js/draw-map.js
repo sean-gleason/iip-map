@@ -149,10 +149,16 @@ const buildAdditional = ( field ) => {
 // add layers (markers) to the map
 function drawLayers( m ) {
   const layerIDArray = [];
+  let layersUnique = [];
   m.features.forEach( ( marker ) => {
     const eventTopic = marker.properties.topic;
     const layerID = `${eventTopic}`;
+    layerIDArray.push( layerID );
 
+    layersUnique = layerIDArray.filter( ( item, index ) => layerIDArray.indexOf( item ) >= index );
+  } );
+
+  layersUnique.forEach( ( layerID ) => {
     // Add a layer for this symbol type if it hasn't been added already.
     if ( !map.getLayer( layerID ) ) {
       map.addLayer( {
@@ -166,17 +172,10 @@ function drawLayers( m ) {
           'circle-stroke-color': '#fff'
         },
         filter: [
-          '==', 'topic', eventTopic
+          '==', 'topic', layerID
         ]
       } );
     }
-
-    layerIDArray.push( layerID );
-    // build out filter <select> by adding each layerID as <option>
-    const option = document.createElement( 'option' );
-    option.innerHTML = layerID;
-    option.value = layerID;
-    fragment.appendChild( option );
 
     // display pop up when a marker is clicked
     map.on( 'click', layerID, ( e ) => {
@@ -219,6 +218,12 @@ function drawLayers( m ) {
                  </div>` )
         .addTo( map );
     } );
+
+    // build out filter <select> by adding each layerID as <option>
+    const option = document.createElement( 'option' );
+    option.innerHTML = layerID;
+    option.value = layerID;
+    fragment.appendChild( option );
 
     // Change the cursor to a pointer when the mouse is over the layer
     map.on( 'mouseenter', layerID, () => {
