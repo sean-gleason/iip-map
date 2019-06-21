@@ -128,12 +128,15 @@ const buildAdditional = ( field ) => {
     fieldArr = field;
     // pull out field id
     added.forEach( ( o, i ) => {
-      if ( fieldArr[i].checked ) {
-        markup += `<div class="info-window__additional">
+      // check that field contains data before proceeding
+      if ( fieldArr[i] ) {
+        if ( fieldArr[i].checked ) {
+          markup += `<div class="info-window__additional">
         <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i].checked} ${o.inlinePost}</div></div>`;
-      } else {
-        markup += `<div class="info-window__additional">
+        } else {
+          markup += `<div class="info-window__additional">
         <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div></div>`;
+        }
       }
     } );
   } else {
@@ -179,6 +182,7 @@ function drawLayers( m ) {
 
     // display pop up when a marker is clicked
     map.on( 'click', layerID, ( e ) => {
+      console.count(e.features);
       const coordinates = e.features[0].geometry.coordinates.slice();
       const { fields } = e.features[0].properties;
       const fieldsObj = JSON.parse( fields );
