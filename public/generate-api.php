@@ -64,13 +64,16 @@ class IIP_Map_API_Route extends WP_REST_Controller {
     $query = "SELECT * FROM $table_name WHERE post_id = $id";
     $list = $wpdb->get_results($query);
 	  $events = [];
+	  $count = 0;
 	  foreach ( $list as $row ) {
+	  	$count++;
 		$events[] = [
 		 'type' => 'Feature',
 		 'geometry' => [
 		  'type' => 'Point',
 		  'coordinates' => [
-			  0 => $row->lat,
+			  // prevent events from having exact same coordinates
+			  0 => strval( $row->lat + ( $count / 15000 ) ),
 			  1 => $row->lng,
 		  ],
 		 ],
