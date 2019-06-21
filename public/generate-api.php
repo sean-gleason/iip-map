@@ -70,8 +70,8 @@ class IIP_Map_API_Route extends WP_REST_Controller {
 		 'geometry' => [
 		  'type' => 'Point',
 		  'coordinates' => [
-			  0 => $row->lng,
-			  1 => $row->lat,
+			  0 => $row->lat,
+			  1 => $row->lng,
 		  ],
 		 ],
 		 'properties' => [

@@ -27,7 +27,15 @@ const map = new mapboxgl.Map( {
 map.scrollZoom.disable();
 // Add zoom and rotation controls to the map.
 const mapNav = new mapboxgl.NavigationControl( { showCompass: false } );
-map.addControl(mapNav, 'bottom-right');
+map.addControl( mapNav, 'bottom-right' );
+
+// Add custom pin to map
+map.loadImage( '/wp-content/plugins/iip-map/public/images/location-pin.png', ( error, image ) => {
+  if ( error ) {
+    throw error;
+  }
+  map.addImage( 'pin', image );
+} );
 
 // Pull map data from iip-maps API
 const mapDataEndpoint = `/wp-json/iip-map/v1/maps/${mapId}`;
@@ -166,13 +174,12 @@ function drawLayers( m ) {
     if ( !map.getLayer( layerID ) ) {
       map.addLayer( {
         id: layerID,
-        type: 'circle',
+        type: 'symbol',
         source: 'events',
-        paint: {
-          'circle-color': '#003B55',
-          'circle-radius': 5,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff'
+        layout: {
+          'icon-image': 'pin',
+          'icon-allow-overlap': false,
+          'icon-size': 1
         },
         filter: [
           '==', 'topic', layerID
@@ -182,7 +189,6 @@ function drawLayers( m ) {
 
     // display pop up when a marker is clicked
     map.on( 'click', layerID, ( e ) => {
-      console.count(e.features);
       const coordinates = e.features[0].geometry.coordinates.slice();
       const { fields } = e.features[0].properties;
       const fieldsObj = JSON.parse( fields );
