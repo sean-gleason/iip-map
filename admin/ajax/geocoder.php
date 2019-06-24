@@ -34,7 +34,8 @@ class IIP_Map_Geocoder {
       }
       $attempted++;
       try {
-          $response = wp_remote_get("{$api_url}{$event->location}.json?access_token=$api_key");
+          $url = $api_url . urlencode($event->location ) . ".json?access_token=$api_key";
+          $response = wp_remote_get( $url );
           if ($response instanceof WP_Error) {
               $event->reason = $response->get_error_message();
               $incomplete[] = $event;
