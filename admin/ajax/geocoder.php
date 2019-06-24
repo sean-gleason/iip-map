@@ -33,27 +33,37 @@ class IIP_Map_Geocoder {
         continue;
       }
       $attempted++;
-      $response = wp_remote_get( "{$api_url}{$event->location}.json?access_token=$api_key" );
-      $loc = $wpdb->_real_escape( $event->location );
-      $body = json_decode( $response['body'] );
-      if ( count( $body->features ) > 0 ) {
-        $feature = $body->features[0];
-        $lat = $feature->center[0];
-        $lng = $feature->center[1];
-        $geos[] = [
-          'loc' => $event->location,
-          'lat' => $lat,
-          'lng' => $lng,
-          'place_name' => $feature->place_name
-        ];
-        $query = "UPDATE $this->table_name SET location_geo = '$loc', lat = $lat, lng = $lng WHERE id = $event->id";
-        $wpdb->query( $query );
-        $geocoded++;
-      } else {
-        $query = "UPDATE $this->table_name SET location_geo = '$loc', lat = NULL, lng = NULL WHERE id = $event->id";
-        $wpdb->query( $query );
-        $event->reason = isset( $body->message ) ? $body->message : 'Not found';
-        $incomplete[] = $event;
+      try {
+          $response = wp_remote_get("{$api_url}{$event->location}.json?access_token=$api_key");
+          if ($response instanceof WP_Error) {
+              $event->reason = $response->get_error_message();
+              $incomplete[] = $event;
+              continue;
+          }
+          $loc = $wpdb->_real_escape($event->location);
+          $body = json_decode($response['body']);
+          if (count($body->features) > 0) {
+              $feature = $body->features[0];
+              $lat = $feature->center[0];
+              $lng = $feature->center[1];
+              $geos[] = [
+                  'loc' => $event->location,
+                  'lat' => $lat,
+                  'lng' => $lng,
+                  'place_name' => $feature->place_name
+              ];
+              $query = "UPDATE $this->table_name SET location_geo = '$loc', lat = $lat, lng = $lng WHERE id = $event->id";
+              $wpdb->query($query);
+              $geocoded++;
+          } else {
+              $query = "UPDATE $this->table_name SET location_geo = '$loc', lat = NULL, lng = NULL WHERE id = $event->id";
+              $wpdb->query($query);
+              $event->reason = isset($body->message) ? $body->message : 'Not found';
+              $incomplete[] = $event;
+          }
+      } catch (Exception $e) {
+          $event->reason = $e->getMessage();
+          $incomplete[] = $event;
       }
       if ( $attempted >= IIP_MAP_GEOCODER_BATCH_SIZE ) {
         $more = true;
