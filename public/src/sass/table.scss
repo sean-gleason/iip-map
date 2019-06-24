@@ -122,6 +122,8 @@
         &__row {
             display: flex;
             > * {
+                hyphens: auto;
+                overflow-wrap: break-word;
                 padding-right: 20px;
                 width: 20%;
             }

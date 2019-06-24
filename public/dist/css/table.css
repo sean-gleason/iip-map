@@ -105,6 +105,10 @@
     display: -ms-flexbox;
     display: flex; }
     .event-table__row > * {
+      -webkit-hyphens: auto;
+          -ms-hyphens: auto;
+              hyphens: auto;
+      overflow-wrap: break-word;
       padding-right: 20px;
       width: 20%; } }
 
