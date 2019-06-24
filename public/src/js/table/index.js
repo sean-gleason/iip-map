@@ -92,10 +92,13 @@ const buildAdditional = ( field ) => {
     fieldArr = field;
     // pull out field id
     added.forEach( ( o, i ) => {
-      if ( fieldArr[i].checked ) {
-        markup += `${fieldArr[i].checked}`;
-      } else {
-        markup += `${fieldArr[i]}`;
+      // check that field has value before proceeding
+      if ( fieldArr[i] ) {
+        if ( fieldArr[i].checked ) {
+          markup += `${fieldArr[i]}`;
+        } else {
+          markup += `${fieldArr[i]}`;
+        }
       }
     } );
   } else {
