@@ -23,8 +23,6 @@ const map = new mapboxgl.Map( {
 } );
 
 // Configure Map controls
-// Disable zoom on scroll
-map.scrollZoom.disable();
 // Add zoom and rotation controls to the map.
 const mapNav = new mapboxgl.NavigationControl( { showCompass: false } );
 map.addControl( mapNav, 'bottom-right' );
