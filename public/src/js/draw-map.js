@@ -192,7 +192,7 @@ function drawLayers( m ) {
       const fieldsObj = JSON.parse( fields );
 
       // map selected field data to available field object
-      const titleField = parseSection( mapping.name_arr, fieldsObj );
+      const titleField = e.features[0].properties.title || parseSection( mapping.name_arr, fieldsObj );
       const topicField = parseSection( mapping.topic_arr, fieldsObj );
       const locationField = parseSection( mapping.location_arr, fieldsObj );
       const dateField = parseSection( mapping.date_arr, fieldsObj );
