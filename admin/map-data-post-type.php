@@ -50,17 +50,33 @@ class IIP_Map_Post_Type {
   // Add custom metaboxes to backend dashboard
   public function map_add_metaboxes() {
     add_meta_box(
-      'iip_map_main',
-      __( 'Configure Your Map', 'iip-map' ),
-      array( $this, 'map_main_metabox' ),
+      'iip_map_main--map',
+      __( 'Configure Map', 'iip-map' ),
+      array( $this, 'map_main_map_metabox' ),
       $this->name,
       'normal',
       'high'
     );
     add_meta_box(
-      'iip_map_sidebar',
-      __( 'More Options', 'iip-map' ),
-      array( $this, 'map_sidebar_metabox' ),
+      'iip_map_main--fields',
+      __( 'Configure Fields & Events', 'iip-map' ),
+      array( $this, 'map_main_fields_metabox' ),
+      $this->name,
+      'normal',
+      'high'
+    );
+    add_meta_box(
+      'iip_map_sidebar--marker',
+      __( 'Update/Delete Markers', 'iip-map' ),
+      array( $this, 'map_sidebar_marker_metabox' ),
+      $this->name,
+      'side',
+      'low'
+    );
+    add_meta_box(
+      'iip_map_sidebar--export',
+      __( 'Export Project Data', 'iip-map' ),
+      array( $this, 'map_sidebar_export_metabox' ),
       $this->name,
       'side',
       'low'
@@ -68,16 +84,25 @@ class IIP_Map_Post_Type {
   }
 
   // Pull in metabox partials
-  public function map_main_metabox( $post ) {
+  public function map_main_map_metabox( $post ) {
     wp_nonce_field( 'map_main', 'map_main_nonce' );
 
-    echo '<div id="iip-map-admin-main"></div>';
+    echo '<div id="iip-map-admin-main--map"><div class="map-admin-spinner-preload"></div></div>';
   }
 
-  public function map_sidebar_metabox( $post ) {
+  // Pull in metabox partials
+  public function map_main_fields_metabox( $post ) {
+      echo '<div id="iip-map-admin-main--fields"><div class="map-admin-spinner-preload"></div></div>';
+  }
+
+  public function map_sidebar_marker_metabox( $post ) {
     wp_nonce_field( 'map_sidebar', 'map_sidebar_nonce' );
 
-    echo '<div id="iip-map-admin-sidebar"></div>';
+    echo '<div id="iip-map-admin-sidebar--marker"><div class="map-admin-spinner-preload"></div></div>';
+  }
+
+  public function map_sidebar_export_metabox( $post ) {
+    echo '<div id="iip-map-admin-sidebar--export"><div class="map-admin-spinner-preload"></div></div>';
   }
 
   // Sanitize and store map post metadata values

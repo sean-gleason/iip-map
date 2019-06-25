@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import MapBox from './MapBox';
 import ShortcodeGenerator from './ShortcodeGenerator';
 
-import { adminMap } from '../../utils/map';
-import { getMapMeta } from '../../utils/globals';
+import { adminMap } from '../../../utils/map';
+import { getMapMeta } from '../../../utils/globals';
 
-class ConfigureMapContainer extends Component {
+class ConfigureMap extends Component {
   constructor( props ) {
     super( props );
     this.state = {
@@ -77,12 +77,14 @@ class ConfigureMapContainer extends Component {
     const { mapProps } = this.state;
 
     return (
-      <div className="iip-map-admin-configure-box">
-        <MapBox />
-        <ShortcodeGenerator callback={ this.handleInputChange } data={ mapProps } />
+      <div className="iip-map-admin-column-wide">
+        <div className="iip-map-admin-configure-box">
+          <MapBox />
+          <ShortcodeGenerator callback={ this.handleInputChange } data={ mapProps } />
+        </div>
       </div>
     );
   }
 }
 
-export default ConfigureMapContainer;
+export default ConfigureMap;

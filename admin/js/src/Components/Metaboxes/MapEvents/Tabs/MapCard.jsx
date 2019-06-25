@@ -3,9 +3,9 @@ import React, {
 } from 'react';
 import * as PropTypes from 'prop-types';
 
-import Column from '../../../Components/Column/Column';
-import ConfigsToggle from '../../../Components/ConfigsToggle/ConfigsToggle';
-import { collapseArr } from '../../../utils/helpers';
+import Column from '../../../Column/Column';
+import ConfigsToggle from '../../../ConfigsToggle/ConfigsToggle';
+import { collapseArr } from '../../../../utils/helpers';
 import TabControls from './TabControls';
 
 const MapCard = ( {

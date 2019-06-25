@@ -6,6 +6,12 @@ $bg: #f8f8f8;
 $bg-dark: #f1f1f1;
 
 .iip-map-admin-mapping {
+  background-color: transparent !important;
+  margin-top: 16px !important;
+
+  &__inner {
+    padding: 10px;
+  }
   &__header {
     display: flex;
     justify-content: space-between;
