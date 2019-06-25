@@ -34,32 +34,27 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            > h4 {
-                width: 25%;
+            @supports (display: grid) {
+                display: grid;
             }
-            > h4 + * {
-                width: 64%;
+
+            &.info-window__location {
+                @supports (display: grid) {
+                    grid-template-columns: 85px 1fr;
+                }
             }
 
             &.info-window__date-time {
                 @supports (display: grid){
-                    display: grid;
-                    grid-template-columns: 75px 1fr 1fr;
-                }
-
-                > * {
-                    width: auto;
-                }
-
-                .info-window__date {
-                    justify-self: end;
+                    grid-template-columns: 85px auto auto;
+                    justify-content: flex-start;
                 }
 
                 .info-window__time {
                     &:before {
                         content: '|';
-                        display: inline-block;
                         margin-left: 5px;
+                        display: inline-block;
                         padding-right: 5px;
                     }
                 }
