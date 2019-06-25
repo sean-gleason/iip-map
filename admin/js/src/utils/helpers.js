@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { getMapMeta, getMapGlobalMeta } from './globals';
+
 // Iterates throug an array of objects extracting their name
 // and returning a string of all the names properties
 export const collapseArr = ( arr ) => {
@@ -35,3 +38,42 @@ export const getObjectFromArray = ( data, key = 'field' ) => data.reduce( ( obj,
   obj[item[key]] = { ...item };
   return obj;
 }, {} );
+
+export const getMarker = ( args ) => {
+  // Get WP admin AJAX URL and data
+  const url = getMapGlobalMeta.ajaxUrl;
+
+  // Create the form that constitutes the AJAX request body
+  const formData = getFormData( { id: args, post_id: getMapMeta.id } );
+  formData.append( 'action', 'iip_map_get_marker_ajax' );
+  formData.append( 'security', getMapGlobalMeta.markerNonce );
+
+  // AJAX POST request to save screendoor project data
+  return axios.post( url, formData ).then( resp => resp.data );
+};
+
+export const updateMarker = ( args ) => {
+  // Get WP admin AJAX URL and data
+  const url = getMapGlobalMeta.ajaxUrl;
+
+  // Create the form that constitutes the AJAX request body
+  const formData = getFormData( { ...args } );
+  formData.append( 'action', 'iip_map_update_marker_ajax' );
+  formData.append( 'security', getMapGlobalMeta.markerNonce );
+
+  // AJAX POST request to save screendoor project data
+  return axios.post( url, formData ).then( resp => resp.data );
+};
+
+export const deleteMarker = ( args ) => {
+  // Get WP admin AJAX URL and data
+  const url = getMapGlobalMeta.ajaxUrl;
+
+  // Create the form that constitutes the AJAX request body
+  const formData = getFormData( { id: args } );
+  formData.append( 'action', 'iip_map_delete_marker_ajax' );
+  formData.append( 'security', getMapGlobalMeta.markerNonce );
+
+  // AJAX POST request to save screendoor project data
+  return axios.post( url, formData ).then( resp => resp.data );
+};

@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import './index.scss';
+
 import ConfigureMap from './Components/Metaboxes/ConfigureMap/ConfigureMap';
-// import MapEvents from './Components/Metaboxes/MapEvents';
 import DataExporter from './Components/Metaboxes/DataExporter';
 import UpdateMarker from './Components/Metaboxes/UpdateMarker';
 import MapEvents from './Components/Metaboxes/MapEvents/MapEvents';
-
-import './index.scss';
 
 ReactDOM.render(
   <ConfigureMap />,
