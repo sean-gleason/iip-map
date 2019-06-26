@@ -4,8 +4,8 @@ import React, {
 import * as PropTypes from 'prop-types';
 
 import TabControls from './TabControls';
-import Logger, { logMessage } from '../../../Components/Logger/Logger';
-import StatusTimer from '../../../Components/StatusTimer/StatusTimer';
+import Logger, { logMessage } from '../../../Logger/Logger';
+import StatusTimer from '../../../StatusTimer/StatusTimer';
 
 const EventDownloader = ( {
   project, eventCounts, setEventCounts, doNext, setProcessing

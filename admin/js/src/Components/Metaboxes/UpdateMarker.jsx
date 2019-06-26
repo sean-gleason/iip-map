@@ -5,7 +5,7 @@ import { getMarker, updateMarker, deleteMarker } from '../../utils/helpers';
 import './UpdateMarker.scss';
 
 const UpdateMarker = () => {
-  const [id, setId] = useState( '' );
+  const [id, setId] = useState( '1600009' );
   const [event, setEvent] = useReducer( ( prevState, update ) => ( { ...prevState, ...update } ), {
     data: null,
     loading: false,

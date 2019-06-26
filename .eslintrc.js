@@ -55,6 +55,12 @@ module.exports = {
         'no-unused-expressions': 'off',
         'import/no-unresolved': 'off'
       }
+    },
+    {
+      files: 'UpdateMarker.jsx',
+      rules: {
+        'jsx-a11y/label-has-associated-control': 'off'
+      }
     }
   ]
 };

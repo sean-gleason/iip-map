@@ -2,11 +2,11 @@ import React, { Fragment, useEffect, useState } from 'react';
 import * as PropTypes from 'prop-types';
 
 import { DragDropContext } from 'react-beautiful-dnd';
-import Column from '../../../Components/Column/Column';
-import ItemGroupDroppable from '../../../Components/Column/ItemGroupDroppable';
+import Column from '../../../Column/Column';
+import ItemGroupDroppable from '../../../Column/ItemGroupDroppable';
 import TabControls from './TabControls';
-import ItemGroup from '../../../Components/Column/ItemGroup';
-import ItemGroupSelect from '../../../Components/Column/ItemGroupSelect';
+import ItemGroup from '../../../Column/ItemGroup';
+import ItemGroupSelect from '../../../Column/ItemGroupSelect';
 
 const MapFields = ( {
   form, mapping, doSave, doNext, getDefaultMapping, isDirty, setDirty, needsUpdate, setUpdated

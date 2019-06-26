@@ -42,6 +42,13 @@ class MapGlobalMeta {
     return null;
   }
 
+  get markerNonce() {
+    if ( this._meta.markerNonce ) {
+      return this._meta.markerNonce;
+    }
+    return null;
+  }
+
   get googleKey() {
     if ( this._meta.googleApi ) {
       return this._meta.googleApi;

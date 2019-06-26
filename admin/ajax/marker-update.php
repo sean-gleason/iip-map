@@ -8,46 +8,79 @@ class IIP_Map_Marker_Update {
   }
 
   function get_marker_ajax(){
-    check_ajax_referer( 'iip-map-update-nonce', 'security' );
+    check_ajax_referer( 'iip-map-marker-nonce', 'security' );
 
     global $wpdb;
 
-    $id = $_POST['id'];
+    $ext_id = $_POST['id'];
+    $post_id = $_POST['post_id'];
 
-    $query = $wpdb->prepare("SELECT title, lat, lng FROM `$this->table_name` WHERE id = %d", $id);
-    $marker_data = $wpdb->get_results($query);
+    if ( !$post_id ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Invalid post ID.' ] );
+    }
+    if ( !$ext_id ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Invalid marker ID.' ] );
+    }
 
-    echo json_encode($marker_data);
+    $query = $wpdb->prepare("SELECT * FROM `$this->table_name` WHERE post_id = %d AND ext_id = %d",$post_id, $ext_id);
+    $marker_data = $wpdb->get_row($query);
+    if ( $marker_data ) {
+      $marker_data->fields = unserialize( $marker_data->fields );
+    }
 
-    wp_die();
+    wp_send_json( ['success' => true, 'event' => $marker_data ] );
   }
 
   function update_marker_ajax(){
-    check_ajax_referer( 'iip-map-update-nonce', 'security' );
+    check_ajax_referer( 'iip-map-marker-nonce', 'security' );
 
     global $wpdb;
 
     $id = $_POST['id'];
-    $event_name = $_POST['event_name'];
+    $title = $_POST['title'];
     $lat = $_POST['lat'];
     $lng = $_POST['lng'];
 
-    $query = $wpdb->prepare("UPDATE `$this->table_name` SET title = %s, lat = %f, lng = %f  WHERE id = %d", $event_name, $lat, $lng, $id);
-    $marker_data = $wpdb->get_results($query);
+    if ( !$id ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Invalid ID.' ] );
+    }
 
-    wp_die();
+    if ( $lat == '' || $lng == '' || !is_numeric( $lat ) || !is_numeric( $lng ) ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Latitude and longitude must be numbers.' ] );
+    }
+
+    if ( !$title ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Event name is required.' ] );
+    }
+
+    $result = $wpdb->update(
+      $this->table_name,
+      [
+        'title' => $title,
+        'lat' => $lat,
+        'lng' => $lng
+      ],
+      ['id' => $id],
+      ['%s', '%f', '%f'],
+      ['%d']
+    );
+
+    wp_send_json( ['success' => true, 'result' => $result] );
   }
 
   function delete_marker_ajax(){
-    check_ajax_referer( 'iip-map-update-nonce', 'security' );
+    check_ajax_referer( 'iip-map-marker-nonce', 'security' );
 
     global $wpdb;
 
     $id = $_POST['id'];
 
-    $query = $wpdb->prepare("DELETE FROM `$this->table_name` WHERE id = %d", $id);
-    $wpdb->query($query);
+    if ( !$id ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Invalid ID.' ] );
+    }
 
-    wp_die();
+    $result = $wpdb->delete( $this->table_name, ['id' => $id], ['%d'] );
+
+    wp_send_json( ['success' => true, 'result' => $result] );
   }
 }

@@ -225,11 +225,14 @@ h3.iip-map-ol-popup-preview-header {
 }
 
 .iip-map-admin-mapbox,
-.iip-map-admin-shortcode-box {
+.iip-map-admin-shortcode-box,
+.iip-map-admin-mapping {
   background-color: #F9F9F9;
   border: 1px solid #e5e5e5;
   margin: 10px 5px 5px;
-  padding: 10px;
+  &__inner {
+    padding: 10px;
+  }
 }
 
 h4.iip-map-admin-metabox-header {
@@ -238,10 +241,11 @@ h4.iip-map-admin-metabox-header {
 
 h4.iip-map-admin-metabox-subheader {
   margin: 0.5em;
+  font-weight: 400;
 }
 
 .iip-map-admin-marker-container {
-  margin: 20px 0;
+  //margin: 20px 0;
 }
 
 .iip-map-admin-marker-input {

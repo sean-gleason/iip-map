@@ -13,7 +13,9 @@ import MapCard from './Tabs/MapCard';
 import EventDownloader from './Tabs/EventDownloader';
 import EventGeocoder from './Tabs/EventGeocoder';
 
-import './MapEventsContainer.scss';
+import screendoorProject from '../../../utils/ScreendoorProject';
+
+import './MapEvents.scss';
 
 const TABS = {
   Project: 0,
@@ -40,7 +42,7 @@ const parseEventCounts = ( eventCounts ) => {
   };
 };
 
-const MapEventsContainer = ( { project } ) => {
+const MapEvents = ( { project } ) => {
   const [mergeState, setState] = useReducer( ( state, update ) => ( { ...state, ...update } ), {
     projectId: project.projectId,
     form: project.form,
@@ -261,112 +263,122 @@ const MapEventsContainer = ( { project } ) => {
 
   return (
     <div className="iip-map-admin-mapping">
-      <div className="iip-map-admin-mapping__header">
-        <div className="iip-map-admin-mapping__warning" style={ { visibility: hasDirtyTab ? 'visible' : 'hidden' } }>
+      <h2 className="iip-map-admin-metabox-header">Map Fields and Save Events</h2>
+      <div className="iip-map-admin-mapping__inner">
+        <h4 className="iip-map-admin-metabox-subheader">
+        Use this form to map the form values from Sceendoor.
+        </h4>
+        <div className="iip-map-admin-mapping__header">
+          <div className="iip-map-admin-mapping__warning" style={ { visibility: hasDirtyTab ? 'visible' : 'hidden' } }>
           * Indicates a tab with unsaved changes. The changes will not affect other tabs until they are saved.
+          </div>
         </div>
+        <Tabs
+          className="map-events-tabs"
+          forceRenderTabPanel
+          selectedIndex={ tab }
+          onSelect={ setTab }
+        >
+          <TabList>
+            <Tab
+              className={ classNameHelper( TABS.Project ) }
+              disabled={ isDisabled( TABS.Project ) }
+            >
+              <span>Select Project</span>
+            </Tab>
+            <Tab
+              className={ classNameHelper( TABS.MapFields ) }
+              disabled={ isDisabled( TABS.MapFields ) }
+            >
+              <span>Field Mapper</span>
+            </Tab>
+            <Tab
+              className={ classNameHelper( TABS.MapCard ) }
+              disabled={ isDisabled( TABS.MapCard ) }
+            >
+              <span>Configure Card</span>
+            </Tab>
+            <Tab
+              className={ classNameHelper( TABS.EventDownloader ) }
+              disabled={ isDisabled( TABS.EventDownloader ) }
+            >
+              <span>Event Downloader</span>
+            </Tab>
+            <Tab
+              className={ classNameHelper( TABS.EventGeocoder ) }
+              disabled={ isDisabled( TABS.EventGeocoder ) }
+            >
+              <span>Event Geocoder</span>
+            </Tab>
+          </TabList>
+          <TabPanel>
+            <MapProject
+              projectId={ projectId }
+              doSave={ doSave }
+              setDirtyTab={ setDirtyTab( TABS.Project ) }
+            />
+          </TabPanel>
+          <TabPanel>
+            <MapFields
+              form={ form }
+              mapping={ mapping }
+              doSave={ doSave }
+              doNext={ doNext }
+              isDirty={ dirtyTabs[TABS.MapFields] }
+              setDirty={ setDirtyTab( TABS.MapFields ) }
+              setUpdated={ setTabUpdated( TABS.MapFields ) }
+              needsUpdate={ mergeState.needsUpdate[TABS.MapFields] }
+              getDefaultMapping={ project.getDefaultMapping }
+            />
+          </TabPanel>
+          <TabPanel>
+            <MapCard
+              form={ form }
+              mapping={ mapping }
+              card={ card }
+              setCard={ setCard }
+              getCardFromMapping={ project.getCardFromMapping }
+              getSample={ project.getSample }
+              doSave={ doSave }
+              doNext={ doNext }
+              isDirty={ dirtyTabs[TABS.MapCard] }
+              setDirty={ setDirtyTab( TABS.MapCard ) }
+              needsUpdate={ mergeState.needsUpdate[TABS.MapCard] }
+              setUpdated={ setTabUpdated( TABS.MapCard ) }
+            />
+          </TabPanel>
+          <TabPanel>
+            <EventDownloader
+              project={ project }
+              eventCounts={ eventCounts }
+              setEventCounts={ setEventCounts }
+              doNext={ doNext }
+              needsUpdate={ mergeState.needsUpdate[TABS.EventDownloader] }
+              setUpdated={ setTabUpdated( TABS.EventDownloader ) }
+              setProcessing={ setProcessing( TABS.EventDownloader ) }
+            />
+          </TabPanel>
+          <TabPanel>
+            <EventGeocoder
+              project={ project }
+              eventCounts={ eventCounts }
+              setEventCounts={ setEventCounts }
+              isDirty={ dirtyTabs[TABS.EventGeocoder] }
+              setProcessing={ setProcessing( TABS.EventGeocoder ) }
+            />
+          </TabPanel>
+        </Tabs>
       </div>
-      <Tabs
-        className="map-events-tabs"
-        forceRenderTabPanel
-        selectedIndex={ tab }
-        onSelect={ setTab }
-      >
-        <TabList>
-          <Tab
-            className={ classNameHelper( TABS.Project ) }
-            disabled={ isDisabled( TABS.Project ) }
-          >
-            <span>Select Project</span>
-          </Tab>
-          <Tab
-            className={ classNameHelper( TABS.MapFields ) }
-            disabled={ isDisabled( TABS.MapFields ) }
-          >
-            <span>Field Mapper</span>
-          </Tab>
-          <Tab
-            className={ classNameHelper( TABS.MapCard ) }
-            disabled={ isDisabled( TABS.MapCard ) }
-          >
-            <span>Configure Card</span>
-          </Tab>
-          <Tab
-            className={ classNameHelper( TABS.EventDownloader ) }
-            disabled={ isDisabled( TABS.EventDownloader ) }
-          >
-            <span>Event Downloader</span>
-          </Tab>
-          <Tab
-            className={ classNameHelper( TABS.EventGeocoder ) }
-            disabled={ isDisabled( TABS.EventGeocoder ) }
-          >
-            <span>Event Geocoder</span>
-          </Tab>
-        </TabList>
-        <TabPanel>
-          <MapProject
-            projectId={ projectId }
-            doSave={ doSave }
-            setDirtyTab={ setDirtyTab( TABS.Project ) }
-          />
-        </TabPanel>
-        <TabPanel>
-          <MapFields
-            form={ form }
-            mapping={ mapping }
-            doSave={ doSave }
-            doNext={ doNext }
-            isDirty={ dirtyTabs[TABS.MapFields] }
-            setDirty={ setDirtyTab( TABS.MapFields ) }
-            setUpdated={ setTabUpdated( TABS.MapFields ) }
-            needsUpdate={ mergeState.needsUpdate[TABS.MapFields] }
-            getDefaultMapping={ project.getDefaultMapping }
-          />
-        </TabPanel>
-        <TabPanel>
-          <MapCard
-            form={ form }
-            mapping={ mapping }
-            card={ card }
-            setCard={ setCard }
-            getCardFromMapping={ project.getCardFromMapping }
-            getSample={ project.getSample }
-            doSave={ doSave }
-            doNext={ doNext }
-            isDirty={ dirtyTabs[TABS.MapCard] }
-            setDirty={ setDirtyTab( TABS.MapCard ) }
-            needsUpdate={ mergeState.needsUpdate[TABS.MapCard] }
-            setUpdated={ setTabUpdated( TABS.MapCard ) }
-          />
-        </TabPanel>
-        <TabPanel>
-          <EventDownloader
-            project={ project }
-            eventCounts={ eventCounts }
-            setEventCounts={ setEventCounts }
-            doNext={ doNext }
-            needsUpdate={ mergeState.needsUpdate[TABS.EventDownloader] }
-            setUpdated={ setTabUpdated( TABS.EventDownloader ) }
-            setProcessing={ setProcessing( TABS.EventDownloader ) }
-          />
-        </TabPanel>
-        <TabPanel>
-          <EventGeocoder
-            project={ project }
-            eventCounts={ eventCounts }
-            setEventCounts={ setEventCounts }
-            isDirty={ dirtyTabs[TABS.EventGeocoder] }
-            setProcessing={ setProcessing( TABS.EventGeocoder ) }
-          />
-        </TabPanel>
-      </Tabs>
     </div>
   );
 };
 
-MapEventsContainer.propTypes = {
+MapEvents.propTypes = {
   project: PropTypes.object
 };
 
-export default MapEventsContainer;
+MapEvents.defaultProps = {
+  project: screendoorProject
+};
+
+export default MapEvents;

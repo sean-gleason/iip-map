@@ -1,0 +1,61 @@
+@import '../../colors';
+
+.map-update-marker-text {
+  width: 80%;
+}
+
+.map-update-marker-input {
+  width: 100%;
+}
+
+.map-admin-hidden {
+  display: none;
+  padding-bottom: 10px;
+}
+
+label.map-update-marker-values {
+  width: 40%;
+}
+
+input.map-update-marker-values {
+  width: 60%;
+}
+
+.map-update-marker-button {
+  float: right;
+  padding-top: 10px;
+}
+
+.iip-map-admin-marker-find {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .map-admin-spinner {
+    float: none;
+    display: inline-block;
+    margin-right: 1em;
+  }
+}
+
+.iip-map-admin-marker-error {
+  color: $red;
+}
+
+
+.iip-map-admin-button-row {
+  margin: 10px 0;
+}
+
+.iip-map-admin-marker-row {
+  margin-bottom: 0.5em;
+
+  .map-admin-spinner {
+    float: none;
+    display: inline-block;
+  }
+
+  .iip-map-admin-marker-input {
+    width: 100%;
+  }
+}

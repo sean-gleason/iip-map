@@ -150,6 +150,7 @@ class IIP_Map_Admin {
     $globals[ 'mapboxApi' ] = get_option( 'iip_map_mapbox_api_key' );
     $globals[ 'ajaxUrl' ] = admin_url( 'admin-ajax.php' );
     $globals[ 'screendoorNonce' ] = wp_create_nonce('iip-map-screendoor-nonce');
+    $globals[ 'markerNonce' ] = wp_create_nonce('iip-map-marker-nonce');
 
     $events = $wpdb->get_row( "SELECT COUNT(*) as event_count, COUNT(location_geo) as geocoded_count FROM {$wpdb->prefix}iip_map_data WHERE post_id = $post->ID" );
 
