@@ -9,6 +9,7 @@ const lng = iip_map_params.map_center_lng; // eslint-disable-line no-undef, came
 const { mapping } = iip_map_params; // eslint-disable-line no-undef, camelcase
 const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 
+
 // get topic select
 const topicSelect = document.getElementById( 'topic-select' );
 const fragment = document.createDocumentFragment();
@@ -168,6 +169,19 @@ function drawLayers( m ) {
   } );
 
   layersUnique.forEach( ( layerID ) => {
+    // we are going to build arrays of markers to store filtered by layerID
+    const markers = [];
+    m.features.filter( ( marker ) => { // eslint-disable-line array-callback-return
+      // build array of markers filter by layerID
+      if ( marker.properties.topic === layerID ) {
+        // push markers to array
+        markers.push( marker );
+      }
+    } );
+    // store events sorted by category
+    // we swap the map data with stored data if the filter is used
+    // doing this because we cannot update the cluster layer once it's drawn
+    sessionStorage.setItem( layerID, JSON.stringify( markers ) );
     // Add a layer for this symbol type if it hasn't been added already.
     if ( !map.getLayer( layerID ) ) {
       map.addLayer( {
@@ -246,19 +260,16 @@ function drawLayers( m ) {
 
   // filtering logic - show/hide layers
   topicSelect.addEventListener( 'change', () => {
-    const layerIDArrayLength = layerIDArray.length;
-    for ( let i = 0; i < layerIDArrayLength; i += 1 ) {
-      map.setLayoutProperty( layerIDArray[i], 'visibility', 'visible' );
-    }
-
-    const index = layerIDArray.indexOf( topicSelect.value );
-    // loop through layerIDArray and checked box value (set as layerID)
-    if ( index !== -1 ) {
-      layerIDArray.splice( index, 1 );
-      const splicedArrayLength = layerIDArray.length;
-      for ( let count = 0; count < splicedArrayLength; count += 1 ) {
-        map.setLayoutProperty( layerIDArray[count], 'visibility', 'none' );
-      }
+    if ( topicSelect.value !== '' ) {
+      map.getSource( 'events' ).setData( {
+        type: 'FeatureCollection',
+        features: JSON.parse( sessionStorage.getItem( topicSelect.value ) )
+      } );
+    } else {
+      map.getSource( 'events' ).setData( {
+        type: 'FeatureCollection',
+        features: JSON.parse( sessionStorage.getItem( 'all' ) )
+      } );
     }
     layerIDArray.push( topicSelect.value );
   } );
@@ -268,6 +279,9 @@ function drawLayers( m ) {
 
 mapDataXHR.onload = function loadData() {
   const mapDataData = mapDataXHR.response;
+  const { features } = mapDataData;
+  // store all events for use if filter is reset
+  sessionStorage.setItem( 'all', JSON.stringify( features ) );
 
   map.addSource( 'events', {
     type: 'geojson',
