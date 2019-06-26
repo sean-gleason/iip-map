@@ -9,7 +9,6 @@ const lng = iip_map_params.map_center_lng; // eslint-disable-line no-undef, came
 const { mapping } = iip_map_params; // eslint-disable-line no-undef, camelcase
 const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 
-
 // get topic select
 const topicSelect = document.getElementById( 'topic-select' );
 const fragment = document.createDocumentFragment();
