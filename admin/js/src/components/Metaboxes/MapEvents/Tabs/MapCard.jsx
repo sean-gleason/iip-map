@@ -3,10 +3,13 @@ import React, {
 } from 'react';
 import * as PropTypes from 'prop-types';
 
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Column from '../../../Column/Column';
 import ConfigsToggle from '../../../ConfigsToggle/ConfigsToggle';
 import { collapseArr } from '../../../../utils/helpers';
 import TabControls from './TabControls';
+import MapCardAdditional from './MapCardAdditional';
+
 
 const MapCard = ( {
   mapping, card, getCardFromMapping, getSample, doSave, doNext, setDirty, isDirty, needsUpdate, setUpdated
@@ -26,8 +29,16 @@ const MapCard = ( {
     const obj = {};
     args.forEach( ( arg ) => {
       obj[arg] = '';
-      return obj;
     } );
+
+    const dragIds = cardState[group].reduce( ( arr, val ) => {
+      if ( 'dragId' in val ) arr.push( val.dragId );
+      return arr;
+    }, [] );
+
+    do {
+      obj.dragId = Math.round( Math.random() * 1000 );
+    } while ( dragIds.includes( obj.dragId ) );
 
     setCardState( {
       [group]: [...cardState[group], obj]
@@ -142,6 +153,23 @@ const MapCard = ( {
     setDirty( false );
   };
 
+  const onDragEnd = ( result ) => {
+    // dropped outside the list
+    if ( !result.destination ) {
+      return;
+    }
+    const items = Array.from( cardState.added );
+    const startIndex = result.source.index;
+    const endIndex = result.destination.index;
+    const [removed] = items.splice( startIndex, 1 );
+    items.splice( endIndex, 0, removed );
+
+    setCardState( {
+      added: items
+    } );
+    setDirty( true );
+  };
+
   useEffect( () => {
     if ( needsUpdate ) {
       setState( card || getCardFromMapping( mapping, cardState ) );
@@ -168,16 +196,16 @@ const MapCard = ( {
             <div className="iip-map-admin-card-preview-container">
               <div className="iip-map-admin-card-preview-sample">
                 { sample !== false && (
-                <ConfigsToggle
-                  toggled={ preview }
-                  label="Show Sample Data?"
-                  callback={ handleSample }
-                />
+                  <ConfigsToggle
+                    toggled={ preview }
+                    label="Show Sample Data?"
+                    callback={ handleSample }
+                  />
                 ) }
                 { sample === false && (
-                <p className="iip-map-admin-card-preview-toggle-label has-error">
-                  Error retrieving sample data.
-                </p>
+                  <p className="iip-map-admin-card-preview-toggle-label has-error">
+                    Error retrieving sample data.
+                  </p>
                 ) }
               </div>
               <div className="iip-map-ol-popup-preview" id="infowindow-1">
@@ -197,12 +225,12 @@ const MapCard = ( {
                   </Fragment>
                   ) }
                   { locationSection.toggled && (
-                  <Fragment>
-                    <h3 className="iip-map-ol-popup-preview-header">{ locationSection.heading || '' }</h3>
-                    <p>{ displayField( 'location' ) }</p>
-                  </Fragment>
+                    <Fragment>
+                      <h3 className="iip-map-ol-popup-preview-header">{ locationSection.heading || '' }</h3>
+                      <p>{ displayField( 'location' ) }</p>
+                    </Fragment>
                   ) }
-                  { added.length > 0 && added.map( ( item, idx ) => (
+                  { additionalSection.toggled && added.length > 0 && added.map( ( item, idx ) => (
                     <Fragment key={ `addedDisplay${idx + 1}` }>
                       <h3 className="iip-map-ol-popup-preview-header">{ item.heading }</h3>
                       <p>
@@ -318,117 +346,54 @@ const MapCard = ( {
                     />
                   </label>
                 </ConfigsToggle>
+                <ConfigsToggle
+                  toggled={ additionalSection.toggled }
+                  label="Additional Sections?"
+                  callback={ updateToggleState( 'additionalSection' ) }
+                />
                 { additionalSection.toggled && (
-                <div className="iip-map-admin-card-preview-option">
-                  <div className="iip-map-admin-card-preview-option-top">
-                    <p className="iip-map-admin-card-preview-toggle-label">Add section?</p>
-                    <button
-                      onClick={ () => {
-                        handleAddArrayInput( 'added', 'field', 'heading', 'inlinePre', 'inlinePost' );
-                      } }
-                      type="button"
-                    >
-                      +
-                    </button>
+                  <div className="iip-map-admin-card-preview-option iip-map-admin-card-additional">
+                    <DragDropContext onDragEnd={ onDragEnd }>
+                      <Droppable droppableId="customSections">
+                        { provided => (
+                          <div
+                            className="iip-map-admin-column-list"
+                            ref={ provided.innerRef }
+                            { ...provided.droppableProps }
+                          >
+                            { added.map( ( value, index ) => {
+                              const position = index + 1;
+                              const kgen = ( ...args ) => `${args.join( '' )}${position}`;
+                              return (
+                                <MapCardAdditional
+                                  key={ kgen( 'additionalSec' ) }
+                                  position={ position }
+                                  value={ value }
+                                  index={ index }
+                                  kgen={ kgen }
+                                  handleInput={ handleInput }
+                                  handleDeleteItem={ handleDeleteItem }
+                                  mapping={ mapping }
+                                />
+                              );
+                            } ) }
+                            { provided.placeholder }
+                          </div>
+                        ) }
+                      </Droppable>
+                    </DragDropContext>
+                    <div className="iip-map-admin-card-preview-option-top iip-map-admin-column-item">
+                      <p className="iip-map-admin-card-preview-toggle-label" style={ { margin: 0 } }>Add Section?</p>
+                      <button
+                        type="button"
+                        onClick={ () => {
+                          handleAddArrayInput( 'added', 'field', 'heading', 'inlinePre', 'inlinePost' );
+                        } }
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
-                  { added.map( ( value, index ) => {
-                    const position = index + 1;
-                    const kgen = ( ...args ) => `${args.join( '' )}${position}`;
-                    return (
-                      <div className="iip-map-admin-card-preview-meta" key={ position }>
-                        <div className="iip-map-admin-new-section-header">
-                          <p className="iip-map-admin-card-preview-toggle-sublabel">
-                            { `Custom Section #${position}` }
-                          </p>
-                          <button
-                            className="iip-event-close-btn"
-                            data-group="added"
-                            data-index={ index }
-                            onClick={ handleDeleteItem }
-                            type="button"
-                          >
-                            X
-                          </button>
-                        </div>
-                        <label
-                          className="iip-map-admin-label"
-                          htmlFor="field"
-                          key={ kgen( 'field' ) }
-                        >
-                          Choose field:
-                          <select
-                            className="iip-map-admin-project-input"
-                            key={ kgen( 'fieldselect' ) }
-                            data-group="added"
-                            data-index={ index }
-                            name="field"
-                            value={ value.field }
-                            onChange={ handleInput }
-                          >
-                            <option value="">Please select a field</option>
-                            { mapping.additionalFields.map( ( item, i ) => (
-                              <option
-                                value={ item.field }
-                                key={ kgen( 'fieldselectopt', i ) }
-                              >
-                                { item.name }
-                              </option>
-                            ) ) }
-                          </select>
-                        </label>
-                        <label
-                          className="iip-map-admin-label"
-                          htmlFor="heading"
-                          key={ kgen( 'heading' ) }
-                        >
-                          Section header (optional):
-                          <input
-                            className="iip-map-admin-project-input"
-                            key={ kgen( 'heading', 'input' ) }
-                            data-group="added"
-                            data-index={ index }
-                            name="heading"
-                            type="text"
-                            value={ value.heading }
-                            onChange={ handleInput }
-                          />
-                        </label>
-                        <label
-                          className="iip-map-admin-label stacked"
-                          htmlFor="inlinePre"
-                          key={ kgen( 'inlinePre', '' ) }
-                        >
-                          Inline text before item (optional):
-                          <textarea
-                            className="iip-map-admin-project-textarea"
-                            key={ kgen( 'inlinePre', 'text' ) }
-                            data-group="added"
-                            data-index={ index }
-                            name="inlinePre"
-                            value={ value.inlinePre }
-                            onChange={ handleInput }
-                          />
-                        </label>
-                        <label
-                          className="iip-map-admin-label stacked"
-                          key={ kgen( 'inlinePost', '' ) }
-                          htmlFor="inlinePost"
-                        >
-                          Inline text after item (optional):
-                          <textarea
-                            className="iip-map-admin-project-textarea"
-                            key={ kgen( 'inlinePost', 'text' ) }
-                            data-group="added"
-                            data-index={ index }
-                            name="inlinePost"
-                            value={ value.inlinePost }
-                            onChange={ handleInput }
-                          />
-                        </label>
-                      </div>
-                    );
-                  } ) }
-                </div>
                 ) }
               </div>
             </div>

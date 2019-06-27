@@ -43,6 +43,21 @@
     }
   }
 
+  .iip-map-admin-card-additional {
+    .iip-map-admin-column-list {
+      min-height: 0;
+      padding: 0;
+
+      .iip-map-admin-card-preview-meta {
+        padding: 0.5rem 0;
+      }
+
+      .iip-map-admin-column-item {
+        margin-bottom: 1em;
+      }
+    }
+  }
+
   .react-tabs {
     -webkit-tap-highlight-color: transparent;
 
