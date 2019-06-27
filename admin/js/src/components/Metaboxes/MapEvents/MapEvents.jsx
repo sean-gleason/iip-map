@@ -266,7 +266,7 @@ const MapEvents = ( { project } ) => {
       <h2 className="iip-map-admin-metabox-header">Map Fields and Save Events</h2>
       <div className="iip-map-admin-mapping__inner">
         <h4 className="iip-map-admin-metabox-subheader">
-        Use this form to map the form values from Sceendoor.
+        Use this form to map the form values from Screendoor.
         </h4>
         <div className="iip-map-admin-mapping__header">
           <div className="iip-map-admin-mapping__warning" style={ { visibility: hasDirtyTab ? 'visible' : 'hidden' } }>
