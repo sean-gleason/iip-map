@@ -9,7 +9,6 @@ const lng = iip_map_params.map_center_lng; // eslint-disable-line no-undef, came
 const { mapping } = iip_map_params; // eslint-disable-line no-undef, camelcase
 const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 
-
 // get topic select
 const topicSelect = document.getElementById( 'topic-select' );
 const fragment = document.createDocumentFragment();
@@ -18,7 +17,7 @@ mapboxgl.accessToken = apiKey;
 
 const map = new mapboxgl.Map( {
   container: 'map',
-  style: 'mapbox://styles/jspellman814/cjwiaf6wi05nk1dlue7undbxu',
+  style: 'mapbox://styles/jspellman814/cjwiaf6wi05nk1dlue7undbxu?optimize=true',
   center: [lat, lng],
   zoom: mapZoom
 } );
@@ -156,8 +155,9 @@ const buildAdditional = ( field ) => {
   return markup;
 };
 
-// add layers (markers) to the map
-function drawLayers( m ) {
+// build filter and associated functionality
+// store layers in browser
+function buildFilter( m ) {
   const layerIDArray = [];
   let layersUnique = [];
   m.features.forEach( ( marker ) => {
@@ -182,80 +182,11 @@ function drawLayers( m ) {
     // we swap the map data with stored data if the filter is used
     // doing this because we cannot update the cluster layer once it's drawn
     sessionStorage.setItem( layerID, JSON.stringify( markers ) );
-    // Add a layer for this symbol type if it hasn't been added already.
-    if ( !map.getLayer( layerID ) ) {
-      map.addLayer( {
-        id: layerID,
-        type: 'symbol',
-        source: 'events',
-        layout: {
-          'icon-image': 'pin',
-          'icon-allow-overlap': false,
-          'icon-size': 1
-        },
-        filter: [
-          '==', 'topic', layerID
-        ]
-      } );
-    }
-
-    // display pop up when a marker is clicked
-    map.on( 'click', layerID, ( e ) => {
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      const { fields } = e.features[0].properties;
-      const fieldsObj = JSON.parse( fields );
-
-      // map selected field data to available field object
-      const titleField = e.features[0].properties.title || parseSection( mapping.name_arr, fieldsObj );
-      const topicField = parseSection( mapping.topic_arr, fieldsObj );
-      const locationField = parseSection( mapping.location_arr, fieldsObj );
-      const dateField = parseSection( mapping.date_arr, fieldsObj );
-      const timeField = parseSection( mapping.time_arr, fieldsObj );
-      const additionalData = parseSection( mapping.other_arr, fieldsObj );
-      // Ensure that if the map is zoomed out such that multiple
-      // copies of the feature are visible, the popup appears
-      // over the copy being pointed to.
-      while ( Math.abs( e.lngLat.lng - coordinates[0] ) > 180 ) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      }
-
-      new mapboxgl.Popup( { offset: 25 } )
-        .setLngLat( coordinates )
-        .setHTML( `
-                 <div class="info-window" data-sdid="${e.features[0].properties.ext_id}">
-                   <div class="info-window__header">
-                    ${buildSection( titleField, 'title' )}
-                    ${buildSection( topicField, 'topic' )}
-                   </div>
-                   <div class="info-window__body">
-                    ${buildSection( locationField, 'location' )}
-                    <div class="info-window__date-time">
-                      ${buildSection( dateField, 'date' )}
-                      ${buildSection( timeField, 'time' )}
-                    </div>
-                   </div>
-                   <div class="info-window__footer">
-                    ${buildAdditional( additionalData )}
-                   </div>
-                 </div>` )
-        .addTo( map );
-    } );
-
     // build out filter <select> by adding each layerID as <option>
     const option = document.createElement( 'option' );
     option.innerHTML = layerID;
     option.value = layerID;
     fragment.appendChild( option );
-
-    // Change the cursor to a pointer when the mouse is over the layer
-    map.on( 'mouseenter', layerID, () => {
-      map.getCanvas().style.cursor = 'pointer';
-    } );
-
-    // Change it back to a pointer when it leaves
-    map.on( 'mouseleave', layerID, () => {
-      map.getCanvas().style.cursor = '';
-    } );
   } );
 
   // filtering logic - show/hide layers
@@ -280,6 +211,7 @@ function drawLayers( m ) {
 mapDataXHR.onload = function loadData() {
   const mapDataData = mapDataXHR.response;
   const { features } = mapDataData;
+  buildFilter( mapDataData );
   // store all events for use if filter is reset
   sessionStorage.setItem( 'all', JSON.stringify( features ) );
 
@@ -290,8 +222,6 @@ mapDataXHR.onload = function loadData() {
     clusterMaxZoom: 14,
     clusterRadius: 50
   } );
-
-  drawLayers( mapDataData );
 
   map.addLayer( {
     id: 'clusters',
@@ -336,9 +266,21 @@ mapDataXHR.onload = function loadData() {
       'text-size': 12
     }
   } );
+
+  map.addLayer( {
+    id: 'uncluster-point',
+    type: 'symbol',
+    source: 'events',
+    filter: ['!', ['has', 'point_count']],
+    layout: {
+      'icon-image': 'pin',
+      'icon-allow-overlap': false,
+      'icon-size': 1
+    }
+  } );
 };
 
-// on map load add clustering functionality
+// on map load add clustering and popup functionality
 map.on( 'load', () => {
   map.on( 'click', 'clusters', ( e ) => {
     const features = map.queryRenderedFeatures( e.point, { layers: ['clusters'] } );
@@ -353,6 +295,56 @@ map.on( 'load', () => {
         zoom: zoom // eslint-disable-line object-shorthand
       } );
     } );
+  } );
+
+  // display marker on click
+  map.on( 'click', 'uncluster-point', ( e ) => {
+    const coordinates = e.features[0].geometry.coordinates.slice();
+    const { fields } = e.features[0].properties;
+    const fieldsObj = JSON.parse( fields );
+
+    // map selected field data to available field object
+    const titleField = parseSection( mapping.name_arr, fieldsObj );
+    const topicField = parseSection( mapping.topic_arr, fieldsObj );
+    const locationField = parseSection( mapping.location_arr, fieldsObj );
+    const dateField = parseSection( mapping.date_arr, fieldsObj );
+    const timeField = parseSection( mapping.time_arr, fieldsObj );
+    const additionalData = parseSection( mapping.other_arr, fieldsObj );
+    // Ensure that if the map is zoomed out such that multiple
+    // copies of the feature are visible, the popup appears
+    // over the copy being pointed to.
+    while ( Math.abs( e.lngLat.lng - coordinates[0] ) > 180 ) {
+      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    }
+
+    new mapboxgl.Popup( { offset: 25 } )
+      .setLngLat( coordinates )
+      .setHTML( `
+                 <div class="info-window">
+                   <div class="info-window__header">
+                    ${buildSection( titleField, 'title' )}
+                    ${buildSection( topicField, 'topic' )}
+                   </div>
+                   <div class="info-window__body">
+                    ${buildSection( locationField, 'location' )}
+                    <div class="info-window__date-time">
+                      ${buildSection( dateField, 'date' )}
+                      ${buildSection( timeField, 'time' )}
+                    </div>
+                   </div>
+                   <div class="info-window__footer">
+                    ${buildAdditional( additionalData )}
+                   </div>
+                 </div>` )
+      .addTo( map );
+  } );
+
+  map.on( 'mouseenter', 'uncluster-point', () => {
+    map.getCanvas().style.cursor = 'pointer';
+  } );
+
+  map.on( 'mouseleave', 'uncluster-point', () => {
+    map.getCanvas().style.cursor = '';
   } );
 
   map.on( 'mouseenter', 'clusters', () => {
