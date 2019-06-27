@@ -12,7 +12,8 @@ import MapCardAdditional from './MapCardAdditional';
 
 
 const MapCard = ( {
-  mapping, card, getCardFromMapping, getSample, doSave, doNext, setDirty, isDirty, needsUpdate, setUpdated
+  mapping, card, getCardFromMapping, getSample, doSave, doNext,
+  setDirty, isDirty, needsUpdate, setUpdated, publishReminder
 } ) => {
   const [cardState, setState] = useReducer(
     ( prevState, update ) => ( { ...prevState, ...update } ),
@@ -400,7 +401,7 @@ const MapCard = ( {
           </Column>
         </div>
       </div>
-      <TabControls handleSave={ handleSave } errors={ errors }>
+      <TabControls handleSave={ handleSave } errors={ errors } publishReminder={ publishReminder }>
         <button
           key="map-card-clear"
           className="button button-large"
@@ -468,6 +469,7 @@ MapCard.propTypes = {
       inlinePost: PropTypes.string
     } ) )
   } ),
+  publishReminder: PropTypes.bool,
   doNext: PropTypes.func,
   doSave: PropTypes.func
 };

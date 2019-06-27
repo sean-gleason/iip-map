@@ -16,6 +16,7 @@ import EventGeocoder from './Tabs/EventGeocoder';
 import screendoorProject from '../../../utils/ScreendoorProject';
 
 import './MapEvents.scss';
+import { getMapGlobalMeta } from '../../../utils/globals';
 
 const TABS = {
   Project: 0,
@@ -261,6 +262,8 @@ const MapEvents = ( { project } ) => {
   const hasDirtyTab = Object.keys( dirtyTabs )
     .reduce( ( dirty, tabIndex ) => dirty || ( dirtyTabs[tabIndex] && !isDisabled( tabIndex ) ), false );
 
+  const publishReminder = !getMapGlobalMeta.published && !isDisabled( TABS.EventGeocoder );
+
   return (
     <div className="iip-map-admin-mapping">
       <h2 className="iip-map-admin-metabox-header">Map Fields and Save Events</h2>
@@ -316,12 +319,15 @@ const MapEvents = ( { project } ) => {
               projectId={ projectId }
               doSave={ doSave }
               setDirtyTab={ setDirtyTab( TABS.Project ) }
+              publishReminder={ publishReminder }
+              eventCounts={ eventCounts }
             />
           </TabPanel>
           <TabPanel>
             <MapFields
               form={ form }
               mapping={ mapping }
+              eventCounts={ eventCounts }
               doSave={ doSave }
               doNext={ doNext }
               isDirty={ dirtyTabs[TABS.MapFields] }
@@ -329,6 +335,7 @@ const MapEvents = ( { project } ) => {
               setUpdated={ setTabUpdated( TABS.MapFields ) }
               needsUpdate={ mergeState.needsUpdate[TABS.MapFields] }
               getDefaultMapping={ project.getDefaultMapping }
+              publishReminder={ publishReminder }
             />
           </TabPanel>
           <TabPanel>
@@ -345,6 +352,7 @@ const MapEvents = ( { project } ) => {
               setDirty={ setDirtyTab( TABS.MapCard ) }
               needsUpdate={ mergeState.needsUpdate[TABS.MapCard] }
               setUpdated={ setTabUpdated( TABS.MapCard ) }
+              publishReminder={ publishReminder }
             />
           </TabPanel>
           <TabPanel>
@@ -356,6 +364,7 @@ const MapEvents = ( { project } ) => {
               needsUpdate={ mergeState.needsUpdate[TABS.EventDownloader] }
               setUpdated={ setTabUpdated( TABS.EventDownloader ) }
               setProcessing={ setProcessing( TABS.EventDownloader ) }
+              publishReminder={ publishReminder }
             />
           </TabPanel>
           <TabPanel>
@@ -365,6 +374,7 @@ const MapEvents = ( { project } ) => {
               setEventCounts={ setEventCounts }
               isDirty={ dirtyTabs[TABS.EventGeocoder] }
               setProcessing={ setProcessing( TABS.EventGeocoder ) }
+              publishReminder={ publishReminder }
             />
           </TabPanel>
         </Tabs>

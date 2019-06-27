@@ -26,13 +26,17 @@
   }
 
   &__controls {
-    box-sizing: border-box;
-    border-top: 1px solid $border-light;
-    padding: 0.5em;
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    &--row {
+      box-sizing: border-box;
+      padding: 0.5em;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      &:first-of-type {
+        border-top: 1px solid $border-light;
+      }
+    }
 
     &--item {
       margin-left: 1em;
