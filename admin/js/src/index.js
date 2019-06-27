@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 
 import './index.scss';
 
-import ConfigureMap from './Components/Metaboxes/ConfigureMap/ConfigureMap';
-import DataExporter from './Components/Metaboxes/DataExporter';
-import UpdateMarker from './Components/Metaboxes/UpdateMarker';
-import MapEvents from './Components/Metaboxes/MapEvents/MapEvents';
+import ConfigureMap from './components/Metaboxes/ConfigureMap/ConfigureMap';
+import DataExporter from './components/Metaboxes/DataExporter';
+import UpdateMarker from './components/Metaboxes/UpdateMarker';
+import MapEvents from './components/Metaboxes/MapEvents/MapEvents';
 
 ReactDOM.render(
   <ConfigureMap />,
