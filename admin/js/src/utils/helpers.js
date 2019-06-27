@@ -77,3 +77,17 @@ export const deleteMarker = ( args ) => {
   // AJAX POST request to save screendoor project data
   return axios.post( url, formData ).then( resp => resp.data );
 };
+
+export const importScreenDoorData = ( args ) => {
+  // Get WP admin AJAX URL and data
+  const url = getMapGlobalMeta.ajaxUrl;
+
+  // Create the form that constitutes the AJAX request body
+  const formData = getFormData( { post_id: getMapMeta.id } );
+  formData.append( 'action', 'iip_map_ajax' );
+  formData.append( 'security', getMapGlobalMeta.markerNonce );
+  formData.append( 'file', args );
+
+  // AJAX POST request to import screendoor project data
+  return axios.post( url, formData ).then( resp => resp.data );
+};
