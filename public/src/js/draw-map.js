@@ -208,7 +208,7 @@ function drawLayers( m ) {
       new mapboxgl.Popup( { offset: 25 } )
         .setLngLat( coordinates )
         .setHTML( `
-                 <div class="info-window">
+                 <div class="info-window" data-sdid="${e.features[0].properties.ext_id}">
                    <div class="info-window__header">
                     ${buildSection( titleField, 'title' )}
                     ${buildSection( topicField, 'topic' )}

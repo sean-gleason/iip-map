@@ -168,7 +168,7 @@ class Table extends Component {
               const timeField = parseSection( mapping.time_arr, fields );
               const additionalData = parseSection( mapping.other_arr, fields );
               return (
-                <div className="event-table__row event">
+                <div className="event-table__row event" data-sdid={ event.properties.ext_id }>
                   <h3>{ titleField }</h3>
                   <div className="topic">{ event.properties.topic }</div>
                   <div className="date">
