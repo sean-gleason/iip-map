@@ -1,6 +1,5 @@
 .mapboxgl-popup {
-  max-width: 300px !important;
-  width: 100%;
+  max-width: 340px !important;
   z-index: 9; }
 
 .mapboxgl-popup-content {

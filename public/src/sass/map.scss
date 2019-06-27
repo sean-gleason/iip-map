@@ -1,6 +1,5 @@
 .mapboxgl-popup {
-    max-width: 300px !important; //override mapbox
-    width: 100%;
+    max-width: 340px !important; //override mapbox
     z-index: 9; //display popup over filter
 }
 
