@@ -12,6 +12,10 @@ const mapID = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
 const baseURL = `/wp-json/iip-map/v1/maps/${mapID}`; // eslint-disable-line prefer-template
 const { mapping } = iip_map_params; // eslint-disable-line no-undef, camelcase
 const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
+// today's date
+const todaysDate = new Date();
+// we are making the assumption that events take place in the current year
+const currentYear = todaysDate.getFullYear();
 
 // convert 12 to 24 hour format if user chooses to
 const convertTime12to24 = ( time12h ) => {
@@ -70,7 +74,7 @@ const parseSection = ( sectionMap, fields ) => {
 const buildSection = ( field, sectionName = '' ) => {
   switch ( sectionName ) {
     case 'date':
-      return card.date.toggled ? `${field[0].month}/${field[0].day}/${field[0].year}` : '';
+      return card.date.toggled ? `${field[0].month}/${field[0].day}/${currentYear}` : '';
     case 'time':
       if ( card.time.toggled === true ) {
         if ( card.time.timeFormat === '24hour' ) {

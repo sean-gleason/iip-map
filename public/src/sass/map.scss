@@ -1,3 +1,70 @@
+.map-wrapper {
+    font-family: Arial, sans-serif;
+    position: relative;
+
+    label {
+        color: #18244C;
+        display: block;
+        font-size: 10px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    .filter-group {
+        background-color: #fff;
+        padding: 20px 30px;
+        left: 30px;
+        position: absolute;
+        top: 30px;
+        z-index: 9;
+        .checkbox-wrapper {
+            margin-top: 10px;
+            input[type=checkbox] {
+                clip: rect(1px,1px,1px,1px);
+                height: 1px;
+                margin: 0;
+                overflow: hidden;
+                position: absolute!important;
+                white-space: nowrap;
+                width: 1px;
+                + label {
+                    align-items: center;
+                    cursor: pointer;
+                    display: flex;
+                    &:before {
+                        content: '';
+                        border: 1px solid #18244C;
+                        display: inline-block;
+                        height: 14px;
+                        margin-right: 8px;
+                        overflow: hidden;
+                        width: 14px;
+                    }
+                }
+                &:checked + label:before {
+                    background-color: #18244C;
+                }
+            }
+        }
+        select {
+            background: #fff;
+            background-position: 97% center;
+            background-repeat: no-repeat;
+            border: none;
+            border-radius: 0;
+            color: #18244C;
+            cursor: pointer;
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px 30px 5px 0;
+            width: 100%;
+            z-index: 2;
+            -webkit-appearance: none;
+        }
+    }
+}
+
 .mapboxgl-popup {
     max-width: 340px !important; //override mapbox
     z-index: 9; //display popup over filter
