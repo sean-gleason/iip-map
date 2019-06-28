@@ -64,7 +64,16 @@
 
 .table-controls {
     display: flex;
-    justify-content: flex-end;
+    color: #1C2A54;
+    justify-content: space-between;
+    margin-bottom: 25px;
+
+    .counter {
+        font-size: 14px;
+        span {
+            padding: 0 5px;
+        }
+    }
 }
 
 .event-table {

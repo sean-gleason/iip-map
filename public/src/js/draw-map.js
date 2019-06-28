@@ -160,7 +160,13 @@ const buildAdditional = ( field ) => {
 function buildFilter( m ) {
   const layerIDArray = [];
   let layersUnique = [];
-  m.features.forEach( ( marker ) => {
+  let mapData = m;
+  // mapData is returned as a string ie11 so we need to convert it to an object
+  if ( typeof mapData === 'string' ) {
+    mapData = JSON.parse( m );
+  }
+
+  mapData.features.forEach( ( marker ) => {
     const eventTopic = marker.properties.topic;
     const layerID = `${eventTopic}`;
     layerIDArray.push( layerID );
@@ -171,7 +177,7 @@ function buildFilter( m ) {
   layersUnique.forEach( ( layerID ) => {
     // we are going to build arrays of markers to store filtered by layerID
     const markers = [];
-    m.features.filter( ( marker ) => { // eslint-disable-line array-callback-return
+    mapData.features.filter( ( marker ) => { // eslint-disable-line array-callback-return
       // build array of markers filter by layerID
       if ( marker.properties.topic === layerID ) {
         // push markers to array

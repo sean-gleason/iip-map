@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import SearchIcon from '../../../images/search.svg';
+// ie 11 compatibility
+import 'isomorphic-fetch';
+
+const ES6Promise = require( 'es6-promise' );
+
+ES6Promise.polyfill();
 
 // Import shortcode parameters
 const mapID = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
