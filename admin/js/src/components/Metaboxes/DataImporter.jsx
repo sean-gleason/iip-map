@@ -12,17 +12,23 @@ const DataImporter = () => {
   const setActionLoading = () => setAction( { loading: true, message: null } );
   const setActionError = err => setAction( { loading: false, error: true, message: err } );
   const setActionResult = err => setAction( { loading: false, error: false, message: err } );
+
   const handleFileSelect = ( e ) => {
     const { files } = e.target;
     if ( files && files.length > 0 ) {
       setActionLoading();
-      importScreenDoorData( files[0] ).then( ( result ) => {
-        if ( result.success ) {
-          setActionResult( 'Import successful.' );
-        } else if ( result.error ) {
-          setActionError( `Import Failed: ${result.error}` );
-        }
-      } ).catch( setActionError );
+      importScreenDoorData( files[0] )
+        .then( ( result ) => {
+          if ( result.success ) {
+            setActionResult( 'Import successful.' );
+          } else if ( result.error ) {
+            setActionError( `Import Failed: ${result.error}` );
+          }
+        } )
+        .catch( ( err ) => {
+          if ( err ) setActionError( err.toString() );
+          else setActionError( 'Import failed.' );
+        } );
     }
   };
 
