@@ -18,13 +18,9 @@ const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 // get topic select
 const topicSelect = document.getElementById( 'topic-select' );
 const fragment = document.createDocumentFragment();
-// get past events checkboxgit statu
-const pastEventsCheckbox = document.getElementById( 'past-events-checkbox' );
 
 // today's date
 const todaysDate = new Date();
-// we are making the assumption that events take place in the current year
-const currentYear = todaysDate.getFullYear();
 
 mapboxgl.accessToken = apiKey;
 
