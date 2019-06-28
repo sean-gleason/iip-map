@@ -18,9 +18,13 @@ const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 // get topic select
 const topicSelect = document.getElementById( 'topic-select' );
 const fragment = document.createDocumentFragment();
+// get past events checkbox
+const pastEventsCheckbox = document.getElementById( 'past-events-checkbox' );
 
 // today's date
 const todaysDate = new Date();
+// we are making the assumption that events take place in the current year
+const currentYear = todaysDate.getFullYear();
 
 mapboxgl.accessToken = apiKey;
 
@@ -43,6 +47,47 @@ map.loadImage( '/wp-content/plugins/iip-map/public/images/location-pin.png', ( e
   }
   map.addImage( 'pin', image );
 } );
+
+// map mapped fields to available fields based on screendoor ID
+const parseSection = ( sectionMap, fields ) => {
+  const vals = [];
+
+  sectionMap.forEach( ( { fieldType, field } ) => {
+    // http://dobtco.github.io/screendoor-api-docs/#spec-for-the-response-hash
+    switch ( fieldType ) {
+      case 'text':
+      case 'paragraph':
+      case 'dropdown':
+      case 'email':
+      case 'phone':
+      case 'numeric':
+      case 'website':
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field].replace( /^[ \t\r\n]+|[ \t\r\n]+$/g, '' ) );
+        }
+        break;
+      case 'date':
+      case 'time':
+      case 'address':
+      case 'price':
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field] );
+        }
+        break;
+      case 'radio':
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field] );
+        }
+        break;
+      default:
+        if ( field in fields && fields[field] ) {
+          vals.push( fields[field] );
+        }
+        return '';
+    }
+  } );
+  return vals;
+};
 
 // build filter and associated functionality
 // store layers in browser
@@ -80,24 +125,39 @@ function buildFilter( m ) {
     option.value = layerID;
     fragment.appendChild( option );
   } );
-
-  // filtering logic - show/hide layers
-  topicSelect.addEventListener( 'change', () => {
-    if ( topicSelect.value !== '' ) {
-      map.getSource( 'events' ).setData( {
-        type: 'FeatureCollection',
-        features: JSON.parse( sessionStorage.getItem( topicSelect.value ) )
-      } );
-    } else {
-      map.getSource( 'events' ).setData( {
-        type: 'FeatureCollection',
-        features: mapData.features
-      } );
+  // build filtering logic which is shared between checkbox and select events
+  function filterLogic() {
+    // get all events if select is empty
+    let selectValue = topicSelect.value;
+    if ( !selectValue ) {
+      selectValue = 'all';
     }
+    map.getSource( 'events' ).setData( {
+      type: 'FeatureCollection',
+      features: JSON.parse( sessionStorage.getItem( selectValue ) ).filter( ( marker ) => {
+        if ( pastEventsCheckbox.checked ) {
+          const { fields } = marker.properties;
+          const dateField = parseSection( mapping.date_arr, fields );
+          const eventDate = new Date( `${currentYear}, ${dateField[0].month}, ${dateField[0].day}` );
+          if ( todaysDate > eventDate ) {
+            return false;
+          }
+        }
+        return true;
+      } )
+    } );
+  }
+  // add filtering logic to event listeners
+  topicSelect.addEventListener( 'change', () => {
+    filterLogic();
     layersUnique.add( topicSelect.value );
   } );
 
   topicSelect.appendChild( fragment );
+
+  pastEventsCheckbox.addEventListener( 'change', () => {
+    filterLogic();
+  } );
 }
 
 // const mapData = { features: null };
@@ -191,47 +251,6 @@ const convertTime12to24 = ( time12h ) => {
     hours = parseInt( hours, 10 ) + 12;
   }
   return `${hours}:${minutes}`;
-};
-
-// map mapped fields to available fields based on screendoor ID
-const parseSection = ( sectionMap, fields ) => {
-  const vals = [];
-
-  sectionMap.forEach( ( { fieldType, field } ) => {
-    // http://dobtco.github.io/screendoor-api-docs/#spec-for-the-response-hash
-    switch ( fieldType ) {
-      case 'text':
-      case 'paragraph':
-      case 'dropdown':
-      case 'email':
-      case 'phone':
-      case 'numeric':
-      case 'website':
-        if ( field in fields && fields[field] ) {
-          vals.push( fields[field].replace( /^[ \t\r\n]+|[ \t\r\n]+$/g, '' ) );
-        }
-        break;
-      case 'date':
-      case 'time':
-      case 'address':
-      case 'price':
-        if ( field in fields && fields[field] ) {
-          vals.push( fields[field] );
-        }
-        break;
-      case 'radio':
-        if ( field in fields && fields[field] ) {
-          vals.push( fields[field] );
-        }
-        break;
-      default:
-        if ( field in fields && fields[field] ) {
-          vals.push( fields[field] );
-        }
-        return '';
-    }
-  } );
-  return vals;
 };
 
 // build our sections for pop ups
