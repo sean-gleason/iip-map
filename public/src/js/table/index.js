@@ -157,6 +157,11 @@ class Table extends Component {
     return (
       <React.Fragment>
         <div className="table-controls">
+          <div className="counter">
+            Viewing
+            <span>{ filteredData.length }</span>
+            Results
+          </div>
           <input
             style={ { backgroundImage: `url(${SearchIcon})` } }
             className="event-table__filter"
