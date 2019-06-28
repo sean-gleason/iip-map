@@ -84,7 +84,7 @@ export const importScreenDoorData = ( args ) => {
 
   // Create the form that constitutes the AJAX request body
   const formData = getFormData( { post_id: getMapMeta.id } );
-  formData.append( 'action', 'iip_map_ajax' );
+  formData.append( 'action', 'iip_map_import_data_ajax' );
   formData.append( 'security', getMapGlobalMeta.markerNonce );
   formData.append( 'file', args );
 
