@@ -267,7 +267,7 @@ const buildSection = ( field, sectionName = '' ) => {
         return `
           <h4>${card.date.heading}</h4>
           <div class="info-window__date">
-              ${field[0].month}/${field[0].day}/${field[0].year}
+              ${field[0].month}/${field[0].day}/${currentYear}
           </div>
         `;
       }
