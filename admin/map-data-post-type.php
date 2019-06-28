@@ -81,6 +81,14 @@ class IIP_Map_Post_Type {
       'side',
       'low'
     );
+    add_meta_box(
+      'iip_map_sidebar--import',
+      __( 'Import Screendoor Data', 'iip-map' ),
+      array( $this, 'map_sidebar_import_metabox' ),
+      $this->name,
+      'side',
+      'low'
+    );
   }
 
   // Pull in metabox partials
@@ -103,6 +111,11 @@ class IIP_Map_Post_Type {
 
   public function map_sidebar_export_metabox( $post ) {
     echo '<div id="iip-map-admin-sidebar--export"><div class="map-admin-spinner-preload"></div></div>';
+  }
+
+
+  public function map_sidebar_import_metabox( $post ) {
+    echo '<div id="iip-map-admin-sidebar--import"><div class="map-admin-spinner-preload"></div></div>';
   }
 
   // Sanitize and store map post metadata values
