@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import SearchIcon from '../../../images/search.svg';
 // ie 11 compatibility
 import 'isomorphic-fetch';
+import { polyfill } from 'es6-promise';
 
-const ES6Promise = require( 'es6-promise' );
+polyfill();
 
-ES6Promise.polyfill();
+import React, { Component } from 'react';
+import SearchIcon from '../../../images/search.svg';
 
 // Import shortcode parameters
 const mapID = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
@@ -152,7 +152,15 @@ class Table extends Component {
 
     return (
       <React.Fragment>
-        <div className="table-controls"><input style={ { backgroundImage: `url(${SearchIcon})` } } className="event-table__filter" placeholder="Type to search" value={ filter } onChange={ this.handleChange } /></div>
+        <div className="table-controls">
+          <input
+            style={ { backgroundImage: `url(${SearchIcon})` } }
+            className="event-table__filter"
+            placeholder="Type to search"
+            value={ filter }
+            onChange={ this.handleChange }
+          />
+        </div>
         <div className="event-table">
           { error ? <p>{ error.message }</p> : null }
           { !isLoading ? (
@@ -174,7 +182,11 @@ class Table extends Component {
               const timeField = parseSection( mapping.time_arr, fields );
               const additionalData = parseSection( mapping.other_arr, fields );
               return (
-                <div className="event-table__row event" data-sdid={ event.properties.ext_id }>
+                <div
+                  className="event-table__row event"
+                  key={ event.properties.ext_id }
+                  data-sdid={ event.properties.ext_id }
+                >
                   <h3>{ titleField }</h3>
                   <div className="topic">{ event.properties.topic }</div>
                   <div className="date">
