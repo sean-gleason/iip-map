@@ -7,7 +7,7 @@ import StatusTimer from '../../../StatusTimer/StatusTimer';
 import TabControls from './TabControls';
 
 const EventGeocoder = ( {
-  project, isDirty, eventCounts, setEventCounts, setProcessing
+  project, isDirty, eventCounts, setEventCounts, setProcessing, publishReminder
 } ) => {
   const [logs, setLogs] = useState( [] );
   const [state, setState] = useReducer( ( prevState, update ) => ( { ...prevState, ...update } ), {
@@ -170,6 +170,7 @@ const EventGeocoder = ( {
 
   useEffect( () => {
     if ( isDirty && !state.active && !stopRef.current ) {
+      log();
       doStatus( 'Geocoding REQUIRED', false, true );
     }
   }, [isDirty] );
@@ -208,6 +209,7 @@ const EventGeocoder = ( {
         </div>
       </div>
       <TabControls
+        publishReminder={ publishReminder }
         handleSave={ handleAction }
         label={ getButtonText() }
         disabled={ !isDirty || ( state.active && stopRef.current ) }
@@ -219,6 +221,7 @@ const EventGeocoder = ( {
 EventGeocoder.propTypes = {
   project: PropTypes.object,
   isDirty: PropTypes.bool,
+  publishReminder: PropTypes.bool,
   eventCounts: PropTypes.object,
   setEventCounts: PropTypes.func,
   setProcessing: PropTypes.func

@@ -11,7 +11,7 @@ const ItemGroupSelect = ( props ) => {
   } = props;
 
   const maxVisible = 10;
-  const height = ( data.length > maxVisible ? maxVisible : data.length * maxVisible ) + 0.5;
+  const lines = ( data.length > maxVisible ? maxVisible : data.length );
 
   const handleSelect = ( e ) => {
     handleTopic( [...e.target.selectedOptions].map( o => o.value ) );
@@ -25,7 +25,7 @@ const ItemGroupSelect = ( props ) => {
             multiple
             name="topicFields"
             style={ {
-              height: `${height}em`
+              height: `calc(${lines} * 1.35em)`
             } }
             className={ hasError ? 'invalid' : '' }
             value={ selected.map( f => f.field ) }

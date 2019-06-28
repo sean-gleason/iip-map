@@ -108,7 +108,7 @@ export class ScreendoorProject {
       }
     }
 
-    console.log( 'saving', dataObj );
+    // console.log( 'saving', dataObj );
 
     // Get WP admin AJAX URL and data
     const url = getMapGlobalMeta.ajaxUrl;

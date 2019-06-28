@@ -28,6 +28,8 @@
       width: 100%;
       z-index: 2;
       -webkit-appearance: none; }
+      .map-wrapper .filter-group select::-ms-expand {
+        display: none; }
 
 .table-wrapper {
   padding: 0 40px; }
@@ -54,9 +56,15 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end; }
+  color: #1C2A54;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-bottom: 25px; }
+  .table-controls .counter {
+    font-size: 14px; }
+    .table-controls .counter span {
+      padding: 0 5px; }
 
 .event-table {
   border-bottom: 1px solid #d5d8e5;
