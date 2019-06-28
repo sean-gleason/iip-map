@@ -28,6 +28,8 @@
       width: 100%;
       z-index: 2;
       -webkit-appearance: none; }
+      .map-wrapper .filter-group select::-ms-expand {
+        display: none; }
 
 .table-wrapper {
   padding: 0 40px; }

@@ -21,7 +21,8 @@ files.forEach(function (file) {
 
 const browserslist = [
   "> 1%",
-  "last 2 versions"
+  "last 2 versions",
+  "ie >= 11"
 ];
 
 module.exports = {

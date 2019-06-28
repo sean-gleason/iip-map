@@ -1,4 +1,10 @@
 import mapboxgl from 'mapbox-gl';
+// ie 11 compatibility
+import 'isomorphic-fetch';
+import { polyfill } from 'es6-promise';
+
+polyfill();
+
 
 // shortcode parameters
 const mapId = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
@@ -35,12 +41,141 @@ map.loadImage( '/wp-content/plugins/iip-map/public/images/location-pin.png', ( e
   map.addImage( 'pin', image );
 } );
 
+// build filter and associated functionality
+// store layers in browser
+function buildFilter( m ) {
+  const layersUnique = new Set();
+  let mapData = m;
+  // mapData is returned as a string ie11 so we need to convert it to an object
+  if ( typeof mapData === 'string' ) {
+    mapData = JSON.parse( m );
+  }
+
+  mapData.features.forEach( ( marker ) => {
+    const eventTopic = marker.properties.topic;
+    const layerID = `${eventTopic}`;
+    layersUnique.add( layerID );
+  } );
+
+  layersUnique.forEach( ( layerID ) => {
+    // we are going to build arrays of markers to store filtered by layerID
+    const markers = [];
+    mapData.features.forEach( ( marker ) => {
+      // build array of markers filter by layerID
+      if ( marker.properties.topic === layerID ) {
+        // push markers to array
+        markers.push( marker );
+      }
+    } );
+    // store events sorted by category
+    // we swap the map data with stored data if the filter is used
+    // doing this because we cannot update the cluster layer once it's drawn
+    sessionStorage.setItem( layerID, JSON.stringify( markers ) );
+    // build out filter <select> by adding each layerID as <option>
+    const option = document.createElement( 'option' );
+    option.innerHTML = layerID;
+    option.value = layerID;
+    fragment.appendChild( option );
+  } );
+
+  // filtering logic - show/hide layers
+  topicSelect.addEventListener( 'change', () => {
+    if ( topicSelect.value !== '' ) {
+      map.getSource( 'events' ).setData( {
+        type: 'FeatureCollection',
+        features: JSON.parse( sessionStorage.getItem( topicSelect.value ) )
+      } );
+    } else {
+      map.getSource( 'events' ).setData( {
+        type: 'FeatureCollection',
+        features: mapData.features
+      } );
+    }
+    layersUnique.add( topicSelect.value );
+  } );
+
+  topicSelect.appendChild( fragment );
+}
+
+// const mapData = { features: null };
+
 // Pull map data from iip-maps API
 const mapDataEndpoint = `/wp-json/iip-map/v1/maps/${mapId}`;
-const mapDataXHR = new XMLHttpRequest();
-mapDataXHR.open( 'GET', mapDataEndpoint );
-mapDataXHR.responseType = 'json';
-mapDataXHR.send();
+fetch( mapDataEndpoint )
+  .then( response => response.json() )
+  .then( ( mapDataData ) => {
+    buildFilter( mapDataData );
+    // const { features } = mapDataData;
+    // store all events for use if filter is reset
+    // mapData.features = features;
+
+    map.addSource( 'events', {
+      type: 'geojson',
+      data: mapDataData,
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
+    } );
+
+    map.addLayer( {
+      id: 'clusters',
+      type: 'circle',
+      source: 'events',
+      filter: ['has', 'point_count'],
+      paint: {
+        // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+        // with three steps to implement three types of circles:
+        //   * Blue, 20px circles when point count is less than 100
+        //   * Yellow, 30px circles when point count is between 100 and 750
+        //   * Pink, 40px circles when point count is greater than or equal to 750
+        'circle-color': [
+          'step',
+          ['get', 'point_count'],
+          '#51bbd6',
+          100,
+          '#f1f075',
+          750,
+          '#f28cb1'
+        ],
+        'circle-radius': [
+          'step',
+          ['get', 'point_count'],
+          20,
+          100,
+          30,
+          750,
+          40
+        ]
+      }
+    } );
+
+    map.addLayer( {
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'events',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['Arial Unicode MS Bold'],
+        'text-size': 12
+      }
+    } );
+
+    map.addLayer( {
+      id: 'uncluster-point',
+      type: 'symbol',
+      source: 'events',
+      filter: ['!', ['has', 'point_count']],
+      layout: {
+        'icon-image': 'pin',
+        'icon-allow-overlap': false,
+        'icon-size': 1
+      }
+    } );
+  } )
+  .catch( ( err ) => {
+    console.error( err );
+  } );
 
 // convert 12 to 24 hour format if user chooses to
 const convertTime12to24 = ( time12h ) => {
@@ -106,7 +241,15 @@ const buildSection = ( field, sectionName = '' ) => {
       return card.location.toggled ? `<div class="info-window__location">
         <h4>${card.location.heading}</h4><div class="info-window__field">${field}</div></div>` : '';
     case 'date':
-      return card.date.toggled ? `<h4>${card.date.heading}</h4><div class="info-window__date">${field[0].month}/${field[0].day}/${field[0].year}</div>` : '';
+      if ( card.date.toggled ) {
+        return `
+          <h4>${card.date.heading}</h4>
+          <div class="info-window__date">
+              ${field[0].month}/${field[0].day}/${field[0].year}
+          </div>
+        `;
+      }
+      return '';
     case 'time':
       if ( card.time.toggled === true ) {
         if ( card.time.timeFormat === '24hour' ) {
@@ -137,11 +280,19 @@ const buildAdditional = ( field ) => {
       // check that field contains data before proceeding
       if ( fieldArr[i] ) {
         if ( fieldArr[i].checked ) {
-          markup += `<div class="info-window__additional">
-        <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i].checked} ${o.inlinePost}</div></div>`;
+          markup += `
+            <div class="info-window__additional">
+              <h4>${o.heading}</h4>
+              <div class="info-window__field">${o.inlinePre} ${fieldArr[i].checked} ${o.inlinePost}</div>
+            </div>
+          `;
         } else {
-          markup += `<div class="info-window__additional">
-        <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div></div>`;
+          markup += `
+            <div class="info-window__additional">
+              <h4>${o.heading}</h4>
+              <div class="info-window__field">${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>
+            </div>
+          `;
         }
       }
     } );
@@ -155,137 +306,6 @@ const buildAdditional = ( field ) => {
   return markup;
 };
 
-// build filter and associated functionality
-// store layers in browser
-function buildFilter( m ) {
-  const layerIDArray = [];
-  let layersUnique = [];
-  let mapData = m;
-  // mapData is returned as a string ie11 so we need to convert it to an object
-  if ( typeof mapData === 'string' ) {
-    mapData = JSON.parse( m );
-  }
-
-  mapData.features.forEach( ( marker ) => {
-    const eventTopic = marker.properties.topic;
-    const layerID = `${eventTopic}`;
-    layerIDArray.push( layerID );
-
-    layersUnique = layerIDArray.filter( ( item, index ) => layerIDArray.indexOf( item ) >= index );
-  } );
-
-  layersUnique.forEach( ( layerID ) => {
-    // we are going to build arrays of markers to store filtered by layerID
-    const markers = [];
-    mapData.features.filter( ( marker ) => { // eslint-disable-line array-callback-return
-      // build array of markers filter by layerID
-      if ( marker.properties.topic === layerID ) {
-        // push markers to array
-        markers.push( marker );
-      }
-    } );
-    // store events sorted by category
-    // we swap the map data with stored data if the filter is used
-    // doing this because we cannot update the cluster layer once it's drawn
-    sessionStorage.setItem( layerID, JSON.stringify( markers ) );
-    // build out filter <select> by adding each layerID as <option>
-    const option = document.createElement( 'option' );
-    option.innerHTML = layerID;
-    option.value = layerID;
-    fragment.appendChild( option );
-  } );
-
-  // filtering logic - show/hide layers
-  topicSelect.addEventListener( 'change', () => {
-    if ( topicSelect.value !== '' ) {
-      map.getSource( 'events' ).setData( {
-        type: 'FeatureCollection',
-        features: JSON.parse( sessionStorage.getItem( topicSelect.value ) )
-      } );
-    } else {
-      map.getSource( 'events' ).setData( {
-        type: 'FeatureCollection',
-        features: JSON.parse( sessionStorage.getItem( 'all' ) )
-      } );
-    }
-    layerIDArray.push( topicSelect.value );
-  } );
-
-  topicSelect.appendChild( fragment );
-}
-
-mapDataXHR.onload = function loadData() {
-  const mapDataData = mapDataXHR.response;
-  const { features } = mapDataData;
-  buildFilter( mapDataData );
-  // store all events for use if filter is reset
-  sessionStorage.setItem( 'all', JSON.stringify( features ) );
-
-  map.addSource( 'events', {
-    type: 'geojson',
-    data: mapDataData,
-    cluster: true,
-    clusterMaxZoom: 14,
-    clusterRadius: 50
-  } );
-
-  map.addLayer( {
-    id: 'clusters',
-    type: 'circle',
-    source: 'events',
-    filter: ['has', 'point_count'],
-    paint: {
-      // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-      // with three steps to implement three types of circles:
-      //   * Blue, 20px circles when point count is less than 100
-      //   * Yellow, 30px circles when point count is between 100 and 750
-      //   * Pink, 40px circles when point count is greater than or equal to 750
-      'circle-color': [
-        'step',
-        ['get', 'point_count'],
-        '#51bbd6',
-        100,
-        '#f1f075',
-        750,
-        '#f28cb1'
-      ],
-      'circle-radius': [
-        'step',
-        ['get', 'point_count'],
-        20,
-        100,
-        30,
-        750,
-        40
-      ]
-    }
-  } );
-
-  map.addLayer( {
-    id: 'cluster-count',
-    type: 'symbol',
-    source: 'events',
-    filter: ['has', 'point_count'],
-    layout: {
-      'text-field': '{point_count_abbreviated}',
-      'text-font': ['Arial Unicode MS Bold'],
-      'text-size': 12
-    }
-  } );
-
-  map.addLayer( {
-    id: 'uncluster-point',
-    type: 'symbol',
-    source: 'events',
-    filter: ['!', ['has', 'point_count']],
-    layout: {
-      'icon-image': 'pin',
-      'icon-allow-overlap': false,
-      'icon-size': 1
-    }
-  } );
-};
-
 // on map load add clustering and popup functionality
 map.on( 'load', () => {
   map.on( 'click', 'clusters', ( e ) => {
@@ -293,12 +313,13 @@ map.on( 'load', () => {
     const clusterId = features[0].properties.cluster_id;
     map.getSource( 'events' ).getClusterExpansionZoom( clusterId, ( err, zoom ) => {
       if ( err ) {
+        console.error( err );
         return;
       }
 
       map.easeTo( {
-        center: features[0].geometry.coordinates,
-        zoom: zoom // eslint-disable-line object-shorthand
+        zoom,
+        center: features[0].geometry.coordinates
       } );
     } );
   } );
