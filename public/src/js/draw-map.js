@@ -32,7 +32,7 @@ mapboxgl.accessToken = apiKey;
 
 const map = new mapboxgl.Map( {
   container: 'map',
-  style: 'mapbox://styles/jspellman814/cjwiaf6wi05nk1dlue7undbxu?optimize=true',
+  style: 'mapbox://styles/alexgordon/cjxgmh0p22nvk1cny8rtlluxg?optimize=true',
   center: [lat, lng],
   zoom: mapZoom
 } );
