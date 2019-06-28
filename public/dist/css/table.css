@@ -1,36 +1,3 @@
-.map-wrapper {
-  font-family: Arial, sans-serif;
-  position: relative; }
-  .map-wrapper label {
-    color: #1b2953;
-    display: block;
-    font-size: 10px;
-    margin-bottom: 5px;
-    text-transform: uppercase; }
-  .map-wrapper .filter-group {
-    background-color: #fff;
-    padding: 20px 30px;
-    left: 30px;
-    position: absolute;
-    top: 30px;
-    z-index: 9; }
-    .map-wrapper .filter-group select {
-      background: #fff;
-      background-position: 97% center;
-      background-repeat: no-repeat;
-      border: none;
-      border-radius: 0;
-      cursor: pointer;
-      display: block;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 5px 30px 5px 0;
-      width: 100%;
-      z-index: 2;
-      -webkit-appearance: none; }
-      .map-wrapper .filter-group select::-ms-expand {
-        display: none; }
-
 .table-wrapper {
   padding: 0 40px; }
 

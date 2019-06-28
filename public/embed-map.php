@@ -62,7 +62,7 @@ class IIP_Map_Embed {
       wp_enqueue_script( 'table' );
     }
 
-    $html = '<div class="map-wrapper"><div id="filter-group" class="filter-group"><label for="topic-select">Filter by</label><select style="background-image: url(/wp-content/plugins/iip-map/public/images/arrow-down.svg);" id="topic-select" name="topic-select"><option value="">Select</option></select></div><div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div></div><div class="table-wrapper"><button id="toggle-table">View this map as a table</button><div id="event-list" class="hidden"></div></div>';
+    $html = '<div class="map-wrapper"><div id="filter-group" class="filter-group"><label for="topic-select">Filter by</label><select style="background-image: url(/wp-content/plugins/iip-map/public/images/arrow-down.svg);" id="topic-select" name="topic-select"><option value="">Select</option></select><div class="checkbox-wrapper"><input name="past-events-filter" type="checkbox" id="past-events-checkbox"><label for="past-events-checkbox"> Remove Past Events</label></div></div><div id="map" style="height: ' . $height . 'px" class="iip-map-container" data-map-id="' . $map . '"><div id="popup"></div></div></div><div class="table-wrapper"><button id="toggle-table">View this map as a table</button><div id="event-list" class="hidden"></div></div>';
     return $html;
 
   }
