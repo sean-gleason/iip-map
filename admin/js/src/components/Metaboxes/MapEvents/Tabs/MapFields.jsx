@@ -5,11 +5,11 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import Column from '../../../Column/Column';
 import ItemGroupDroppable from '../../../Column/ItemGroupDroppable';
 import TabControls from './TabControls';
-import ItemGroup from '../../../Column/ItemGroup';
 import ItemGroupSelect from '../../../Column/ItemGroupSelect';
 
 const MapFields = ( {
-  form, mapping, doSave, doNext, getDefaultMapping, isDirty, setDirty, needsUpdate, setUpdated
+  form, mapping, doSave, doNext, getDefaultMapping,
+  isDirty, setDirty, needsUpdate, setUpdated, eventCounts, publishReminder
 } ) => {
   const mappingExists = mapping && mapping.fields && Object.values( mapping.fields ).length > 0;
   const [state, setState] = useState( () => {
@@ -143,6 +143,9 @@ const MapFields = ( {
     availableFields, nameFields, locationFields, dateFields, timeFields, additionalFields, topicFields
   } = state;
 
+  const warningText = 'Warning: Saving a new mapping will delete any existing events associated with this map.';
+  const showWarning = eventCounts.total !== '0' && isDirty;
+
   return (
     <Fragment>
       <div className="react-tabs__tab-panel--inner">
@@ -190,8 +193,10 @@ const MapFields = ( {
         </div>
       </div>
       <TabControls
+        publishReminder={ publishReminder }
         handleSave={ handleSave }
         errors={ errors.length > 0 ? ['Sections outlined in red require at least 1 field mapping'] : [] }
+        warning={ showWarning ? warningText : null }
       >
         <button
           key="map-fields-clear"
@@ -226,8 +231,10 @@ const MapFields = ( {
 
 MapFields.propTypes = {
   needsUpdate: PropTypes.bool,
+  publishReminder: PropTypes.bool,
   form: PropTypes.array,
   mapping: PropTypes.object,
+  eventCounts: PropTypes.object,
   doSave: PropTypes.func,
   doNext: PropTypes.func,
   isDirty: PropTypes.bool,

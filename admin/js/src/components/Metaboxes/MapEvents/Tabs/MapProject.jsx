@@ -2,7 +2,9 @@ import React, { Fragment, useEffect, useState } from 'react';
 import * as PropTypes from 'prop-types';
 import TabControls from './TabControls';
 
-const MapProject = ( { projectId, doSave, setDirtyTab } ) => {
+const MapProject = ( {
+  projectId, doSave, setDirtyTab, eventCounts, publishReminder
+} ) => {
   const [id, setId] = useState( projectId !== null ? projectId : '' );
   const [errors, setErrors] = useState( [] );
 
@@ -40,7 +42,8 @@ const MapProject = ( { projectId, doSave, setDirtyTab } ) => {
     checkErrors();
   }, [id] );
 
-  const showWarning = projectId && id && projectId !== id;
+  const warningText = 'Warning: Saving a new project ID will delete any existing events associated with this map.';
+  const showWarning = projectId && id && projectId !== id && eventCounts.total !== '0';
 
   return (
     <Fragment>
@@ -57,11 +60,12 @@ const MapProject = ( { projectId, doSave, setDirtyTab } ) => {
           />
         </label>
       </div>
-      <TabControls handleSave={ handleSave } errors={ errors }>
-        <div className="iip-map-admin-mapping__error" style={ { visibility: showWarning ? 'visible' : 'hidden' } }>
-          Warning: Saving a new project ID will delete any existing events associated with this map.
-        </div>
-      </TabControls>
+      <TabControls
+        handleSave={ handleSave }
+        errors={ errors }
+        warning={ showWarning ? warningText : null }
+        publishReminder={ publishReminder }
+      />
     </Fragment>
   );
 };
@@ -69,6 +73,8 @@ const MapProject = ( { projectId, doSave, setDirtyTab } ) => {
 MapProject.propTypes = {
   projectId: PropTypes.string,
   setDirtyTab: PropTypes.func,
+  eventCounts: PropTypes.object,
+  publishReminder: PropTypes.bool,
   doSave: PropTypes.func
 };
 

@@ -15,6 +15,7 @@ export const mapGlobalMeta = ( function getGlobals() {
 class MapGlobalMeta {
   constructor( meta ) {
     this._meta = meta;
+    this.published = /.*post=[0-9]+.*/.test( window.location.search );
   }
 
   get meta() {

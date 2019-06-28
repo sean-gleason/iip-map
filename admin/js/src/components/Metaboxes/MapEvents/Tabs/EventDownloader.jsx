@@ -8,7 +8,7 @@ import Logger, { logMessage } from '../../../Logger/Logger';
 import StatusTimer from '../../../StatusTimer/StatusTimer';
 
 const EventDownloader = ( {
-  project, eventCounts, setEventCounts, doNext, setProcessing
+  project, eventCounts, setEventCounts, doNext, setProcessing, publishReminder
 } ) => {
   const [errors] = useState( [] );
   const [logs, setLogs] = useState( [] );
@@ -47,7 +47,7 @@ const EventDownloader = ( {
 
   const processEvents = ( resp ) => {
     if ( stopRef.current ) return null;
-    doStatus( `Processing events from page ${pager.page}` );
+    doStatus( `Downloading events from page ${pager.page}` );
     if ( resp && resp.length > 0 ) {
       const events = [];
       resp.forEach( ( eventData ) => {
@@ -55,7 +55,7 @@ const EventDownloader = ( {
       } );
       return events;
     }
-    doStatus( 'Event processing complete', false );
+    doStatus( 'Event downloading complete', false );
     setActive( false );
     setProcessing( false );
   };
@@ -136,6 +136,15 @@ const EventDownloader = ( {
     doRequest();
   }, [pager.page] );
 
+  useEffect( () => {
+    if ( eventCounts.total === '0' ) {
+      log();
+      setPager( {
+        status: 'Download REQUIRED'
+      } );
+    }
+  }, [eventCounts.total] );
+
   const getButtonText = () => {
     if ( !pager.active ) return 'Download Events';
     if ( !stopRef.current ) return 'Stop Download';
@@ -174,6 +183,7 @@ const EventDownloader = ( {
         handleSave={ doNext }
         label="Continue"
         disabled={ eventCounts.total === '0' || pager.active }
+        publishReminder={ publishReminder }
       >
         <button
           key="map-events-download"
@@ -205,6 +215,7 @@ EventDownloader.propTypes = {
       geocoded: PropTypes.string
     } )
   } ),
+  publishReminder: PropTypes.bool,
   eventCounts: PropTypes.object,
   setEventCounts: PropTypes.func,
   setProcessing: PropTypes.func,
