@@ -20,6 +20,8 @@ const topicSelect = document.getElementById( 'topic-select' );
 const fragment = document.createDocumentFragment();
 // get past events checkbox
 const pastEventsCheckbox = document.getElementById( 'past-events-checkbox' );
+// set to store events for cluster filtering
+const storage = new Set();
 
 // today's date
 const todaysDate = new Date();
@@ -118,7 +120,7 @@ function buildFilter( m ) {
     // store events sorted by category
     // we swap the map data with stored data if the filter is used
     // doing this because we cannot update the cluster layer once it's drawn
-    sessionStorage.setItem( layerID, JSON.stringify( markers ) );
+    storage[layerID] = markers;
     // build out filter <select> by adding each layerID as <option>
     const option = document.createElement( 'option' );
     option.innerHTML = layerID;
@@ -134,7 +136,7 @@ function buildFilter( m ) {
     }
     map.getSource( 'events' ).setData( {
       type: 'FeatureCollection',
-      features: JSON.parse( sessionStorage.getItem( selectValue ) ).filter( ( marker ) => {
+      features: storage[selectValue].filter( ( marker ) => {
         if ( pastEventsCheckbox.checked ) {
           const { fields } = marker.properties;
           const dateField = parseSection( mapping.date_arr, fields );
@@ -170,6 +172,7 @@ fetch( mapDataEndpoint )
     buildFilter( mapDataData );
     // const { features } = mapDataData;
     // store all events for use if filter is reset
+    storage.all = mapDataData.features;
     // mapData.features = features;
 
     map.addSource( 'events', {
