@@ -6,4 +6,6 @@ function toggleTable() {
   button.innerHTML = button.innerHTML === 'View this map as a table' ? 'Hide table' : 'View this map as a table';
 }
 
-button.addEventListener( 'click', toggleTable, false );
+if ( button ) {
+  button.addEventListener( 'click', toggleTable, false );
+}

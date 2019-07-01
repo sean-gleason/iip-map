@@ -14,7 +14,7 @@ class IIP_Map_Embed {
 
     wp_register_script( 'table', plugin_dir_url( __FILE__ ) . 'dist/js/table.js', array(), null, true );
 
-    wp_register_script( 'table-toggle', plugin_dir_url( __FILE__ ) . 'dist/js/table-button.js', array(), null, false );
+    wp_register_script( 'table-toggle', plugin_dir_url( __FILE__ ) . 'dist/js/table-button.js', array(), null, true );
 
     wp_enqueue_style( 'iip-mapbox-frontend', 'https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css', array(), null, 'all' );
 
