@@ -1,23 +1,22 @@
 import React, { useReducer } from 'react';
-import { importScreenDoorData } from '../../utils/helpers';
+import { importData } from '../../utils/helpers';
 
 const DataImporter = () => {
-  const labelStyle = { verticalAlign: 'inherit' };
-
   const [action, setAction] = useReducer( ( prevState, update ) => ( { ...prevState, ...update } ), {
     loading: false,
     error: false,
     message: null
   } );
   const setActionLoading = () => setAction( { loading: true, message: null } );
-  const setActionError = err => setAction( { loading: false, error: true, message: err } );
-  const setActionResult = err => setAction( { loading: false, error: false, message: err } );
+  const setActionError = err => setAction( { loading: false, error: !!err, message: err || '' } );
+  const setActionResult = msg => setAction( { loading: false, error: false, message: msg } );
 
   const handleFileSelect = ( e ) => {
     const { files } = e.target;
     if ( files && files.length > 0 ) {
       setActionLoading();
-      importScreenDoorData( files[0] )
+      setActionError();
+      importData( files[0] )
         .then( ( result ) => {
           if ( result.success ) {
             setActionResult( 'Import successful.' );
@@ -44,19 +43,15 @@ const DataImporter = () => {
           id="iip-map-admin-import-screendoor-data"
           disabled={ action.loading }
         >
-          <label
-            htmlFor="iip-map-admin-import-screendoor-data-input"
-            style={ labelStyle }
-          >
-            Import Screendoor Data
-            <input
-              id="iip-map-admin-import-screendoor-data-input"
-              className="hidden"
-              accept=".csv,text/csv"
-              type="file"
-              onChange={ handleFileSelect }
-            />
-          </label>
+          Import Screendoor Data
+          <input
+            id="iip-map-admin-import-screendoor-data-input"
+            className="hidden"
+            accept=".csv,text/csv"
+            type="file"
+            disabled={ action.loading }
+            onChange={ handleFileSelect }
+          />
         </button>
         <div className="iip-map-admin-marker-row">
           { action.message && (
