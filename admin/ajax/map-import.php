@@ -35,36 +35,49 @@ class IIP_Map_Import {
       wp_send_json( [ 'success' => false, 'error' => 'File must be .csv format.' ] );
     }
 
-    $values = [];
     $map_meta = get_post_meta( $post_id, '_iip_map_fields_meta', true );
+    if ( !$map_meta ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Project must be selected, and fields mapped before events can be imported.' ] );
+    }
     $project_id = $map_meta['project_id'];
     if ( !$project_id ) {
-      wp_send_json( [ 'success' => false, 'error' => 'Could not find project ID.' ] );
+      wp_send_json( [ 'success' => false, 'error' => 'Project ID has not been saved.' ] );
+    }
+    if ( !array_key_exists( 'mapping', $map_meta ) || !$map_meta['mapping'] ) {
+      wp_send_json( [ 'success' => false, 'error' => 'Project fields must be mapped before events can be imported.' ] );
     }
     $fh = fopen( $file['tmp_name'], 'r+' );
+
+
+    $values = [];
     $header = [];
+    $missing_fields = [];
     if ( ($row = fgetcsv( $fh )) !== FALSE ) {
       foreach ( $row as $key => $value ) {
         $header[$value] = $key;
       }
-
       if ( !in_array( 'Response ID', $row ) ) {
-        wp_send_json( [ 'success' => false, 'error' => 'Missing required fields.' ] );
+        $missing_fields[] = 'Response ID';
       }
     } else {
-      wp_send_json( [ 'success' => false, 'error' => 'Missing header row.' ] );
+      wp_send_json( [ 'success' => false, 'error' => 'Empty CSV file.' ] );
     }
+
     $mapping_keys = [ 'topic_arr', 'date_arr', 'time_arr', 'location_arr', 'name_arr', 'other_arr' ];
     $field_names = [];
     $field_data = [];
     foreach ( $mapping_keys as $map_key ) {
       foreach ( $map_meta['mapping'][$map_key] as $field ) {
         if ( !in_array( $field->name, array_keys( $header ) ) ) {
-          wp_send_json( [ 'success' => false, 'error' => 'Missing required fields.' ] );
+          $missing_fields[] = $field->name;
         }
         $field_names[] = $field->name;
         $field_data[$field->name] = $field;
       }
+    }
+
+    if ( count( $missing_fields ) > 0 ) {
+      wp_send_json( [ 'success' => false, 'error' => "Missing required fields: \r\n" . implode( "\r\n", $missing_fields ) ] );
     }
 
     try {
@@ -113,9 +126,7 @@ class IIP_Map_Import {
     } catch ( Exception $e ) {
       wp_send_json( [ 'success' => false, 'error' => $e->getMessage() ] );
     }
-
-    $event_counts = $wpdb->get_row( "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM $this->table_name WHERE post_id = $post_id" );
-    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $updated, 'events' => $event_counts ] );
+    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $updated ] );
   }
 
 }
