@@ -6,10 +6,11 @@ import Column from '../../../Column/Column';
 import ItemGroupDroppable from '../../../Column/ItemGroupDroppable';
 import TabControls from './TabControls';
 import ItemGroupSelect from '../../../Column/ItemGroupSelect';
+import { useMapState } from '../../../../context/MapProvider';
 
 const MapFields = ( {
-  form, mapping, doSave, doNext, getDefaultMapping,
-  isDirty, setDirty, needsUpdate, setUpdated, eventCounts, publishReminder
+  form, mapping, doSave, doNext, getDefaultMapping, getMappingErrors,
+  isDirty, setDirty, needsUpdate, setUpdated, publishReminder
 } ) => {
   const mappingExists = mapping && mapping.fields && Object.values( mapping.fields ).length > 0;
   const [state, setState] = useState( () => {
@@ -23,6 +24,8 @@ const MapFields = ( {
     return getDefaultMapping( [] );
   } );
   const [errors, setErrors] = useState( [] );
+
+  const { eventCounts } = useMapState();
 
   const onDragEnd = ( result ) => {
     const { destination, draggableId, source } = result;
@@ -75,17 +78,7 @@ const MapFields = ( {
   };
 
   const checkErrors = () => {
-    const { nameFields, locationFields, topicFields } = state;
-    const errs = [];
-    if ( !nameFields.length ) {
-      errs.push( 'name' );
-    }
-    if ( !locationFields.length ) {
-      errs.push( 'location' );
-    }
-    if ( !topicFields.length ) {
-      errs.push( 'topic' );
-    }
+    const errs = getMappingErrors( state );
     setErrors( errs );
     return errs.length !== 0;
   };
@@ -234,12 +227,12 @@ MapFields.propTypes = {
   publishReminder: PropTypes.bool,
   form: PropTypes.array,
   mapping: PropTypes.object,
-  eventCounts: PropTypes.object,
   doSave: PropTypes.func,
   doNext: PropTypes.func,
   isDirty: PropTypes.bool,
   setDirty: PropTypes.func,
   setUpdated: PropTypes.func,
+  getMappingErrors: PropTypes.func,
   getDefaultMapping: PropTypes.func
 };
 
