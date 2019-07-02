@@ -16,7 +16,7 @@ class IIP_Map_Import {
   }
 
   function import_data_ajax() {
-    check_ajax_referer( 'iip-map-marker-nonce', 'security' );
+    check_ajax_referer( 'iip-map-import-nonce', 'security' );
 
     global $wpdb;
 
