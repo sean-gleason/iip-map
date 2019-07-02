@@ -332,6 +332,21 @@ export class ScreendoorProject {
     event.topic = this.parseSection( this.mapping.topicFields, event.fields );
     return event;
   };
+
+  getMappingErrors = ( mapping ) => {
+    const { nameFields, locationFields, topicFields } = mapping;
+    const errs = [];
+    if ( !nameFields.length ) {
+      errs.push( 'name' );
+    }
+    if ( !locationFields.length ) {
+      errs.push( 'location' );
+    }
+    if ( !topicFields.length ) {
+      errs.push( 'topic' );
+    }
+    return errs;
+  };
 }
 const screendoorProject = new ScreendoorProject();
 

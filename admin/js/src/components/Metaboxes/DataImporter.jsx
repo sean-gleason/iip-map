@@ -1,7 +1,10 @@
 import React, { Fragment, useReducer, useRef } from 'react';
 import { importScreenDoorData } from '../../utils/helpers';
+import { useMapState } from '../../context/MapProvider';
 
 const DataImporter = () => {
+  const { projectId, mappingValid } = useMapState();
+
   const [action, setAction] = useReducer( ( prevState, update ) => ( { ...prevState, ...update } ), {
     loading: false,
     error: false,
@@ -20,7 +23,13 @@ const DataImporter = () => {
       importScreenDoorData( files[0] )
         .then( ( result ) => {
           if ( result.success ) {
-            setActionResult( 'Import successful' );
+            const numCreated = parseInt( result.created, 10 );
+            const numUpdated = parseInt( result.updated, 10 );
+            let created = '';
+            if ( numCreated ) created = `\nCreated ${numCreated} event${numCreated !== 1 ? 's' : ''}`;
+            let updated = '';
+            if ( numUpdated ) updated = `\nUpdated ${numUpdated} event${numUpdated !== 1 ? 's' : ''}`;
+            setActionResult( `Import successful${created || updated ? ':' : ''} ${created}${updated}` );
           } else if ( result.error ) {
             setActionError( `Import Failed: \n${result.error}` );
           } else {
@@ -55,7 +64,7 @@ const DataImporter = () => {
             type="button"
             className="button button-primary button-large"
             id="iip-map-admin-import-screendoor-data"
-            disabled={ action.loading }
+            disabled={ action.loading || !projectId || !mappingValid }
             onClick={ handleImport }
           >
             Import Screendoor Data
@@ -65,7 +74,7 @@ const DataImporter = () => {
               accept=".csv,text/csv"
               type="file"
               ref={ inputFile }
-              disabled={ action.loading }
+              disabled={ action.loading || !projectId || !mappingValid }
               onChange={ handleFileSelect }
             />
           </button>

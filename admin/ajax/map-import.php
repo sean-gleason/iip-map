@@ -109,8 +109,8 @@ class IIP_Map_Import {
         }
 
 
-        $topic = $wpdb->_real_escape( $this->collapse( $map_meta['topic_arr'], $event_fields ) );
-        $location = $wpdb->_real_escape( $this->collapse( $map_meta['location_arr'], $event_fields ) );
+        $topic = $wpdb->_real_escape( $this->collapse( $map_meta['mapping']['topic_arr'], $event_fields ) );
+        $location = $wpdb->_real_escape( $this->collapse( $map_meta['mapping']['location_arr'], $event_fields ) );
 
         $event_fields = $wpdb->_real_escape( serialize( (object)$event_fields ) );
         $insert = "($post_id, '$response_id', $project_id, '$topic', '$location', '$event_fields' )";
@@ -123,10 +123,10 @@ class IIP_Map_Import {
 
       $created = $wpdb->query( $query );
       $updated = $total - $created;
+      wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $updated ] );
     } catch ( Exception $e ) {
       wp_send_json( [ 'success' => false, 'error' => $e->getMessage() ] );
     }
-    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $updated ] );
   }
 
 }
