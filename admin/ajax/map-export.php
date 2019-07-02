@@ -44,14 +44,14 @@ class IIP_Map_Export {
 
     // Set header row values
     $csv_fields = array();
-    $csv_fields[] = 'id';
-    $csv_fields[] = 'map_id';
-    $csv_fields[] = 'ext_id';
-    $csv_fields[] = 'title';
-    $csv_fields[] = 'location';
-    $csv_fields[] = 'topic';
-    $csv_fields[] = 'lat';
-    $csv_fields[] = 'lng';
+    $csv_fields[] = 'ID';
+    $csv_fields[] = 'Map ID';
+    $csv_fields[] = 'Response ID';
+    $csv_fields[] = 'Title';
+    $csv_fields[] = 'Location';
+    $csv_fields[] = 'Topic';
+    $csv_fields[] = 'Latitude';
+    $csv_fields[] = 'Longitude';
 
     $mapping = $map_meta['mapping'];
     $mapping_keys = [ 'topic_arr', 'date_arr', 'time_arr', 'location_arr', 'name_arr', 'other_arr' ];
