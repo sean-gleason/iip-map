@@ -1,3 +1,5 @@
+@import './colors';
+
 #iip-map-admin-page {
   padding-top: 10px;
   min-width: 763px;
@@ -292,4 +294,12 @@ h4.iip-map-admin-metabox-subheader {
   margin: 0;
   position: absolute;
   z-index: 1000;
+}
+
+.iip-map-admin-row {
+  margin-bottom: 0.5em;
+}
+
+.iip-map-admin-error {
+  color: $red;
 }

@@ -1,34 +1,57 @@
-import React, { useReducer } from 'react';
+import React, { Fragment, useReducer, useRef } from 'react';
 import { importData } from '../../utils/helpers';
+import { useMapDispatch, useMapState } from '../../context/MapProvider';
 
 const DataImporter = () => {
+  const { dispatchCounts } = useMapDispatch();
+  const { projectId, mappingValid } = useMapState();
+
   const [action, setAction] = useReducer( ( prevState, update ) => ( { ...prevState, ...update } ), {
     loading: false,
     error: false,
     message: null
   } );
-  const setActionLoading = () => setAction( { loading: true, message: null } );
+  const setActionLoading = () => setAction( { loading: true, error: false, message: 'Importing...' } );
   const setActionError = err => setAction( { loading: false, error: !!err, message: err || '' } );
-  const setActionResult = msg => setAction( { loading: false, error: false, message: msg } );
+  const setActionResult = msg => setAction( { loading: false, error: false, message: msg || '' } );
+
+  const inputFile = useRef( null );
 
   const handleFileSelect = ( e ) => {
     const { files } = e.target;
     if ( files && files.length > 0 ) {
       setActionLoading();
-      setActionError();
       importData( files[0] )
         .then( ( result ) => {
           if ( result.success ) {
-            setActionResult( 'Import successful.' );
+            const numCreated = parseInt( result.created, 10 );
+            const numUpdated = parseInt( result.updated, 10 );
+            let created = '';
+            if ( numCreated ) created = `\nCreated ${numCreated} event${numCreated !== 1 ? 's' : ''}`;
+            let updated = '';
+            if ( numUpdated ) updated = `\nUpdated ${numUpdated} event${numUpdated !== 1 ? 's' : ''}`;
+            setActionResult( `Import successful${created || updated ? ':' : ''} ${created}${updated}` );
+            dispatchCounts( result.eventCounts );
           } else if ( result.error ) {
-            setActionError( `Import Failed: ${result.error}` );
+            setActionError( `Import failed: \n${result.error}` );
+          } else {
+            setActionError( 'Import failed' );
           }
         } )
         .catch( ( err ) => {
-          if ( err ) setActionError( err.toString() );
-          else setActionError( 'Import failed.' );
+          if ( err ) {
+            setActionError( `Import failed: \n${err.toString()}` );
+          } else {
+            setActionError( 'Import failed' );
+          }
         } );
     }
+  };
+
+  const handleImport = () => {
+    inputFile.current.value = null;
+    setActionResult();
+    inputFile.current.click();
   };
 
   return (
@@ -37,26 +60,36 @@ const DataImporter = () => {
         <p>
           Click the button below to import Screendoor CSV data.
         </p>
-        <button
-          type="button"
-          className="button button-primary button-large"
-          id="iip-map-admin-import-screendoor-data"
-          disabled={ action.loading }
-        >
-          Import Screendoor Data
-          <input
-            id="iip-map-admin-import-screendoor-data-input"
-            className="hidden"
-            accept=".csv,text/csv"
-            type="file"
-            disabled={ action.loading }
-            onChange={ handleFileSelect }
-          />
-        </button>
-        <div className="iip-map-admin-marker-row">
+
+        <div className="iip-map-admin-row">
+          <button
+            type="button"
+            className="button button-primary button-large"
+            id="iip-map-admin-import-screendoor-data"
+            disabled={ action.loading || !projectId || !mappingValid }
+            onClick={ handleImport }
+          >
+            Import Screendoor Data
+            <input
+              id="iip-map-admin-import-screendoor-data-input"
+              className="hidden"
+              accept=".csv,text/csv"
+              type="file"
+              ref={ inputFile }
+              disabled={ action.loading || !projectId || !mappingValid }
+              onChange={ handleFileSelect }
+            />
+          </button>
+        </div>
+        <div className="iip-map-admin-row">
           { action.message && (
-            <div className={ `iip-map-admin-marker-${action.error ? 'error' : 'success'}` }>
-              { action.message }
+            <div className={ `iip-map-admin-${action.error ? 'error' : 'success'}` }>
+              { action.message.split( '\n' ).map( str => (
+                <Fragment key={ Math.random() }>
+                  { str }
+                  <br />
+                </Fragment>
+              ) ) }
             </div>
           ) }
         </div>

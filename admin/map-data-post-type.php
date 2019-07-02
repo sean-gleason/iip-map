@@ -95,6 +95,7 @@ class IIP_Map_Post_Type {
   public function map_main_map_metabox( $post ) {
     wp_nonce_field( 'map_main', 'map_main_nonce' );
 
+    echo '<div id="iip-map-admin-main--root"></div>';
     echo '<div id="iip-map-admin-main--map"><div class="map-admin-spinner-preload"></div></div>';
   }
 

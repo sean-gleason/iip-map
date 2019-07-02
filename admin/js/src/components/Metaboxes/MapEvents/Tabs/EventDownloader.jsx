@@ -6,10 +6,14 @@ import * as PropTypes from 'prop-types';
 import TabControls from './TabControls';
 import Logger, { logMessage } from '../../../Logger/Logger';
 import StatusTimer from '../../../StatusTimer/StatusTimer';
+import { useMapDispatch, useMapState } from '../../../../context/MapProvider';
 
 const EventDownloader = ( {
-  project, eventCounts, setEventCounts, doNext, setProcessing, publishReminder
+  project, doNext, setProcessing, publishReminder
 } ) => {
+  const { eventCounts } = useMapState();
+  const { dispatchCounts } = useMapDispatch();
+
   const [errors] = useState( [] );
   const [logs, setLogs] = useState( [] );
   const [pager, setPager] = useReducer( ( state, update ) => ( { ...state, ...update } ), {
@@ -72,7 +76,7 @@ const EventDownloader = ( {
             `${creates} event${creates !== 1 ? 's' : ''} created`,
             `${updates} event${updates !== 1 ? 's' : ''} updated`
           ].join( ', ' ) );
-          setEventCounts( result.events );
+          dispatchCounts( result.events );
         } else if ( result.error ) {
           handleSaveEventError( result.error );
         }
@@ -216,8 +220,6 @@ EventDownloader.propTypes = {
     } )
   } ),
   publishReminder: PropTypes.bool,
-  eventCounts: PropTypes.object,
-  setEventCounts: PropTypes.func,
   setProcessing: PropTypes.func,
   doNext: PropTypes.func
 };

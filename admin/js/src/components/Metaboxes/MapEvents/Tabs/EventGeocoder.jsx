@@ -5,10 +5,14 @@ import * as PropTypes from 'prop-types';
 import Logger, { logMessage } from '../../../Logger/Logger';
 import StatusTimer from '../../../StatusTimer/StatusTimer';
 import TabControls from './TabControls';
+import { useMapDispatch, useMapState } from '../../../../context/MapProvider';
 
 const EventGeocoder = ( {
-  project, isDirty, eventCounts, setEventCounts, setProcessing, publishReminder
+  project, isDirty, setProcessing, publishReminder
 } ) => {
+  const { eventCounts } = useMapState();
+  const { dispatchCounts } = useMapDispatch();
+
   const [logs, setLogs] = useState( [] );
   const [state, setState] = useReducer( ( prevState, update ) => ( { ...prevState, ...update } ), {
     active: false,
@@ -60,7 +64,7 @@ const EventGeocoder = ( {
         strs.push( `  [${inc.id}] ${inc.location}: ${inc.reason}\n` );
       } );
       log( strs.join( '' ).replace( /\n+$/, '' ) );
-      setEventCounts( result.events );
+      dispatchCounts( result.events );
 
       if ( result.attempted > 0 && !stopRef.current && result.more ) {
         doStatus( `${result.geocoded} of ${result.attempted} events geocoded.\nWaiting for next batch`, true, true );
@@ -222,8 +226,6 @@ EventGeocoder.propTypes = {
   project: PropTypes.object,
   isDirty: PropTypes.bool,
   publishReminder: PropTypes.bool,
-  eventCounts: PropTypes.object,
-  setEventCounts: PropTypes.func,
   setProcessing: PropTypes.func
 };
 
