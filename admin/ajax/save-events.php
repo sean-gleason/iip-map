@@ -22,12 +22,18 @@ class IIP_Map_Save_Events {
       $topic = $wpdb->_real_escape( $event->topic );
       $values[] = "($id, $event->ext_id, $project_id, '$title', '$topic', '$loc', '$fields')";
     }
+
+    $query = "SELECT COUNT(id) FROM $this->table_name WHERE post_id = %d";
+    $prevTotal = $wpdb->get_var( $wpdb->prepare( $query, $post_id ) );
+    $prevTotal = $prevTotal ?: 0;
+
     $values = implode( ',', $values );
     $query = "INSERT INTO $this->table_name (post_id, ext_id, project_id, title, topic, location, fields) VALUES $values ON DUPLICATE KEY UPDATE title=VALUES(title), topic=VALUES(topic), fields=VALUES(fields), location=VALUES(location)";
-    $created = $wpdb->query( $query );
-    $updated = count( $events ) - $created;
+    $result = $wpdb->query( $query );
 
-    $event_counts = $wpdb->get_row( "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM $this->table_name WHERE post_id = $id" );
-    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $updated, 'events' => $event_counts ] );
+    $query = "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM $this->table_name WHERE post_id = %d";
+    $event_counts = $wpdb->get_row( $wpdb->prepare( $query, $post_id ) );
+    $created = $event_counts->total - $prevTotal;
+    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $result - $created, 'events' => $event_counts ] );
   }
 }
