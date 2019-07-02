@@ -8,7 +8,7 @@ import TabControls from './TabControls';
 import ItemGroupSelect from '../../../Column/ItemGroupSelect';
 
 const MapFields = ( {
-  form, mapping, doSave, doNext, getDefaultMapping,
+  form, mapping, doSave, doNext, getDefaultMapping, getMappingErrors,
   isDirty, setDirty, needsUpdate, setUpdated, eventCounts, publishReminder
 } ) => {
   const mappingExists = mapping && mapping.fields && Object.values( mapping.fields ).length > 0;
@@ -75,17 +75,7 @@ const MapFields = ( {
   };
 
   const checkErrors = () => {
-    const { nameFields, locationFields, topicFields } = state;
-    const errs = [];
-    if ( !nameFields.length ) {
-      errs.push( 'name' );
-    }
-    if ( !locationFields.length ) {
-      errs.push( 'location' );
-    }
-    if ( !topicFields.length ) {
-      errs.push( 'topic' );
-    }
+    const errs = getMappingErrors( state );
     setErrors( errs );
     return errs.length !== 0;
   };
@@ -240,6 +230,7 @@ MapFields.propTypes = {
   isDirty: PropTypes.bool,
   setDirty: PropTypes.func,
   setUpdated: PropTypes.func,
+  getMappingErrors: PropTypes.func,
   getDefaultMapping: PropTypes.func
 };
 

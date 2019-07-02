@@ -17,6 +17,7 @@ import screendoorProject from '../../../utils/ScreendoorProject';
 
 import './MapEvents.scss';
 import { getMapGlobalMeta } from '../../../utils/globals';
+import { useMapDispatch } from '../../../context/MapProvider';
 
 const TABS = {
   Project: 0,
@@ -44,6 +45,7 @@ const parseEventCounts = ( eventCounts ) => {
 };
 
 const MapEvents = ( { project } ) => {
+  const { dispatch, dispatchMapping, dispatchCounts } = useMapDispatch();
   const [mergeState, setState] = useReducer( ( state, update ) => ( { ...state, ...update } ), {
     projectId: project.projectId,
     form: project.form,
@@ -54,7 +56,11 @@ const MapEvents = ( { project } ) => {
     nextPage: false
   } );
 
-  const [eventCounts, setEventCounts] = useState( {
+  const [eventCounts, setEventCounts] = useReducer( ( state, update ) => {
+    const updated = { ...state, ...update };
+    dispatchCounts( updated );
+    return updated;
+  }, {
     total: project.events.total,
     geocoded: project.events.geocoded
   } );
@@ -142,6 +148,7 @@ const MapEvents = ( { project } ) => {
             nextPage: true,
             needsUpdate: getNeedsUpdate( TABS.Project )
           };
+          dispatch( { projectId: id, mapping: project.mapping } );
           setEventCounts( result.events );
           if ( !project.card ) {
             project.card = card;
@@ -167,6 +174,7 @@ const MapEvents = ( { project } ) => {
           [TABS.EventDownloader]: true
         } );
         setEventCounts( result.events );
+        dispatchMapping( mappingData );
         setState( {
           mapping: mappingData,
           card: null,
@@ -335,6 +343,7 @@ const MapEvents = ( { project } ) => {
               setUpdated={ setTabUpdated( TABS.MapFields ) }
               needsUpdate={ mergeState.needsUpdate[TABS.MapFields] }
               getDefaultMapping={ project.getDefaultMapping }
+              getMappingErrors={ project.getMappingErrors }
               publishReminder={ publishReminder }
             />
           </TabPanel>

@@ -1,7 +1,10 @@
 import React, { useReducer } from 'react';
 import { importScreenDoorData } from '../../utils/helpers';
+import { useMapState } from '../../context/MapProvider';
 
 const DataImporter = () => {
+  const { projectId, mappingValid } = useMapState();
+
   const labelStyle = { verticalAlign: 'inherit' };
 
   const [action, setAction] = useReducer( ( prevState, update ) => ( { ...prevState, ...update } ), {
@@ -42,7 +45,7 @@ const DataImporter = () => {
           type="button"
           className="button button-primary button-large"
           id="iip-map-admin-import-screendoor-data"
-          disabled={ action.loading }
+          disabled={ action.loading || !projectId || !mappingValid }
         >
           <label
             htmlFor="iip-map-admin-import-screendoor-data-input"
