@@ -50,6 +50,20 @@ class MapGlobalMeta {
     return null;
   }
 
+  get importNonce() {
+    if ( this._meta.importNonce ) {
+      return this._meta.importNonce;
+    }
+    return null;
+  }
+
+  get exportNonce() {
+    if ( this._meta.exportNonce ) {
+      return this._meta.exportNonce;
+    }
+    return null;
+  }
+
   get googleKey() {
     if ( this._meta.googleApi ) {
       return this._meta.googleApi;
