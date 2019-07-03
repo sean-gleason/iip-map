@@ -154,7 +154,11 @@ class IIP_Map_Admin {
     $globals[ 'importNonce' ] = wp_create_nonce('iip-map-import-nonce');
     $globals[ 'exportNonce' ] = wp_create_nonce('iip-map-export-nonce');
 
-    $events = $wpdb->get_row( "SELECT COUNT(*) as event_count, COUNT(location_geo) as geocoded_count FROM {$wpdb->prefix}iip_map_data WHERE post_id = $post->ID" );
+    if ( $post && $post->ID ) {
+      $events = $wpdb->get_row( "SELECT COUNT(*) as event_count, COUNT(location_geo) as geocoded_count FROM {$wpdb->prefix}iip_map_data WHERE post_id = $post->ID" );
+    } else {
+      $events = (object) [ 'total' => 0, 'geocoded' => 0];
+    }
 
     // Pass all PHP variable to admin JS
     wp_localize_script( 'iip-map-admin-js', 'iipMapParams', array(

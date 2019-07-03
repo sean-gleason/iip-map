@@ -61,7 +61,7 @@ class IIP_Map_API_Route extends WP_REST_Controller {
 
     $table_name = $wpdb->prefix . 'iip_map_data';
 
-    $query = "SELECT * FROM $table_name WHERE post_id = $id";
+    $query = "SELECT * FROM $table_name WHERE post_id = $id AND location_geo IS NOT NULL AND lat IS NOT NULL AND lng IS NOT NULL";
     $list = $wpdb->get_results( $query );
     $events = [];
     $count = 0;
