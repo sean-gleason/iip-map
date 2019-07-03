@@ -137,6 +137,7 @@
       border: 1px solid $border;
       border-top: 0;
       background: $bg;
+      max-width: 100%;
 
       &--selected {
         display: block;
