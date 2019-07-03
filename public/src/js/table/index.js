@@ -105,16 +105,16 @@ const buildAdditional = ( field ) => {
       // check that field has value before proceeding
       if ( fieldArr[i] ) {
         if ( fieldArr[i].checked ) {
-          markup += `${fieldArr[i]}`;
+          markup += `\n${fieldArr[i].checked}`;
         } else {
-          markup += `${fieldArr[i]}`;
+          markup += `\n${fieldArr[i]}`;
         }
       }
     } );
   } else {
     fieldArr = field.split( ',' );
     added.forEach( ( o, i ) => {
-      markup += `${fieldArr[i]}`;
+      markup += `\n${fieldArr[i]}`;
     } );
   }
   return markup;
@@ -186,7 +186,7 @@ class Table extends Component {
           { !isLoading ? (
             filteredData.map( ( event ) => {
               const { fields } = event.properties;
-              const titleField = parseSection( mapping.name_arr, fields );
+              const titleField = event.properties.title;
               const dateField = parseSection( mapping.date_arr, fields );
               const timeField = parseSection( mapping.time_arr, fields );
               const additionalData = parseSection( mapping.other_arr, fields );
@@ -207,7 +207,11 @@ class Table extends Component {
                     { event.properties.location }
                   </div>
                   <div className="contact">
-                    { buildAdditional( additionalData ) }
+                    { buildAdditional( additionalData ).split( '\n' ).map( row => (
+                      <div key={ Math.random() * 1000 }>
+                        { row }
+                      </div>
+                    ) ) }
                   </div>
                 </div>
               );

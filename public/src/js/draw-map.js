@@ -5,7 +5,6 @@ import { polyfill } from 'es6-promise';
 
 polyfill();
 
-
 // shortcode parameters
 const mapId = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
 const apiKey = iip_map_params.mapbox_api_key; // eslint-disable-line no-undef, camelcase
@@ -32,7 +31,7 @@ mapboxgl.accessToken = apiKey;
 
 const map = new mapboxgl.Map( {
   container: 'map',
-  style: 'mapbox://styles/alexgordon/cjxgmh0p22nvk1cny8rtlluxg?optimize=true',
+  style: 'mapbox://styles/alexgordon/cjxgmh0p22nvk1cny8rtlluxg?optimize=true&fresh=true',
   center: [lat, lng],
   zoom: mapZoom
 } );
@@ -49,6 +48,20 @@ map.loadImage( '/wp-content/plugins/iip-map/public/images/location-pin.png', ( e
   }
   map.addImage( 'pin', image );
 } );
+
+const mashObject = ( obj ) => {
+  if ( Array.isArray( obj ) ) {
+    return obj.join( ', ' );
+  }
+  if ( typeof obj === 'object' ) {
+    const strs = [];
+    Object.keys( obj ).forEach( ( key ) => {
+      strs.push( `${key}: ${mashObject( obj[key] )}` );
+    } );
+    return strs.join( '\n' );
+  }
+  return obj.toString();
+};
 
 // map mapped fields to available fields based on screendoor ID
 const parseSection = ( sectionMap, fields ) => {
@@ -272,7 +285,7 @@ const buildSection = ( field, sectionName = '' ) => {
           <div class="info-window__date">
               ${field[0].month}/${field[0].day}/${currentYear}
           </div>
-        `;
+        `.trim();
       }
       return '';
     case 'time':
@@ -288,7 +301,7 @@ const buildSection = ( field, sectionName = '' ) => {
         return '';
       }
       break;
-    default: return `<div class="info-window__general">${field}</div>`;
+    default: return `<div class="info-window__general">${mashObject( field )}</div>`;
   }
 };
 
@@ -298,7 +311,7 @@ const buildAdditional = ( field ) => {
   let fieldArr;
   let markup = '';
   const added = card.added_arr;
-  if ( field.constructor === Array ) {
+  if ( Array.isArray( field ) ) {
     fieldArr = field;
     // pull out field id
     added.forEach( ( o, i ) => {
@@ -308,24 +321,29 @@ const buildAdditional = ( field ) => {
           markup += `
             <div class="info-window__additional">
               <h4>${o.heading}</h4>
-              <div class="info-window__field">${o.inlinePre} ${fieldArr[i].checked} ${o.inlinePost}</div>
+              <div class="info-window__field">${o.inlinePre} ${mashObject( fieldArr[i].checked )} ${o.inlinePost}</div>
             </div>
-          `;
+          `.trim();
         } else {
           markup += `
             <div class="info-window__additional">
               <h4>${o.heading}</h4>
-              <div class="info-window__field">${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div>
+              <div class="info-window__field">${o.inlinePre} ${mashObject( fieldArr[i] )} ${o.inlinePost}</div>
             </div>
-          `;
+          `.trim();
         }
       }
     } );
   } else {
     fieldArr = field.split( ',' );
     added.forEach( ( o, i ) => {
-      markup += `<div class="info-window__additional">
-        <h4>${o.heading}</h4><div class="info-window__field">${o.inlinePre} ${fieldArr[i]} ${o.inlinePost}</div></div>`;
+      markup += `
+        <div class="info-window__additional">
+          <h4>${o.heading}</h4>
+          <div class="info-window__field">
+            ${o.inlinePre} ${mashObject( fieldArr[i] )} ${o.inlinePost}
+          </div>
+        </div>`.trim();
     } );
   }
   return markup;
@@ -355,8 +373,10 @@ map.on( 'load', () => {
     const { fields } = e.features[0].properties;
     const fieldsObj = JSON.parse( fields );
 
+    const sdid = e.features[0].properties.ext_id;
+
     // map selected field data to available field object
-    const titleField = parseSection( mapping.name_arr, fieldsObj );
+    const titleField = e.features[0].properties.title;
     const topicField = parseSection( mapping.topic_arr, fieldsObj );
     const locationField = parseSection( mapping.location_arr, fieldsObj );
     const dateField = parseSection( mapping.date_arr, fieldsObj );
@@ -372,7 +392,7 @@ map.on( 'load', () => {
     new mapboxgl.Popup( { offset: 25 } )
       .setLngLat( coordinates )
       .setHTML( `
-                 <div class="info-window">
+                 <div class="info-window" data-sdid="${sdid}">
                    <div class="info-window__header">
                     ${buildSection( titleField, 'title' )}
                     ${buildSection( topicField, 'topic' )}
@@ -385,9 +405,9 @@ map.on( 'load', () => {
                     </div>
                    </div>
                    <div class="info-window__footer">
-                    ${buildAdditional( additionalData )}
+                    Add${buildAdditional( additionalData )}
                    </div>
-                 </div>` )
+                 </div>`.trim() )
       .addTo( map );
   } );
 
