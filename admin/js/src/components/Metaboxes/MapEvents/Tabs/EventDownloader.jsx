@@ -51,7 +51,6 @@ const EventDownloader = ( {
 
   const processEvents = ( resp ) => {
     if ( stopRef.current ) return null;
-    doStatus( `Downloading events from page ${pager.page}` );
     if ( resp && resp.length > 0 ) {
       const events = [];
       resp.forEach( ( eventData ) => {

@@ -129,11 +129,12 @@ class IIP_Map_Import {
       $query = "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM $this->table_name WHERE post_id = %d";
       $event_counts = $wpdb->get_row( $wpdb->prepare( $query, $post_id ) );
       $created = $event_counts->total - $prevTotal;
+      $updated = ( $result - $created ) / 2;
       wp_send_json( [
         'success' => true,
         'attempted' => $total,
         'created' => $created,
-        'updated' => $result - $created,
+        'updated' => $updated,
         'result' => $result,
         'eventCounts' => $event_counts
       ] );
