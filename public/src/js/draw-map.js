@@ -405,7 +405,7 @@ map.on( 'load', () => {
                     </div>
                    </div>
                    <div class="info-window__footer">
-                    Add${buildAdditional( additionalData )}
+                    ${buildAdditional( additionalData )}
                    </div>
                  </div>`.trim() )
       .addTo( map );
