@@ -113,7 +113,17 @@ const MapCard = ( {
     const { fields } = group;
     if ( name === 'added' ) {
       const val = fields.find( f => f.field === field );
-      return val ? val.value : '';
+      if ( !val || !val.value ) return '';
+      if ( Array.isArray( val.value ) ) {
+        return val.value.join( ', ' );
+      }
+      if ( typeof val.value === 'object' ) {
+        if ( 'checked' in val.value ) return val.value.checked;
+        return Object.keys( val.value )
+          .map( key => `${key}: ${val.value[key]}` )
+          .join( ', ' );
+      }
+      return val.value;
     }
     if ( name === 'date' ) {
       const [{ value: { day, month, year } }] = fields;

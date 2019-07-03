@@ -34,6 +34,7 @@ class IIP_Map_Save_Events {
     $query = "SELECT COUNT(*) as total, COUNT(location_geo) as geocoded FROM $this->table_name WHERE post_id = %d";
     $event_counts = $wpdb->get_row( $wpdb->prepare( $query, $id ) );
     $created = $event_counts->total - $prevTotal;
-    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $result - $created, 'events' => $event_counts ] );
+    $updated = ( $result - $created ) / 2;
+    wp_send_json( [ 'success' => true, 'created' => $created, 'updated' => $updated, 'events' => $event_counts ] );
   }
 }
