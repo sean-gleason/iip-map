@@ -1,12 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import * as PropTypes from 'prop-types';
 import TabControls from './TabControls';
+import { useMapState } from '../../../../context/MapProvider';
 
 const MapProject = ( {
-  projectId, doSave, setDirtyTab, eventCounts, publishReminder
+  projectId, doSave, setDirtyTab, publishReminder
 } ) => {
   const [id, setId] = useState( projectId !== null ? projectId : '' );
   const [errors, setErrors] = useState( [] );
+
+  const { eventCounts } = useMapState();
 
   const checkErrors = () => {
     if ( !id.match( /^[0-9]+$/ ) ) {
@@ -73,7 +76,6 @@ const MapProject = ( {
 MapProject.propTypes = {
   projectId: PropTypes.string,
   setDirtyTab: PropTypes.func,
-  eventCounts: PropTypes.object,
   publishReminder: PropTypes.bool,
   doSave: PropTypes.func
 };

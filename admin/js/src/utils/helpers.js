@@ -78,16 +78,29 @@ export const deleteMarker = ( args ) => {
   return axios.post( url, formData ).then( resp => resp.data );
 };
 
-export const importScreenDoorData = ( args ) => {
+export const importData = ( args ) => {
   // Get WP admin AJAX URL and data
   const url = getMapGlobalMeta.ajaxUrl;
 
   // Create the form that constitutes the AJAX request body
   const formData = getFormData( { post_id: getMapMeta.id } );
   formData.append( 'action', 'iip_map_import_data_ajax' );
-  formData.append( 'security', getMapGlobalMeta.markerNonce );
+  formData.append( 'security', getMapGlobalMeta.importNonce );
   formData.append( 'file', args );
 
   // AJAX POST request to import screendoor project data
   return axios.post( url, formData ).then( resp => resp.data );
+};
+
+export const exportData = () => {
+  // Get WP admin AJAX URL and data
+  const url = getMapGlobalMeta.ajaxUrl;
+
+  // Create the form that constitutes the AJAX request body
+  const formData = getFormData( { post_id: getMapMeta.id } );
+  formData.append( 'action', 'iip_map_export_data_ajax' );
+  formData.append( 'security', getMapGlobalMeta.exportNonce );
+
+  // AJAX POST request to import screendoor project data
+  return axios.post( url, formData );
 };

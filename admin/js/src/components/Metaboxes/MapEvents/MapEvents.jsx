@@ -17,6 +17,7 @@ import screendoorProject from '../../../utils/ScreendoorProject';
 
 import './MapEvents.scss';
 import { getMapGlobalMeta } from '../../../utils/globals';
+import { useMapDispatch, useMapState } from '../../../context/MapProvider';
 
 const TABS = {
   Project: 0,
@@ -44,6 +45,8 @@ const parseEventCounts = ( eventCounts ) => {
 };
 
 const MapEvents = ( { project } ) => {
+  const { eventCounts } = useMapState();
+  const { dispatch, dispatchMapping, dispatchCounts } = useMapDispatch();
   const [mergeState, setState] = useReducer( ( state, update ) => ( { ...state, ...update } ), {
     projectId: project.projectId,
     form: project.form,
@@ -52,11 +55,6 @@ const MapEvents = ( { project } ) => {
     tab: 0,
     needsUpdate: { ...defaultTabBooleans },
     nextPage: false
-  } );
-
-  const [eventCounts, setEventCounts] = useState( {
-    total: project.events.total,
-    geocoded: project.events.geocoded
   } );
 
   const [dirtyTabs, setDirty] = useReducer( ( state, update ) => ( { ...state, ...update } ), {
@@ -142,7 +140,8 @@ const MapEvents = ( { project } ) => {
             nextPage: true,
             needsUpdate: getNeedsUpdate( TABS.Project )
           };
-          setEventCounts( result.events );
+          dispatch( { projectId: id, mapping: project.mapping } );
+          dispatchCounts( result.events );
           if ( !project.card ) {
             project.card = card;
           } else {
@@ -166,7 +165,8 @@ const MapEvents = ( { project } ) => {
           [TABS.EventGeocoder]: true,
           [TABS.EventDownloader]: true
         } );
-        setEventCounts( result.events );
+        dispatchCounts( result.events );
+        dispatchMapping( mappingData );
         setState( {
           mapping: mappingData,
           card: null,
@@ -273,7 +273,7 @@ const MapEvents = ( { project } ) => {
         </h4>
         <div className="iip-map-admin-mapping__header">
           <div className="iip-map-admin-mapping__warning" style={ { visibility: hasDirtyTab ? 'visible' : 'hidden' } }>
-          * Indicates a tab with unsaved changes. The changes will not affect other tabs until they are saved.
+          * Indicates a tab with unsaved changes or required action.
           </div>
         </div>
         <Tabs
@@ -320,14 +320,12 @@ const MapEvents = ( { project } ) => {
               doSave={ doSave }
               setDirtyTab={ setDirtyTab( TABS.Project ) }
               publishReminder={ publishReminder }
-              eventCounts={ eventCounts }
             />
           </TabPanel>
           <TabPanel>
             <MapFields
               form={ form }
               mapping={ mapping }
-              eventCounts={ eventCounts }
               doSave={ doSave }
               doNext={ doNext }
               isDirty={ dirtyTabs[TABS.MapFields] }
@@ -335,6 +333,7 @@ const MapEvents = ( { project } ) => {
               setUpdated={ setTabUpdated( TABS.MapFields ) }
               needsUpdate={ mergeState.needsUpdate[TABS.MapFields] }
               getDefaultMapping={ project.getDefaultMapping }
+              getMappingErrors={ project.getMappingErrors }
               publishReminder={ publishReminder }
             />
           </TabPanel>
@@ -358,8 +357,6 @@ const MapEvents = ( { project } ) => {
           <TabPanel>
             <EventDownloader
               project={ project }
-              eventCounts={ eventCounts }
-              setEventCounts={ setEventCounts }
               doNext={ doNext }
               needsUpdate={ mergeState.needsUpdate[TABS.EventDownloader] }
               setUpdated={ setTabUpdated( TABS.EventDownloader ) }
@@ -370,8 +367,6 @@ const MapEvents = ( { project } ) => {
           <TabPanel>
             <EventGeocoder
               project={ project }
-              eventCounts={ eventCounts }
-              setEventCounts={ setEventCounts }
               isDirty={ dirtyTabs[TABS.EventGeocoder] }
               setProcessing={ setProcessing( TABS.EventGeocoder ) }
               publishReminder={ publishReminder }
