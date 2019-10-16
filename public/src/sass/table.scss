@@ -20,6 +20,19 @@
 
     }
 
+    .pagesWrapper {
+        button {
+            margin-top: 5px;
+            background: none;
+            color: inherit;
+            font-weight: inherit;
+            padding: 15px;
+            &:hover{
+                background: darken(#fff, 10%);
+            }
+        }
+    }
+
 
 
 

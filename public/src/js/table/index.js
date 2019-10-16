@@ -11,6 +11,7 @@ import SearchIcon from '../../../images/search.svg';
 // Import shortcode parameters
 const mapID = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
 const baseURL = `/wp-json/iip-map/v1/maps/${mapID}`; // eslint-disable-line prefer-template
+console.log( baseURL );
 const { mapping } = iip_map_params; // eslint-disable-line no-undef, camelcase
 const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 // today's date
@@ -93,6 +94,17 @@ const buildSection = ( field, sectionName = '' ) => {
   }
 };
 
+const pages = ( filteredData ) => {
+  // console.log( total );
+  const total = ( filteredData.length / 100 ) + 1;
+  const pagesArray = [];
+  for ( let i = 1; i <= total; i += 1 ) {
+    pagesArray.push( i );
+  }
+  console.log( pagesArray.length );
+  return pagesArray;
+};
+
 // build additional data section
 // broken into it's own function due to the need to lop through mapped fields
 const buildAdditional = ( field ) => {
@@ -129,7 +141,9 @@ class Table extends Component {
       filter: '',
       events: [],
       error: null,
-      checked: false
+      checked: true,
+      page: 0,
+      offset: 100
     };
     this.handleCheckboxChange = this.handleCheckboxChange.bind( this );
   }
@@ -143,8 +157,21 @@ class Table extends Component {
   };
 
   handleCheckboxChange = ( event ) => {
-    this.setState( { checked: event.target.checked } );
+    this.setState( { checked: !event.target.checked } );
+    this.setState( { page: 0 } );
+    this.setState( { offset: 100 } );
   };
+
+  changePage = ( event ) => {
+    // need to fix becouse this is async and there maybe a delay
+    let targetPage = event.target.value - 1;
+    targetPage *= 100;
+    let targetOffset = targetPage;
+    targetOffset += 100;
+    this.setState( { page: targetPage } );
+    this.setState( { offset: targetOffset } );
+    // console.log( this.state.page );
+  }
 
   fetchEvents() {
     fetch( baseURL )
@@ -172,7 +199,7 @@ class Table extends Component {
         if ( dateField.length < 1 || !dateField[0].month || !dateField[0].day ) {
           return true;
         }
-        const eventDate = new Date( currentYear, dateField[0].month, dateField[0].day );
+        const eventDate = new Date( currentYear, ( dateField[0].month - 1 ), dateField[0].day );
         return todaysDate <= eventDate;
       } );
     }
@@ -196,8 +223,14 @@ class Table extends Component {
         <div className="table-check-wrap">
           <label htmlFor="tableCheck">
             <input id="tableCheck" type="checkbox" value={ checked } onChange={ this.handleCheckboxChange } />
-            Remove Past Events
+            Show All Events
           </label>
+        </div>
+        <div className="pagesWrapper">
+        { filteredData.length > 100 ? (
+          pages( filteredData ).map( page => (
+            <button type="button" onClick={ e => this.changePage( e, 'value' ) } key={ page.toString() } value={ page.toString() }>{ page }</button> ) )
+        ) : null }
         </div>
         <div className="event-table">
           { error ? <p>{ error.message }</p> : null }
@@ -213,7 +246,8 @@ class Table extends Component {
             </React.Fragment>
           ) : null }
           { !isLoading ? (
-            filteredData.map( ( event ) => {
+
+            filteredData.slice( this.state.page, this.state.offset ).map( ( event ) => {
               const { fields } = event.properties;
               const titleField = event.properties.title;
               const dateField = parseSection( mapping.date_arr, fields );

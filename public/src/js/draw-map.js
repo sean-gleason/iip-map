@@ -156,7 +156,7 @@ function buildFilter( m ) {
           if ( dateField.length < 1 || !dateField[0].month || !dateField[0].day ) {
             return true;
           }
-          const eventDate = new Date( currentYear, dateField[0].month, dateField[0].day );
+          const eventDate = new Date( currentYear, ( dateField[0].month - 1 ), dateField[0].day );
           return todaysDate <= eventDate;
         }
         return true;
