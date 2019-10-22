@@ -11,7 +11,6 @@ import SearchIcon from '../../../images/search.svg';
 // Import shortcode parameters
 const mapID = iip_map_params.map_id; // eslint-disable-line no-undef, camelcase
 const baseURL = `/wp-json/iip-map/v1/maps/${mapID}`; // eslint-disable-line prefer-template
-console.log( baseURL );
 const { mapping } = iip_map_params; // eslint-disable-line no-undef, camelcase
 const { card } = iip_map_params; // eslint-disable-line no-undef, camelcase
 // today's date
@@ -94,14 +93,16 @@ const buildSection = ( field, sectionName = '' ) => {
   }
 };
 
-const pages = ( filteredData ) => {
-  // console.log( total );
-  const total = ( filteredData.length / 100 ) + 1;
-  const pagesArray = [];
-  for ( let i = 1; i <= total; i += 1 ) {
+const pages = ( filteredData, pageNavMarker, totalPages ) => {
+  let pagesArray = [];
+  for ( let i = 1; i <= totalPages; i += 1 ) {
     pagesArray.push( i );
   }
-  console.log( pagesArray.length );
+
+  if ( pagesArray.length > 5 ) {
+    pagesArray = pagesArray.slice( pageNavMarker, ( pageNavMarker + 5 ) );
+  }
+
   return pagesArray;
 };
 
@@ -143,7 +144,9 @@ class Table extends Component {
       error: null,
       checked: true,
       page: 0,
-      offset: 100
+      offset: 100,
+      pageNavMarker: 0,
+      activeId: null
     };
     this.handleCheckboxChange = this.handleCheckboxChange.bind( this );
   }
@@ -160,6 +163,8 @@ class Table extends Component {
     this.setState( { checked: !event.target.checked } );
     this.setState( { page: 0 } );
     this.setState( { offset: 100 } );
+    this.setState( { pageNavMarker: 0 } );
+    this.setState( { activeId: null } );
   };
 
   changePage = ( event ) => {
@@ -170,7 +175,26 @@ class Table extends Component {
     targetOffset += 100;
     this.setState( { page: targetPage } );
     this.setState( { offset: targetOffset } );
-    // console.log( this.state.page );
+    this.setState( { pageNavMarker: ( event.target.value - 3 > 0 ) ? event.target.value - 3 : 0 } );
+    this.setState( { activeId: event.target.value } );
+  }
+
+  changePagePrev = () => {
+    const currentPageNavMarker = this.state.pageNavMarker;
+    if ( currentPageNavMarker - 5 > 0 ) {
+      this.setState( { pageNavMarker: ( currentPageNavMarker - 5 ) } );
+    } else {
+      this.setState( { pageNavMarker: 0 } );
+    }
+  }
+
+  changePageNext = ( totalPages ) => {
+    const pageNavMarker = this.state.pageNavMarker;
+    if ( ( pageNavMarker + 5 ) >= totalPages ) {
+      this.setState( { pageNavMarker: totalPages } );
+    } else {
+      this.setState( { pageNavMarker: ( pageNavMarker + 5 ) } );
+    }
   }
 
   fetchEvents() {
@@ -203,6 +227,12 @@ class Table extends Component {
         return todaysDate <= eventDate;
       } );
     }
+
+
+    const totalPages = Math.ceil( filteredData.length / 100 );
+    const pageNavStart = <button type="button" onClick={ e => this.changePagePrev() }>Prev </button>;
+    const pageNavEnd = <button type="button" onClick={ e => this.changePageNext( totalPages ) }>  Next</button>;
+
     return (
       <React.Fragment>
         <div className="table-controls">
@@ -227,10 +257,21 @@ class Table extends Component {
           </label>
         </div>
         <div className="pagesWrapper">
-        { filteredData.length > 100 ? (
-          pages( filteredData ).map( page => (
-            <button type="button" onClick={ e => this.changePage( e, 'value' ) } key={ page.toString() } value={ page.toString() }>{ page }</button> ) )
-        ) : null }
+          { filteredData.length > 100 && this.state.pageNavMarker !== 0 ? pageNavStart : null }
+          { filteredData.length > 100 ? (
+            pages( filteredData, this.state.pageNavMarker, totalPages ).map( page => (
+              <button
+                type="button"
+                key={ page.toString() }
+                onClick={ e => this.changePage( e, 'value' ) }
+                value={ page.toString() }
+                className={ this.state.activeId === page.toString() ? 'is-active' : '' }
+              >
+                { page }
+              </button>
+            ) )
+          ) : null }
+          { filteredData.length > 100 && !( ( this.state.pageNavMarker + 5 ) >= totalPages ) ? pageNavEnd : null }
         </div>
         <div className="event-table">
           { error ? <p>{ error.message }</p> : null }
@@ -246,7 +287,6 @@ class Table extends Component {
             </React.Fragment>
           ) : null }
           { !isLoading ? (
-
             filteredData.slice( this.state.page, this.state.offset ).map( ( event ) => {
               const { fields } = event.properties;
               const titleField = event.properties.title;
