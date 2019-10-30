@@ -19,6 +19,7 @@ const topicSelect = document.getElementById( 'topic-select' );
 const fragment = document.createDocumentFragment();
 // get past events checkbox
 const pastEventsCheckbox = document.getElementById( 'past-events-checkbox' );
+console.log(pastEventsCheckbox);
 // set to store events for cluster filtering
 const storage = new Set();
 
@@ -107,6 +108,7 @@ const parseSection = ( sectionMap, fields ) => {
 // build filter and associated functionality
 // store layers in browser
 function buildFilter( m ) {
+
   const layersUnique = new Set();
   let mapData = m;
   // mapData is returned as a string ie11 so we need to convert it to an object
@@ -141,7 +143,10 @@ function buildFilter( m ) {
     fragment.appendChild( option );
   } );
   // build filtering logic which is shared between checkbox and select events
+
+
   function filterLogic() {
+
     // get all events if select is empty
     let selectValue = topicSelect.value;
     if ( !selectValue ) {
@@ -150,7 +155,7 @@ function buildFilter( m ) {
     map.getSource( 'events' ).setData( {
       type: 'FeatureCollection',
       features: storage[selectValue].filter( ( marker ) => {
-        if ( pastEventsCheckbox.checked ) {
+        if ( !pastEventsCheckbox.checked ) {
           const { fields } = marker.properties;
           const dateField = parseSection( mapping.date_arr, fields );
           if ( dateField.length < 1 || !dateField[0].month || !dateField[0].day ) {
@@ -163,6 +168,9 @@ function buildFilter( m ) {
       } )
     } );
   }
+
+  filterLogic();
+
   // add filtering logic to event listeners
   topicSelect.addEventListener( 'change', () => {
     filterLogic();
@@ -174,6 +182,7 @@ function buildFilter( m ) {
   pastEventsCheckbox.addEventListener( 'change', () => {
     filterLogic();
   } );
+
 }
 
 // const mapData = { features: null };
@@ -183,7 +192,6 @@ const mapDataEndpoint = `/wp-json/iip-map/v1/maps/${mapId}`;
 fetch( mapDataEndpoint )
   .then( response => response.json() )
   .then( ( mapDataData ) => {
-    buildFilter( mapDataData );
     // const { features } = mapDataData;
     // store all events for use if filter is reset
     storage.all = mapDataData.features;
@@ -252,6 +260,9 @@ fetch( mapDataEndpoint )
         'icon-size': 1
       }
     } );
+
+    buildFilter( mapDataData );
+
   } )
   .catch( ( err ) => {
     console.error( err );
